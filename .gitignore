@@ -1,8 +1,11 @@
+# Mac OS X hidden files
+.DS_Store
+ 
 *.py[cod]
-
+ 
 # C extensions
 *.so
-
+ 
 # Packages
 *.egg
 *.egg-info
@@ -17,20 +20,40 @@ develop-eggs
 .installed.cfg
 lib
 lib64
-__pycache__
-
+ 
 # Installer logs
 pip-log.txt
-
+ 
 # Unit test / coverage reports
 .coverage
 .tox
 nosetests.xml
-
+ 
 # Translations
 *.mo
-
+ 
 # Mr Developer
 .mr.developer.cfg
 .project
 .pydevproject
+.tmp
+DEV
+node_modules
+
+*.py[cod]
+
+# Databses
+*.sqlite*
+
+# Docs
+docs/_build
+
+# Secrets
+scout/secrets.py
+
+# Bower
+public/vendor
+
+# SASS
+.sass-cache
+app/styles/vendor/*

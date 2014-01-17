@@ -1,0 +1,75 @@
+<div class="panel family">
+
+  <div class="panel__overlay--header family-header">
+
+    <div class="list--vertical">
+      <div class="list__item">
+        <div class="list__column fixed center-text">
+          <div class="family-id">Family {{family.id}}</div>
+        </div>
+        <div class="list__column fixed">
+          Last update: {{fromNow family.analyzedDate}}
+        </div>
+        <div class="list__column fixed">
+          {{#link-to "variants" family}}Variants{{/link-to}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel__body family-body">
+
+    <div class="box family">
+      <h5>Family members</h5>
+      <table class="predict gt-call-table">
+
+        {{#each sample in family.samples}}
+          <tr>
+            <td {{bind-attr class="sample.affected:filter--blue :predict__main :predict__part"}}>{{sample.id}}</td>
+            <td class="predict__part affected">
+              {{!<img src="/img/icon-boy.svg" class="family-member-icon">}}
+              <div class="family-member">{{sample.gender}} {{sample.type}}</div>
+            </td>
+            <td class="predict__part">{{sample.captureKit}}</td>
+          </tr>
+        {{/each}}
+
+      </table>
+
+      <table class="predict">
+        <tr>
+          <td class="predict__main predict__part">Possible gene models</td>
+          {{#each model in family.samples.1.inheritanceModels}}
+            <td class="predict__part">{{model}}</td>
+          {{/each}}
+        </tr>
+      </table>
+    </div>
+
+    <div class="box">
+      <h5>Comments</h5>
+
+      {{#each comment in comments}}
+        <div class="comment__wrapper">
+          <div class="comment__avatar">
+            <div class="comment__letter">{{comment.firstLetter}}</div>
+          </div>
+          <div class="comment">
+            <div class="comment__header">
+              <div class="comment__username">{{comment.userName}}:</div>
+            </div>
+
+            <div class="comment__body">{{comment.userComment}}</div>
+            <div class="comment__meta">
+              <div class="comment__date">{{fromNow comment.logDate}}</div>
+              <div class="comment__tag">{{comment.positionInColumn}}</div>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+
+    </div>
+
+  </div>
+
+</div>

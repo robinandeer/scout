@@ -1,0 +1,88 @@
+<div class="app-logo">Scout</div>
+<div><a href="{{ url_for('login') }}">Connect with Google</a></div>
+
+<style>
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: #f5f5f5;
+  }
+  a {
+    width: 250px;
+    padding: 17px 35px 20px;
+    background-color: #DD4B39;
+    color: #fff;
+    font-family: Lato;
+    text-decoration: none;
+    border-radius: 2px;
+    text-align: center;
+    font-size: 20px;
+  }
+  a:hover {
+    background-color: #e7382e;
+  }
+  a:active {
+    position: relative;
+    top: 1px;
+  }
+
+  @-webkit-keyframes slideDown {
+    0% {
+      -webkit-transform: translateY(-100px);
+      opacity: 0; }
+
+    50% {
+      opacity: 1; }
+
+    100% {
+      -webkit-transform: translateY(0); } }
+  @-moz-keyframes slideDown {
+    0% {
+      -moz-transform: translateY(-100px);
+      opacity: 0; }
+
+    50% {
+      opacity: 1; }
+
+    100% {
+      -moz-transform: translateY(0); } }
+  @-o-keyframes slideDown {
+    0% {
+      -o-transform: translateY(-100px);
+      opacity: 0; }
+
+    50% {
+      opacity: 1; }
+
+    100% {
+      -o-transform: translateY(0); } }
+  @keyframes slideDown {
+    0% {
+      transform: translateY(-100px);
+      opacity: 0; }
+
+    50% {
+      opacity: 1; }
+
+    100% {
+      transform: translateY(0); } }
+
+  .app-logo {
+    font-family: Lato, sans-serif;
+    color: #bdc3c7;
+    font-size: 40px;
+    margin-top: -60px;
+    margin-bottom: 30px;
+    -webkit-animation: slideDown 1s;
+    -moz-animation: slideDown 1s;
+    animation: slideDown 1s;
+  }
+
+</style>

@@ -1,0 +1,14 @@
+<div class="frame">
+  <div class="labels">
+    <span class="min">0</span>
+    <span class="max">{{maxValue}}</span>
+  </div>
+  <span class="pointer" {{bind-attr style="computedAngle"}}>
+    <span class="pointer-cap"></span>
+    <span class="value">{{value}}</span>
+  </span>
+</div>
+
+{{#if isMaxValueExceeded}}
+  <p class="value-exceeded">maxValue exceeded</p>
+{{/if}}

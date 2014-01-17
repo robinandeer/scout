@@ -1,0 +1,39 @@
+<div class="panel families">
+
+  <div class="panel__overlay--header">
+    <div class="panel__overlay__title">Families</div>
+    
+    <div class="list--vertical">
+      <div class="list__item">
+        <div class="list__column">Links</div>
+        <div class="list__column">NGS update</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel__body">
+    <div class="list--vertical">
+      {{#each family in model}}
+        <div class="list__item">
+          <div class="list__column">
+            <div class="btn-group">
+              {{#link-to "family" family classNames="btn"}}
+                <div class="btn__body">Family {{family.id}}</div>
+              {{/link-to}}
+              {{#link-to "variants" family classNames="btn"}}
+                <div class="btn__body">Variants</div>
+              {{/link-to}}
+            </div>
+          </div>
+          
+          <div class="list__column">
+            {{fromNow family.analyzedDate}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+
+</div>
+
+{{outlet}}

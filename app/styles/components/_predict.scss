@@ -1,0 +1,51 @@
+.predict {
+  width: 100%;
+  margin-bottom: 30px;
+
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.predict__part {
+  border: 1px solid $flat-gray-1;
+  padding: 2ex;
+}
+
+.predict__main {
+  width: 200px;
+  padding: 15px;
+
+  border: 1px solid $flat-gray-1;
+  vertical-align: middle;
+
+  background-color: lighten($flat-gray-1, 5%);
+  font-weight: bold;
+  text-align: center;
+}
+
+.predict__gauge {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.predict__number {
+  font-size: 20px;
+}
+
+.predict__text {
+  color: $flat-gray-3;
+}
+
+.filter--pass {
+  background-color: rgba($flat-green-1, .05);
+}
+
+.filter--fail {
+  background-color: rgba($flat-red-1, .05);
+}
+
+.filter--blue {
+  background-color: rgba($flat-blue-1, .05);
+}

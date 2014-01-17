@@ -1,0 +1,178 @@
+#!/usr/bin/env python
+# coding: utf-8
+"""
+  package.module
+  ~~~~~~~~~~~~~
+
+  A description which can be long and explain the complete
+  functionality of this module even with indented code examples.
+  Class/Function however should not be documented here.
+
+  :copyright: year by my name, see AUTHORS for more details
+  :license: license_name, see LICENSE for more details
+"""
+
+from flask import (Flask, redirect, url_for, session, render_template,
+                   request, make_response, flash, jsonify, Response)
+
+from flask.ext.login import (LoginManager, login_user, logout_user,
+                             login_required, current_user)
+
+from flask_oauth import OAuth
+from orm import User, session as orm_session
+import os
+import requests
+import json
+import ipdb
+
+from secrets import google_keys, github_keys
+from github import IssueTracker
+
+# GitHub IssueTracker
+it = IssueTracker(github_keys.username, github_keys.password)
+
+# Main Flask app
+app = Flask(__name__, static_url_path='/static')
+app.config.update(
+  DEBUG      = True,
+  SECRET_KEY = 'development key'
+)
+
+# OAuth
+oauth = OAuth()
+
+# You must configure 3 values from Google APIs console
+# https://code.google.com/apis/console
+google = oauth.remote_app('google',
+  base_url             = 'https://www.google.com/accounts/',
+  authorize_url        = 'https://accounts.google.com/o/oauth2/auth',
+  request_token_url    = None,
+  request_token_params = {
+    'scope': 'https://www.googleapis.com/auth/userinfo.email',
+    'response_type': 'code'
+  },
+  access_token_url     = 'https://accounts.google.com/o/oauth2/token',
+  access_token_method  = 'POST',
+  access_token_params  = {'grant_type': 'authorization_code'},
+  consumer_key         = google_keys.client_id,
+  consumer_secret      = google_keys.client_secret
+)
+
+REDIRECT_URI = '/authorized'  # one of the Redirect URIs from Google APIs console
+
+# Flask Login
+login_manager = LoginManager()
+login_manager.setup_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+  return User.load(user_id)
+
+# ROUTES
+
+@app.route('/')
+def index():
+
+  # AnonymousUser doesn't have an email
+  if hasattr(current_user, 'email'):
+    # Show full app
+    return app.send_static_file("index.html")
+
+  else:
+    # Show login view
+    return """<a href="%s">Login</a>""" % url_for('login_google')
+
+@app.route('/login/google')
+def login_google():
+  session['next'] = request.args.get('next') or request.referrer or None
+  callback=url_for('google_callback', _external=True)
+  return google.authorize(callback=callback)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+  logout_user()
+  return redirect(url_for('index'))
+
+
+@app.route(REDIRECT_URI)
+@google.authorized_handler
+def google_callback(resp):
+  access_token = resp['access_token']
+  session['access_token'] = access_token, ''
+
+  if access_token:
+    r = requests.get('https://www.googleapis.com/oauth2/v1/userinfo',
+                     headers={'Authorization': 'OAuth ' + access_token})
+    if r.ok:
+      data = json.loads(r.text)
+
+      # Also check the user against internal database
+      r = requests.get("http://clinical-db.scilifelab.se:8082/checkEmail/"
+                       + data["email"])
+
+      user_info = r.json()
+
+      # Check if the request returned with an "Error"
+      if not user_info.get("Error", None):
+        oauth_id = data['id']
+
+        # Add data from Mats get-request
+        data["name"] = user_info["name"]
+        data["institute"] = user_info["institute"]
+
+        user = User.load(oauth_id) or User.add(**data)
+        login_user(user)
+        next_url = session.get('next') or url_for('index')
+
+        # OK - the user is registered, let in
+        return redirect(next_url)
+
+      else:
+        # The user doesn't have access, kick out
+        flash("You're email address doesn't have access to Scout")
+        logout_user()
+        return redirect(url_for('index'))
+
+  return redirect(url_for('login'))
+
+
+@app.route('/login')
+def login():
+  callback=url_for('google_callback', _external=True)
+  return google.authorize(callback=callback)
+
+
+# Routes incoming API calls to the Tornado backend and sends JSON response
+@app.route("/api/v1/<path:path>")
+@login_required
+def api(path):
+  # Route to Tornado
+  cookie = {"institute": current_user.institute}
+
+  r = requests.get("http://clinical-db.scilifelab.se:8082/" + path,
+                   cookies=cookie)
+
+  # Send JSON response
+  return Response(r.text, mimetype="application/json")
+
+
+@google.tokengetter
+def get_access_token():
+  return session.get('access_token')
+
+@login_required
+@app.route("/issue/new", methods=["POST"])
+def create_issue():
+  # Submits an issue to Scout repo at GitHub
+  it.create(request.data["title"], request.data["body"])
+
+def main():
+  port = int(os.environ.get('PORT', 5000))
+  app.run(port=port)
+
+
+if __name__ == '__main__':
+  main()

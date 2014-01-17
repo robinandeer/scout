@@ -1,0 +1,212 @@
+<div {{bind-attr class="variantLoaded:panel--sidebar:panel :variants :v-panel__wrapper"}}>
+
+  {{#if isShowingModal}}
+  <div class="v-panel filter-panel">
+    <div class="panel__wrapper">
+      {{! Static filters}}
+      <div class="panel">
+        <div class="panel__overlay--header">
+          <div class="panel__overlay__title">Frequency cutoffs</div>
+        </div>
+
+        <div class="panel__overlay--footer filter-footer">
+          <div class="btn-group">
+            <div class="btn" {{action 'filter'}}>
+              <div class="btn__body">Filter</div>
+            </div>
+            <div class="btn" {{action 'clinicalFilter'}}>
+              <div class="btn__body">Clinical filter</div>
+            </div>
+            <div class="btn" {{action 'clearFilter'}}>
+              <div class="btn__body">Clear</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel__body">
+          <div class="list--vertical">
+            <div class="list__item">
+              <div class="list__column">
+                {{view Ember.RadioButton name="relation" selectionBinding="staticFilters.relation" value="LESSER"}} Lesser
+              </div>
+
+              <div class="list__column">
+                {{view Ember.RadioButton name="relation" selectionBinding="staticFilters.relation" value="GREATER"}} Greater
+              </div>
+            </div>
+
+            <div class="list__item">
+              <div class="list__column">
+                <label for="genomes">1000 Genomes</label>
+              </div>
+              <div class="list__column">
+                {{input id="genomes" type="text" valueBinding="staticFilters.1000 Genomes" placeholder='0.1'}}
+              </div>
+            </div>
+
+            <div class="list__item">
+              <div class="list__column">
+                <label for="dbSNP129">dbSNP 129</label>
+              </div>
+              <div class="list__column">
+                {{input id="dbSNP129" type="text" valueBinding="staticFilters.dbsnp129" placeholder='0.1'}}
+              </div>
+            </div>
+
+            <div class="list__item">
+              <div class="list__column">
+                <label for="dbSNP132">dbSNP 132</label>
+              </div>
+              <div class="list__column">
+                {{input id="dbSNP132" type="text" valueBinding="staticFilters.dbsnp132" placeholder='0.1'}}
+              </div>
+            </div>
+
+            <div class="list__item">
+              <div class="list__column">
+                <label for="esp6500">esp6500</label>
+              </div>
+              <div class="list__column">
+                {{input id="esp6500" type="text" valueBinding="staticFilters.esp6500" placeholder='0.1'}}
+              </div>
+            </div>
+
+            <div class="divider">Misc.</div>
+            <div class="list__item">
+              <div class="list__column">
+                <label for="gene-name">Gene name</label>
+              </div>
+              <div class="list__column">
+                {{input id="gene-name" type="text" valueBinding="staticFilters.gene_name" placeholder='ADK'}}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div> {{! END static filters }}
+
+      {{! Multiple dynamic filter panels}}
+      {{#each group in filters}}
+        <div class="panel">
+          <div class="panel__overlay--header">
+            <div class="panel__overlay__title">{{group.name}}</div>
+          </div>
+          <div class="panel__body">
+            <div class="list--vertical">
+
+              {{#each key in group.keys}}
+                <div class="list__item">
+                  <div class="list__column">{{key.id}}</div>
+                  <div class="list__column">
+                    {{input type="checkbox" checkedBinding="key.isActive" classNames="toggle-slider__input"}}
+                  </div>
+                </div>
+              {{/each}}
+
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+  </div>
+  {{/if}}
+
+  <div class="panel__overlay--header v-panel">
+
+    <div class="list--vertical">
+      <div class="list__item">
+        {{#if variantLoaded}}
+
+        <span class="panel__overlay__title">Variants</span>
+
+        {{else}}
+
+        <div class="list__column--slim">
+          {{#link-to "index" classNames="btn"}}
+            <div class="btn__body">Families</div>
+          {{/link-to}}
+        </div>
+
+        <div class="list__column--slim">Variants</div>
+
+        <div class="list__column--slim">
+          <div {{action "toggleProperty" "isShowingModal"}} class="btn">
+            <div class="btn__body">
+              {{#if isShowingModal}}Close{{else}}Open{{/if}} filter
+            </div>
+          </div>
+        </div>
+
+        {{/if}}
+        
+      </div>
+
+      <div class="list__item">
+        <div class="list__column fixed">Rank score</div>
+        <div class="list__column fixed">Gene</div>
+        {{#unless variantLoaded}}
+        <div class="list__column fixed">Inheritance</div>
+        <div class="list__column fixed">1000 Genomes</div>
+        <div class="list__column fixed">PolyPhen</div>
+        <div class="list__column fixed">Gene annotation</div>
+        <div class="list__column fixed">Functional annotation</div>
+        <div class="list__column fixed">HGMD</div>
+        {{/unless}}
+      </div>
+    </div>
+  </div>
+
+  <div class="panel__body v-panel">
+    <div class="list--vertical">
+      {{#each variant in model}}
+        {{#link-to "variant" variant classNames="list__item"}}
+
+          <div class="list__column fixed">{{variant.rankScore}}</div>
+          <div class="list__column fixed">
+            <div class="hgnc-symbol">{{variant.hgncSymbol}}</div>
+          </div>
+
+          {{#unless variantLoaded}}
+          <div {{bind-attr class=":list__column :fixed :scrollable variant.geneModel::undef"}}>
+            {{#each model in variant.geneModels}}
+              <span class="inheritance-model">{{model}}</span>
+            {{else}}
+              Nada
+            {{/each}}
+          </div>
+
+          <div {{bind-attr class=":list__column :fixed variant.thousandG::undef"}}>
+            {{fallback variant.thousandG}}
+          </div>
+
+          <div {{bind-attr class=":list__column :fixed variant.polyphenDivHuman::undef"}}>
+            {{fallback variant.polyphenDivHuman}}
+          </div>
+
+          <div class="list__column fixed">{{variant.geneAnnotation}}</div>
+
+          <div {{bind-attr class=":list__column :fixed variant.functionalAnnotation::undef"}}>
+            {{#if variant.functionalAnnotation}}
+              {{variant.functionalAnnotation}}
+            {{else}}
+              Nada
+            {{/if}}
+          </div>
+
+          <div {{bind-attr class=":list__column :fixed variant.hgmd::undef"}}>
+            {{#if variant.hgmd}}
+              {{variant.hgmd}}
+            {{else}}
+              Nada
+            {{/if}}
+          </div>
+          
+          {{/unless}}
+
+        {{/link-to}}
+      {{/each}}
+    </div>
+  </div>
+</div>
+
+{{outlet}}

@@ -1,0 +1,139 @@
+// +-------------------------------------------------------------------+
+// |  Panel Layout Component
+// |  ------------------------
+// |  This component provides styles to set up a basic panel layout.
+// |
+// |  'Fixed' headers offer optional flexibility for content that needs
+// |  to stay always *on top*.
+// |
+// |  Usage:
+// |    <div class="panel__wrapper">
+// |      <div class="panel--menu"></div>
+// |
+// |      <div class="panel--sidebar">
+// |
+// |        <div class="panel__overlay--header"></div>
+// |        <div class="panel__overlay--footer"></div>
+// |
+// |        <div class="panel__body">
+// |          ...
+// |        </div>
+// |
+// |      </div>
+// |      <div class="panel">
+// |
+// |        <div class="panel__body">
+// |          ...
+// |        </div>
+// |
+// |      </div>
+// |    </div>
+// +-------------------------------------------------------------------+
+// Public API
+$menu-width: 180px;
+$sidebar-width: 250px;
+$sidebar-min-width: 300px;
+$overlay-approximate-height: 50px;
+
+// Container for wrapping all panel elements
+.panel__wrapper {
+  @extend %fill-up;
+
+  // Required
+  @include display(flex);
+  overflow: auto;
+}
+
+// Scrollable section of a panel
+.panel__body {
+  // Required
+  overflow-y: auto;
+  height: 100%;
+}
+
+// +-------------------------------------------------------------------+
+// |  Panel type classes
+// +-------------------------------------------------------------------+
+// Induvidual base panel class
+.panel {
+  // Required
+  @include flex-basis(100%);
+  height: 100%;
+  position: relative;  // To contain absolute-positioned child elements
+}
+
+// Special menu panel, usually placed far left
+.panel--menu {
+  @extend .panel;
+
+  // Required
+  max-width: $menu-width;
+
+  // Styles
+  //background-color: #2d3e4b;
+}
+
+.panel--sidebar {
+  @extend .panel;
+
+  // Required
+  @include flex-basis($sidebar-width);
+  min-width: $sidebar-min-width;
+  
+  // Styles
+  //border-right: 1px solid rgba(#000, 0.1);
+  //background-color: #E6E9F0;
+}
+
+// +-------------------------------------------------------------------+
+// |  Panel Headers & Footers
+// +-------------------------------------------------------------------+
+%panel__overlay {
+  @extend %light-overlay;
+
+  // Required
+  position: absolute;
+  width: 100%;
+  z-index: 9999;  // Make sure it floats above everything else
+
+  // Defaults
+  min-height: $overlay-approximate-height;
+  background-color: rgba(#fff, .95);
+}
+
+.panel__overlay--header {
+  @extend %panel__overlay;
+
+  // Defaults
+  border-bottom: 1px solid rgba(#000, .15);
+  box-shadow: 0 2px 4px -4px rgba(#000, .4);
+
+  ~ .panel__body {
+    // Add space before content to clear the overlay
+    padding-top: $overlay-approximate-height + 30px;
+  }
+}
+
+.panel__overlay--footer {
+  @extend %panel__overlay;
+
+  // Required
+  bottom: 0;
+
+  // Defaults
+  box-shadow: 0 -2px 4px -4px rgba(#000, .4);
+  border-top: 1px solid rgba(#000, .15);
+
+  ~ .panel__body {
+    // Add space after content to clear the overlay
+    padding-bottom: $overlay-approximate-height + 50px;
+  }
+}
+
+.panel__overlay__title {
+  text-align: center;
+  color: $flat-gray-2;
+  font-size: 12px;
+  text-transform: uppercase;
+  width: 100%;
+}

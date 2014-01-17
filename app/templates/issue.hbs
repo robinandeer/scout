@@ -1,0 +1,45 @@
+<div class="center-center login-screen">
+
+{{#if isWritingMessage}}
+
+  <form class="issue-form" {{action 'confirmIssue' on='submit'}}>
+    <h4>Submit an issue</h4>
+    {{input value=issueTitle type='text' placeholder='Title'}}
+    {{textarea value=issueBody placeholder='Body'}}
+
+    {{#unless isConfirmingIssue}}
+      <button type="submit" class="btn">
+        <div class="btn__body">Submit</div>
+      </button>
+    {{else}}
+      <div {{action 'createIssue'}} class="btn">
+        <div class="btn__body">Are you sure?</div>
+      </div>
+    {{/unless}}
+  </form>
+
+{{else}}
+
+  {{#if hasSentMessage}}
+
+    <div class="issue-form">
+      <h4>Your issue</h4>
+      <a {{bind-attr href="message.html_url"}} class="issue-title">
+        {{message.title}}
+      </a>
+      <div class="issue-body-wrapper">{{{message.html}}}</div>
+
+      <div {{action "reset"}} class="btn">
+        <div class="btn__body">New issue</div>
+      </div>
+    </div>
+
+  {{else}}
+
+    <div class="issue-sending">Sending issue...</div>
+
+  {{/if}}
+
+{{/if}}
+
+</div>
