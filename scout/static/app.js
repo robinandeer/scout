@@ -1180,3 +1180,7 @@ Ember.RadioButton = Ember.View.extend({
     return this.get('value') === this.get('selection');
   }).property()
 });
+
+/*
+//@ sourceMappingURL=app.js.map
+*/

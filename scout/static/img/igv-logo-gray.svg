@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <title>igv-logo-gray</title>
+    <description>Created with Sketch (http://www.bohemiancoding.com/sketch)</description>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="igv" sketch:type="MSLayerGroup">
+            <rect id="Rectangle-1" stroke="#B0B6BB" stroke-width="4" sketch:type="MSShapeGroup" x="0" y="0" width="50" height="50" rx="3.90625"></rect>
+            <path d="M50,6.46875 L13.0964156,6.46875 L10,9.59375 L13.0964156,12.71875 L50,12.71875 L50,6.46875 Z" id="Path-1" fill="#B0B6BB" sketch:type="MSShapeGroup"></path>
+            <path d="M49.21875,14.84375 L25.189218,14.84375 L21.875,18.1485588 L25.1892181,21.09375 L49.218749,21.09375 L49.21875,14.84375 Z" id="Path-1" fill="#B0B6BB" sketch:type="MSShapeGroup"></path>
+            <text sketch:type="MSTextLayer" font-family="Clear Sans Medium" font-size="25" font-weight="normal" sketch:alignment="middle" letter-spacing="-0.34" fill="#B0B6BB">
+                <tspan x="7.890625" y="38.28125">igv</tspan>
+            </text>
+        </g>
+    </g>
+</svg>

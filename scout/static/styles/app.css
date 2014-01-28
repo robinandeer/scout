@@ -1,16 +1,19 @@
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_mixins\.scss}line{font-family:\00003109}}
 pre, .pre--scrollable {
   -webkit-overflow-scrolling: touch; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_mixins\.scss}line{font-family:\00003116}}
 html,
 body, .panel__wrapper {
   width: 100%;
   height: 100%; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_mixins\.scss}line{font-family:\00003124}}
 .panel__overlay--header, .panel__overlay--footer {
   background-color: #fff;
   background-color: rgba(255, 255, 255, 0.98); }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_mixins\.scss}line{font-family:\00003137}}
 .space-between {
   display: -webkit-flex;
   display: -moz-flex;
@@ -19,37 +22,46 @@ body, .panel__wrapper {
   -moz-justify-content: space-between;
   justify-content: space-between; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_basics\.scss}line{font-family:\000035}}
 * {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_basics\.scss}line{font-family:\0000314}}
 ul,
 ol {
   list-style: none;
   margin: 0;
   padding: 0; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_basics\.scss}line{font-family:\0000334}}
 .cf:before,
 .cf:after {
   content: " ";
   display: table; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_basics\.scss}line{font-family:\0000340}}
 .cf:after {
   clear: both; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_basics\.scss}line{font-family:\0000346}}
 .cf {
   *zoom: 1; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_basics\.scss}line{font-family:\0000359}}
 body {
   background-color: white; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_basics\.scss}line{font-family:\0000363}}
 .center-text {
   text-align: center; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_basics\.scss}line{font-family:\0000366}}
 .right-text {
   text-align: right; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\000031}}
 body,
 html {
   color: #333333;
@@ -57,45 +69,58 @@ html {
   font-size: 1em;
   line-height: 1.5em; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000310}}
 h1, h2, h3, h4, h5, h6 {
   text-rendering: optimizeLegibility;
   margin: 0;
   line-height: 1.25em;
   font-weight: 200; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000317}}
 h1 {
   font-size: 3em; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000321}}
 h2 {
   font-size: 2.75em; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000325}}
 h3 {
   font-size: 2.5em; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000329}}
 h4 {
   font-size: 2.25em; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000333}}
 h5 {
   font-size: 2em; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000337}}
 h6 {
   font-size: 1.5em; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000343}}
 small {
   color: #e6e9f0; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000348}}
 p {
   margin: 0 0 1.5em; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000353}}
 a {
   color: #477dca;
   text-decoration: none; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000357}}
   a:hover {
     color: #2c5999; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000361}}
   a:active, a:focus {
     color: #2c5999;
     outline: none; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000368}}
 hr {
   border-bottom: 1px solid #eff1f5;
   border-left: none;
@@ -103,29 +128,36 @@ hr {
   border-top: none;
   margin: 1.5em 0; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000376}}
 img {
   margin: 0;
   max-width: 100%; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000381}}
 blockquote {
   border-left: 4px solid #eff1f5;
   color: #595959;
   margin: 1.5em 0;
   padding-left: 0.75em; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000387}}
   blockquote small {
     margin-top: -20px;
     display: block; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000393}}
 cite {
   color: #737373;
   font-style: italic; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\0000397}}
   cite:before {
     content: '\2014 \00A0'; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\00003102}}
 .code, code, pre, .pre--scrollable {
   background: rgba(0, 0, 0, 0.05);
   border-radius: 4px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\00003108}}
 code {
   padding: 0 5px 2px;
   position: relative;
@@ -133,6 +165,7 @@ code {
   color: #c7254e;
   font-size: 0.9em; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\00003121}}
 pre, .pre--scrollable {
   overflow-x: auto;
   white-space: nowrap;
@@ -140,20 +173,24 @@ pre, .pre--scrollable {
   color: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(0, 0, 0, 0.1); }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/framework\/_typography\.scss}line{font-family:\00003137}}
 .pre--scrollable {
   max-height: 350px;
   overflow-y: auto; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\0000339}}
 .panel__wrapper {
   display: -webkit-flex;
   display: -moz-flex;
   display: flex;
   overflow: auto; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\0000348}}
 .panel__body {
   overflow-y: auto;
   height: 100%; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\0000358}}
 .panel, .panel--menu, .panel--sidebar {
   -webkit-flex-basis: 100%;
   -moz-flex-basis: 100%;
@@ -161,15 +198,18 @@ pre, .pre--scrollable {
   height: 100%;
   position: relative; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\0000366}}
 .panel--menu {
   max-width: 180px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\0000376}}
 .panel--sidebar {
   -webkit-flex-basis: 250px;
   -moz-flex-basis: 250px;
   flex-basis: 250px;
   min-width: 300px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\0000391}}
 .panel__overlay--header, .panel__overlay--footer {
   position: absolute;
   width: 100%;
@@ -177,19 +217,24 @@ pre, .pre--scrollable {
   min-height: 50px;
   background-color: rgba(255, 255, 255, 0.95); }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\00003104}}
 .panel__overlay--header {
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   box-shadow: 0 2px 4px -4px rgba(0, 0, 0, 0.4); }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\00003111}}
   .panel__overlay--header ~ .panel__body {
     padding-top: 80px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\00003117}}
 .panel__overlay--footer {
   bottom: 0;
   box-shadow: 0 -2px 4px -4px rgba(0, 0, 0, 0.4);
   border-top: 1px solid rgba(0, 0, 0, 0.15); }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\00003127}}
   .panel__overlay--footer ~ .panel__body {
     padding-bottom: 100px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_panel\.scss}line{font-family:\00003133}}
 .panel__overlay__title {
   text-align: center;
   color: #bdc3c7;
@@ -197,9 +242,13 @@ pre, .pre--scrollable {
   text-transform: uppercase;
   width: 100%; }
 
-.btn, .btn--focus, .btn--active,
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\000035}}
+.btn--focus,
+.btn--active,
 .btn.active, .btn--disabled,
-.btn[disabled], .btn--primary, .btn--danger, .btn--pill, .btn--facebook, .btn--twitter, .btn--google, .btn--linkedin, .btn--youtube {
+.btn[disabled], .btn--primary,
+.btn--danger, .btn--pill, .btn--facebook, .btn--twitter, .btn--google, .btn--linkedin, .btn--youtube,
+.btn {
   display: -webkit-flex;
   display: -moz-flex;
   display: flex;
@@ -213,15 +262,29 @@ pre, .pre--scrollable {
   cursor: pointer;
   background: none;
   outline: none;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 2px;
+  border: 1px solid #cfd9db;
+  border-bottom-width: 2px;
+  border-radius: 3px;
   min-height: 40px; }
-  .btn:hover, .btn--focus:hover, .btn--active:hover, .btn--disabled:hover, .btn--primary:hover, .btn--danger:hover, .btn--pill:hover, .btn--facebook:hover, .btn--twitter:hover, .btn--google:hover, .btn--linkedin:hover, .btn--youtube:hover {
-    background: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05); }
-  .btn:active, .btn--focus:active, .btn--active:active, .btn--disabled:active, .btn--primary:active, .btn--danger:active, .btn--pill:active, .btn--facebook:active, .btn--twitter:active, .btn--google:active, .btn--linkedin:active, .btn--youtube:active {
-    box-shadow: inset 0 3px 3px -3px rgba(0, 0, 0, 0.4); }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000323}}
+  .btn--focus:hover,
+  .btn--active:hover,
+  .btn.active:hover, .btn--disabled:hover,
+  .btn[disabled]:hover, .btn--primary:hover,
+  .btn--danger:hover, .btn--pill:hover, .btn--facebook:hover, .btn--twitter:hover, .btn--google:hover, .btn--linkedin:hover, .btn--youtube:hover,
+  .btn:hover {
+    box-shadow: 0 0 3px #ecf0f1; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000327}}
+  .btn--focus:active,
+  .btn--active:active,
+  .btn.active:active, .btn--disabled:active,
+  .btn[disabled]:active, .btn--primary:active,
+  .btn--danger:active, .btn--pill:active, .btn--facebook:active, .btn--twitter:active, .btn--google:active, .btn--linkedin:active, .btn--youtube:active,
+  .btn:active {
+    border-bottom-width: 1px;
+    box-shadow: none; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000333}}
 .btn__body {
   white-space: nowrap;
   max-width: 100%;
@@ -229,8 +292,10 @@ pre, .pre--scrollable {
   text-overflow: ellipsis;
   width: 100%;
   text-align: center;
-  padding: 0 15px; }
+  padding: 0 15px;
+  cursor: pointer; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000343}}
 .btn__segment {
   display: -webkit-flex;
   display: -moz-flex;
@@ -248,135 +313,113 @@ pre, .pre--scrollable {
   background-color: rgba(0, 0, 0, 0.02);
   border-right: 1px solid rgba(0, 0, 0, 0.1); }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000357}}
 .btn__icon {
   font-size: 30px;
   margin-left: 15px; }
 
-.btn--focus, .btn--active,
-.btn.active,
-.active.btn--focus,
-.active.btn--disabled,
-.active.btn--primary,
-.active.btn--danger,
-.active.btn--pill,
-.active.btn--facebook,
-.active.btn--twitter,
-.active.btn--google,
-.active.btn--linkedin,
-.active.btn--youtube {
-  background: rgba(255, 255, 255, 0.3); }
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000362}}
+.btn--focus,
 .btn--active,
-.active.btn--focus,
-.active.btn--active,
-.active.btn,
-.active.btn--disabled,
-.active.btn--primary,
-.active.btn--danger,
-.active.btn--pill,
-.active.btn--facebook,
-.active.btn--twitter,
-.active.btn--google,
-.active.btn--linkedin,
-.active.btn--youtube {
-  box-shadow: inset 0 3px 3px -3px rgba(0, 0, 0, 0.4); }
+.btn.active {
+  box-shadow: 0 0 3px #ecf0f1; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000369}}
+.btn--active,
+.btn.active {
+  border-bottom-width: 1px;
+  box-shadow: none; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000376}}
+  .btn--active:hover,
+  .btn.active:hover {
+    box-shadow: none; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000381}}
 .btn--disabled,
-[disabled].btn--focus,
-[disabled].btn--active,
-[disabled].btn--disabled,
-[disabled].btn,
-[disabled].btn--primary,
-[disabled].btn--danger,
-[disabled].btn--pill,
-[disabled].btn--facebook,
-[disabled].btn--twitter,
-[disabled].btn--google,
-[disabled].btn--linkedin,
-[disabled].btn--youtube {
+.btn[disabled] {
   background: rgba(0, 0, 0, 0.05);
   cursor: not-allowed;
   color: rgba(0, 0, 0, 0.5); }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000389}}
   .btn--disabled:hover, .btn--disabled:active,
-  [disabled].btn--focus:hover,
-  [disabled].btn--active:hover,
-  [disabled].btn--disabled:hover,
-  [disabled].btn:hover,
-  [disabled].btn--primary:hover,
-  [disabled].btn--danger:hover,
-  [disabled].btn--pill:hover,
-  [disabled].btn--facebook:hover,
-  [disabled].btn--twitter:hover,
-  [disabled].btn--google:hover,
-  [disabled].btn--linkedin:hover,
-  [disabled].btn--youtube:hover,
-  [disabled].btn--focus:active,
-  [disabled].btn--active:active,
-  [disabled].btn--disabled:active,
-  [disabled].btn:active,
-  [disabled].btn--primary:active,
-  [disabled].btn--danger:active,
-  [disabled].btn--pill:active,
-  [disabled].btn--facebook:active,
-  [disabled].btn--twitter:active,
-  [disabled].btn--google:active,
-  [disabled].btn--linkedin:active,
-  [disabled].btn--youtube:active {
+  .btn[disabled]:hover,
+  .btn[disabled]:active {
     background: rgba(0, 0, 0, 0.05);
     box-shadow: none; }
 
-.btn--primary, .btn--danger {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\0000396}}
+.btn--primary,
+.btn--danger {
   padding-top: 6px;
   padding-bottom: 6px;
   background: #3498db;
   color: rgba(255, 255, 255, 0.9); }
-  .btn--primary:hover, .btn--danger:hover {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003106}}
+  .btn--primary:hover,
+  .btn--danger:hover {
     background: #5faee3; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003111}}
 .btn--danger {
   background: #e74c3c; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003116}}
   .btn--danger:hover {
     background: #ed7669; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003121}}
 .btn--pill {
   border-radius: 50px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003128}}
 .btn--facebook {
   background-color: #2b3f87;
   color: #ecf0f1;
   font-weight: bold; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003135}}
   .btn--facebook:hover {
     background-color: #324ba3; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003140}}
 .btn--facebook, .btn--twitter, .btn--google, .btn--linkedin, .btn--youtube {
   color: #ecf0f1;
   font-weight: bold; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003147}}
 .btn--facebook {
   background-color: #3b5998; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003152}}
   .btn--facebook:hover {
     background-color: #2d4373; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003157}}
 .btn--twitter {
   background-color: #55acee; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003163}}
   .btn--twitter:hover {
     background-color: #2795e9; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003168}}
 .btn--google {
   background-color: #c43128; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003172}}
   .btn--google:hover {
     background-color: #d9362d; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003177}}
 .btn--linkedin {
   background-color: #1a6ea7; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003181}}
   .btn--linkedin:hover {
     background-color: #1a83cc; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003186}}
 .btn--youtube {
   background-color: #b50015; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003190}}
   .btn--youtube:hover {
     background-color: #c60019; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003198}}
 .btn-group {
   display: -webkit-flex;
   display: -moz-flex;
@@ -384,31 +427,43 @@ pre, .pre--scrollable {
   -webkit-justify-content: center;
   -moz-justify-content: center;
   justify-content: center; }
-  .btn-group > .btn:not(:first-child), .btn-group > .btn--focus:not(:first-child), .btn-group > .btn--active:not(:first-child), .btn-group > .btn--disabled:not(:first-child), .btn-group > .btn--primary:not(:first-child), .btn-group > .btn--danger:not(:first-child), .btn-group > .btn--pill:not(:first-child), .btn-group > .btn--facebook:not(:first-child), .btn-group > .btn--twitter:not(:first-child), .btn-group > .btn--google:not(:first-child), .btn-group > .btn--linkedin:not(:first-child), .btn-group > .btn--youtube:not(:first-child) {
-    border-left: none; }
-  .btn-group > .btn:first-child, .btn-group > .btn--focus:first-child, .btn-group > .btn--active:first-child, .btn-group > .btn--disabled:first-child, .btn-group > .btn--primary:first-child, .btn-group > .btn--danger:first-child, .btn-group > .btn--pill:first-child, .btn-group > .btn--facebook:first-child, .btn-group > .btn--twitter:first-child, .btn-group > .btn--google:first-child, .btn-group > .btn--linkedin:first-child, .btn-group > .btn--youtube:first-child {
-    border-radius: 4px 0 0 4px; }
-  .btn-group > .btn:last-child, .btn-group > .btn--focus:last-child, .btn-group > .btn--active:last-child, .btn-group > .btn--disabled:last-child, .btn-group > .btn--primary:last-child, .btn-group > .btn--danger:last-child, .btn-group > .btn--pill:last-child, .btn-group > .btn--facebook:last-child, .btn-group > .btn--twitter:last-child, .btn-group > .btn--google:last-child, .btn-group > .btn--linkedin:last-child, .btn-group > .btn--youtube:last-child {
-    border-radius: 0 4px 4px 0; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003202}}
+  .btn-group > .btn {
+    border-radius: 0; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003207}}
+    .btn-group > .btn:not(:first-of-type) {
+      border-left: none;
+      border-radius: 0; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003212}}
+    .btn-group > .btn:first-of-type {
+      border-radius: 4px 0 0 4px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_btn\.scss}line{font-family:\00003216}}
+    .btn-group > .btn:last-of-type {
+      border-radius: 0 4px 4px 0; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_list\.scss}line{font-family:\000035}}
 .list--horizontal {
   display: -webkit-flex;
   display: -moz-flex;
   display: flex;
   overflow-x: auto; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_list\.scss}line{font-family:\000039}}
   .list--horizontal .list__item {
     -webkit-flex-shrink: 0;
     -moz-flex-shrink: 0;
     flex-shrink: 0; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_list\.scss}line{font-family:\0000313}}
   .list--horizontal.list-closed {
     height: 0; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_list\.scss}line{font-family:\0000320}}
 .list--vertical .list__item {
   white-space: nowrap;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_list\.scss}line{font-family:\0000325}}
 .list__item {
   display: -webkit-flex;
   display: -moz-flex;
@@ -421,6 +476,7 @@ pre, .pre--scrollable {
   align-items: center;
   border-bottom: 1px solid #dfe1e8; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_list\.scss}line{font-family:\0000333}}
 .list__item__text {
   white-space: nowrap;
   max-width: 100%;
@@ -430,6 +486,7 @@ pre, .pre--scrollable {
   -moz-flex-basis: 70%;
   flex-basis: 70%; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_list\.scss}line{font-family:\0000338}}
 .list__item__label {
   -webkit-flex-basis: 30%;
   -moz-flex-basis: 30%;
@@ -438,6 +495,7 @@ pre, .pre--scrollable {
   font-size: 1.7ex;
   text-align: right; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_list\.scss}line{font-family:\0000345}}
 .list__item__icon {
   width: 25px;
   height: 25px;
@@ -445,51 +503,54 @@ pre, .pre--scrollable {
   border-radius: 5px;
   margin-right: 15px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_list\.scss}line{font-family:\0000353}}
 .divider {
   padding: 5px 15px;
   background-color: #eeeeee;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_predict\.scss}line{font-family:\000031}}
 .predict {
   width: 100%;
-  margin-bottom: 30px;
   border-collapse: collapse;
   table-layout: fixed; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_predict\.scss}line{font-family:\000038}}
 .predict__part {
   border: 1px solid #ecf0f1;
-  padding: 2ex; }
+  padding: 1ex; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_predict\.scss}line{font-family:\0000313}}
 .predict__main {
   width: 200px;
-  padding: 15px;
   border: 1px solid #ecf0f1;
   vertical-align: middle;
   background-color: #fbfcfc;
   font-weight: bold;
   text-align: center; }
 
-.predict__gauge {
-  margin-top: 10px;
-  margin-bottom: 15px;
-  margin-left: auto;
-  margin-right: auto; }
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_predict\.scss}line{font-family:\0000324}}
 .predict__number {
   font-size: 20px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_predict\.scss}line{font-family:\0000328}}
 .predict__text {
-  color: #95a5a6; }
+  color: #95a5a6;
+  font-size: 14px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_predict\.scss}line{font-family:\0000333}}
 .filter--pass {
   background-color: rgba(26, 188, 156, 0.05); }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_predict\.scss}line{font-family:\0000337}}
 .filter--fail {
   background-color: rgba(231, 76, 60, 0.05); }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_predict\.scss}line{font-family:\0000341}}
 .filter--blue {
   background-color: rgba(52, 152, 219, 0.05); }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_comment\.scss}line{font-family:\000031}}
 .comment__wrapper {
   display: -webkit-flex;
   display: -moz-flex;
@@ -497,9 +558,12 @@ pre, .pre--scrollable {
   -webkit-justify-content: space-between;
   -moz-justify-content: space-between;
   justify-content: space-between;
-  margin-bottom: 50px;
-  padding-bottom: 15px; }
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  padding: 15px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_comment\.scss}line{font-family:\000039}}
 .comment__avatar {
   display: -webkit-flex;
   display: -moz-flex;
@@ -514,30 +578,33 @@ pre, .pre--scrollable {
   min-width: 80px;
   height: 80px;
   background-color: #2980b9;
-  margin-right: 50px; }
+  margin-right: 40px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_comment\.scss}line{font-family:\0000321}}
 .comment__letter {
   font-size: 50px;
   color: #ecf0f1;
   font-weight: 200; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_comment\.scss}line{font-family:\0000327}}
 .comment__username {
   font-weight: bold; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_comment\.scss}line{font-family:\0000331}}
 .comment__date {
   color: #bdc3c7; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_comment\.scss}line{font-family:\0000335}}
 .comment {
   -webkit-flex-basis: 90%;
   -moz-flex-basis: 90%;
   flex-basis: 90%; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_comment\.scss}line{font-family:\0000339}}
 .comment__body {
-  padding: 0 0 15px; }
+  padding: 0 0 10px; }
 
-.comment__header {
-  margin-bottom: 10px; }
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_comment\.scss}line{font-family:\0000343}}
 .comment__meta {
   display: -webkit-flex;
   display: -moz-flex;
@@ -546,11 +613,13 @@ pre, .pre--scrollable {
   -moz-align-items: center;
   align-items: center;
   font-size: 14px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_comment\.scss}line{font-family:\0000350}}
   .comment__meta > div:first-of-type {
     padding-right: 10px;
     margin-right: 10px;
     border-right: 2px solid #ecf0f1; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_comment\.scss}line{font-family:\0000358}}
 .comment__tag {
   border: 2px solid #ecf0f1;
   border-radius: 50px;
@@ -560,20 +629,297 @@ pre, .pre--scrollable {
   display: inline-block;
   padding: 0 10px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_progress\.scss}line{font-family:\000033}}
+.progress__wrapper {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  border-radius: 3px;
+  margin: 30px 0; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_progress\.scss}line{font-family:\0000311}}
+.progress__well {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  background-color: #ecf0f1;
+  height: 100%;
+  box-shadow: inset 0 1px 3px -1px #bdc3c7;
+  border-radius: 3px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_progress\.scss}line{font-family:\0000319}}
+.progress__mark {
+  position: relative;
+  -webkit-flex-basis: 100%;
+  -moz-flex-basis: 100%;
+  flex-basis: 100%;
+  padding-left: 1px;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.1); }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_progress\.scss}line{font-family:\0000326}}
+  .progress__mark:first-child {
+    border-left: 0; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_progress\.scss}line{font-family:\0000330}}
+  .progress__mark:last-child {
+    border-right: 0; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_progress\.scss}line{font-family:\0000335}}
+.progress__mark__label {
+  margin-top: 25px;
+  font-size: 14px;
+  color: #95a5a6;
+  margin-left: -15px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_progress\.scss}line{font-family:\0000342}}
+.progress__bar {
+  position: absolute;
+  top: 0;
+  width: 60%;
+  height: 100%;
+  background-color: #bdc3c7;
+  border-radius: 3px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_progress\.scss}line{font-family:\0000351}}
+.progress__bar__dot {
+  position: absolute;
+  left: -15px;
+  top: 50%;
+  border-radius: 100px;
+  margin-top: -16px;
+  width: 30px;
+  height: 150%;
+  background-color: #fff;
+  box-shadow: 0 1px 2px #bdc3c7; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_progress\.scss}line{font-family:\0000362}}
+  .progress__bar__dot:hover {
+    left: -18px;
+    margin-top: -19px;
+    width: 36px;
+    height: 180%;
+    background-color: #3498db;
+    border: 5px solid #fff;
+    box-shadow: 0 1px 3px #bdc3c7, 0 0 0 10px rgba(52, 152, 219, 0.2); }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_progress\.scss}line{font-family:\0000374}}
+    .progress__bar__dot:hover:after {
+      width: 56px;
+      height: 56px;
+      content: " ";
+      position: absolute;
+      border-radius: 100px;
+      top: -16px;
+      left: -16px;
+      border: 1px solid rgba(52, 152, 219, 0.4); }
+
+/* =Kyoo Tooltip style
+/* You may grab the code from here on
+/* ----------------------------------- */
+/* Tooltip wrapper -------*/
+/* Add this class to HTML element you so desire Kyoo Tooltip to appear */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\000037}}
+.kyoo-tooltip {
+  position: relative; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\0000310}}
+.kyoo-tooltip .kyootip {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  z-index: 99999;
+  /* Somehow this prevents the tooltip from displaying */
+  /* Not sure if it's Chrome or CodePen */
+  /*-webkit-transition: .3s ease-in-out;
+  -moz-transition: .3s ease-in-out;
+  -o-transition: .3s ease-in-out;
+  transition: 0.3s; */ }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\0000322}}
+.kyoo-tooltip:hover .kyootip {
+  opacity: 1;
+  visibility: visible; }
+
+/* Kyoo Tooltip base style -------*/
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\0000328}}
+.kyootip {
+  background-color: #222;
+  color: #fff;
+  font: normal 12px/16px Arial;
+  padding: 6px 10px;
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: none;
+  z-index: 4;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  -o-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\0000347}}
+.kyootip:after {
+  content: " ";
+  font-size: 0;
+  line-height: 0;
+  position: absolute;
+  width: 0;
+  z-index: 1; }
+
+/* Top position style -------*/
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\0000358}}
+.kyootip--top {
+  bottom: 130%;
+  left: 50%;
+  margin-bottom: -10px;
+  margin-left: -60px;
+  width: 100px; }
+
+/* Tooltip arrow */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\0000366}}
+.kyootip--top:after {
+  border-top: 5px solid #222;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  bottom: -5px;
+  left: 50%;
+  margin-left: -5px; }
+
+/* When hovered, move tooltip at the bottom */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\0000375}}
+.kyoo-tooltip:hover .kyootip--top {
+  margin-bottom: 0; }
+
+/* Right position style -------*/
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\0000381}}
+.kyootip--right {
+  left: 100%;
+  margin-left: -5px;
+  top: -5px;
+  width: 100px; }
+
+/* Tooltip arrow */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\0000388}}
+.kyootip--right:after {
+  border-top: 5px solid transparent;
+  border-right: 5px solid #222;
+  border-bottom: 5px solid transparent;
+  left: -5px;
+  /* Offset value to pull to the left */
+  margin-top: -5px;
+  top: 50%; }
+
+/* When hovered, move tooltip a bit to the right */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\0000397}}
+.kyoo-tooltip:hover .kyootip--right {
+  margin-left: 10px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\00003102}}
+.kyootip--bottom {
+  top: 130%;
+  left: 50%;
+  margin-top: -10px;
+  margin-left: -60px;
+  width: 100px; }
+
+/* Tooltip arrow */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\00003110}}
+.kyootip--bottom:after {
+  border-bottom: 5px solid #222;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  top: -5px;
+  left: 50%;
+  margin-left: -5px; }
+
+/* When hovered, move tooltip at the bottom */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\00003119}}
+.kyoo-tooltip:hover .kyootip--bottom {
+  margin-top: 0; }
+
+/* Left position style -------*/
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\00003125}}
+.kyootip--left {
+  right: 100%;
+  margin-right: -5px;
+  top: -5px;
+  width: 100px; }
+
+/* Tooltip arrow */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\00003132}}
+.kyootip--left:after {
+  border-top: 5px solid transparent;
+  border-left: 5px solid #222;
+  border-bottom: 5px solid transparent;
+  margin-top: -5px;
+  right: -5px;
+  /* Offset value to pull to the right */
+  top: 50%; }
+
+/* When hovered, move tooltip a bit to the right */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_tooltip\.scss}line{font-family:\00003141}}
+.kyoo-tooltip:hover .kyootip--left {
+  margin-right: 10px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_text-input\.scss}line{font-family:\000033}}
+.form--complex label {
+  display: block;
+  font-size: 13px;
+  color: #bdc3c7; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_text-input\.scss}line{font-family:\0000310}}
+.form__input-wrapper {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: flex;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  justify-content: center; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_text-input\.scss}line{font-family:\0000315}}
+.form__text-input,
+.text-input,
+.text-input--error {
+  padding: 10px;
+  border: 1px solid #cfd9db;
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  margin-right: 5px;
+  outline: none; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_text-input\.scss}line{font-family:\0000324}}
+  .form__text-input:focus,
+  .text-input:focus,
+  .text-input--error:focus {
+    background: #fbfcfc; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_text-input\.scss}line{font-family:\0000334}}
+.text-input--error {
+  background-color: #feebea; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/components\/_text-input\.scss}line{font-family:\0000339}}
+  .text-input--error:focus {
+    background-color: #fee0de; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\0000354}}
 .panel--menu {
   max-width: 130px;
   background-color: #23313b; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\0000359}}
 .panel--sidebar {
   border-right: 1px solid #dfe1e8; }
 
-.app, .center-center {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\0000363}}
+.app, .center-center,
+.modal__wrapper {
   height: 100%;
   width: 100%; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\0000368}}
 small {
   color: rgba(0, 0, 0, 0.5); }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\0000372}}
 .app {
   display: -webkit-flex;
   display: -moz-flex;
@@ -582,7 +928,9 @@ small {
   -moz-flex-direction: row;
   flex-direction: row; }
 
-.center-center {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\0000380}}
+.center-center,
+.modal__wrapper {
   display: -webkit-flex;
   display: -moz-flex;
   display: flex;
@@ -596,6 +944,7 @@ small {
   -moz-align-items: center;
   align-items: center; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\0000390}}
 .logo {
   font-family: Baskerville;
   font-size: 30px;
@@ -604,29 +953,36 @@ small {
   -moz-animation: slideDown 1s;
   animation: slideDown 1s; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\0000398}}
 .variants.panel > .panel__body, .variants.panel--menu > .panel__body, .variants.panel--sidebar > .panel__body {
   padding-top: 107px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003102}}
 .panel--sidebar.variants {
-  max-width: 300px;
+  max-width: 350px;
   -webkit-flex-shrink: 0;
   -moz-flex-shrink: 0;
   flex-shrink: 0;
   background-color: #fcfcfc; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003107}}
   .panel--sidebar.variants > .panel__body {
     padding-top: 80px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003112}}
 .overlay__header--aside {
   font-size: 30px;
   font-weight: bold;
   color: #1abc9c; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003121}}
 .box {
   padding-bottom: 50px;
-  max-width: 800px;
+  width: 80%;
+  max-width: 960px;
   margin-left: auto;
   margin-right: auto; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003130}}
 .list--horizontal {
   display: -webkit-flex;
   display: -moz-flex;
@@ -638,92 +994,136 @@ small {
   -moz-align-items: flex-start;
   align-items: flex-start; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003136}}
 .predictor__text {
   text-align: center;
   margin-top: 15px;
   color: #95a5a6; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003142}}
 .logo--omim {
   font-family: "Palatino Linotype";
   font-weight: bold;
   color: #2A6936;
   font-size: 25px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003150}}
 .link {
   text-decoration: none; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003154}}
 .link__text {
   text-align: center;
   margin-top: 10px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003159}}
 .annotate-table, .gt-call-table {
   table-layout: auto; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003163}}
 .family-member {
   display: inline-block;
   margin-left: 15px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003168}}
 .family-member-icon {
   width: 20px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003172}}
 .gt-call__allele, .gt-call__allele--full {
   width: 100px;
   margin-left: auto;
   margin-right: auto;
   height: 5px;
   border: 1px solid #bdc3c7; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003179}}
   .gt-call__allele:first-child, .gt-call__allele--full:first-child {
     margin-bottom: 5px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003184}}
 .gt-call__allele--full {
   background-color: #bdc3c7; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003190}}
 .filter-modal {
   max-width: 350px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003195}}
 h4 {
   margin-bottom: 10px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003199}}
 .undef {
   background-color: rgba(0, 0, 0, 0.02); }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003202}}
   .undef .predict__number {
     color: transparent; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003208}}
 .list__item:hover {
   background-color: rgba(0, 0, 0, 0.03); }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003212}}
 .list__item:visited {
   color: #bdc3c7; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003216}}
 .list__item.active {
   color: #1abc9c;
   font-weight: bold;
   background-color: #f5f7f7; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003226}}
 .panel__overlay--header > .list--vertical > .list__item:hover {
   background-color: inherit; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003233}}
 .list__column,
-.list__column--slim {
+.list__column--slim,
+.list__column--small {
   white-space: nowrap;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 15px; }
+  padding: 15px;
+  -webkit-flex-shrink: 0.8;
+  -moz-flex-shrink: 0.8;
+  flex-shrink: 0.8; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003239}}
   .list__column.fixed,
-  .fixed.list__column--slim {
+  .fixed.list__column--slim,
+  .fixed.list__column--small {
     -webkit-flex-basis: 100%;
     -moz-flex-basis: 100%;
     flex-basis: 100%;
     border-right: 1px solid #d8dae3; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003246}}
   .list__column.undef,
-  .undef.list__column--slim {
+  .undef.list__column--slim,
+  .undef.list__column--small {
     color: transparent; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003250}}
   .list__column:last-of-type,
-  .list__column--slim:last-of-type {
+  .list__column--slim:last-of-type,
+  .list__column--small:last-of-type {
     border-right: 0; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003255}}
 .list__column--slim {
   padding: 5px 10px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003261}}
+.list__column--small {
+  -webkit-flex-basis: 100px;
+  -moz-flex-basis: 100px;
+  flex-basis: 100px;
+  -webkit-flex-grow: 0.1;
+  -moz-flex-grow: 0.1;
+  flex-grow: 0.1;
+  -webkit-flex-shrink: 1.5;
+  -moz-flex-shrink: 1.5;
+  flex-shrink: 1.5;
+  min-width: 100px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003270}}
 .hgnc-symbol {
   white-space: nowrap;
   max-width: 100%;
@@ -731,6 +1131,7 @@ h4 {
   text-overflow: ellipsis;
   max-width: 100px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003275}}
 .menu__item {
   display: block;
   padding: 15px;
@@ -741,30 +1142,36 @@ h4 {
   border-bottom-color: #12191e;
   border-top-style: solid;
   border-bottom-style: solid; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003289}}
   .menu__item:hover {
     color: #74b0e9;
     background-color: rgba(255, 255, 255, 0.1); }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003294}}
   .menu__item:active {
     position: relative;
     top: 1px;
     color: #6193c3; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003301}}
 .menu__item__icon {
   width: 50px;
   height: 50px;
   background-size: cover;
   margin: 0 auto; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003308}}
 .menu__item__label {
   margin-top: 5px;
   font-size: 13px;
   text-align: center; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003315}}
 .issue-title {
   font-size: 25px;
   margin-bottom: 10px;
   color: #2980b9; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003321}}
 .issue-form {
   display: -webkit-flex;
   display: -moz-flex;
@@ -773,42 +1180,46 @@ h4 {
   -moz-flex-direction: column;
   flex-direction: column;
   width: 350px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003326}}
   .issue-form h4 {
     font-weight: 200;
     color: #bbb;
     margin-bottom: 30px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003332}}
   .issue-form input[type=text],
   .issue-form textarea {
-    background: none;
-    border: none;
+    width: 100%;
     margin-bottom: 30px;
-    font-size: 1.3em;
-    padding: .3em .5em;
-    outline: none; }
-    .issue-form input[type=text]:focus,
-    .issue-form textarea:focus {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: #2980b9; }
+    padding: 10px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003339}}
   .issue-form input[type=text] {
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1); }
+    font-size: 1.3em; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003343}}
   .issue-form textarea {
-    min-height: 250px;
-    border: 2px solid rgba(0, 0, 0, 0.1); }
-  .issue-form .btn, .issue-form .btn--focus, .issue-form .btn--active, .issue-form .btn--disabled, .issue-form .btn--primary, .issue-form .btn--danger, .issue-form .btn--pill, .issue-form .btn--facebook, .issue-form .btn--twitter, .issue-form .btn--google, .issue-form .btn--linkedin, .issue-form .btn--youtube {
+    min-height: 250px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003347}}
+  .issue-form .btn {
     font-size: 20px;
     padding: 10px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003351}}
+    .issue-form .btn:active {
+      margin-bottom: 1px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003359}}
 .family-id {
   font-size: 20px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003365}}
 .external-links .link {
   padding: 10px 25px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003368}}
   .external-links .link:hover {
     background-color: rgba(0, 0, 0, 0.015);
     padding: 9px 24px;
     border-radius: 10px;
     border: 1px solid #eff1f5; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003377}}
 .rank-score {
   font-size: 40px;
   color: #16a085;
@@ -823,32 +1234,39 @@ h4 {
   -moz-justify-content: center;
   justify-content: center; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003387}}
 .family-header ~ .panel__body {
   padding-top: 120px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003392}}
 .family-id {
   font-size: 30px;
   color: #16a085; }
 
-.predict {
-  margin-top: 10px; }
-
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003397}}
 .variant-header ~ .panel__body {
   padding-top: 130px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003402}}
 .v-panel__wrapper {
   display: -webkit-flex;
   display: -moz-flex;
   display: flex;
   -webkit-flex-direction: column;
   -moz-flex-direction: column;
-  flex-direction: column; }
+  flex-direction: column;
+  position: relative; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003408}}
 .v-panel {
   -webkit-flex-basis: 100%;
   -moz-flex-basis: 100%;
   flex-basis: 100%; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003411}}
+  .v-panel .list__column {
+    min-width: 200px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003416}}
 .filter-panel {
   -webkit-flex-basis: 450px;
   -moz-flex-basis: 450px;
@@ -860,30 +1278,134 @@ h4 {
   border-bottom: 1px solid #d8dae3;
   overflow: hidden;
   background-color: #f8f9fa; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003424}}
   .filter-panel .panel, .filter-panel .panel--menu, .filter-panel .panel--sidebar {
     border-right: 1px solid #ecf0f1; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003427}}
     .filter-panel .panel > .panel__body, .filter-panel .panel--menu > .panel__body, .filter-panel .panel--sidebar > .panel__body {
       padding-top: 50px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003432}}
   .filter-panel .panel__wrapper {
     overflow: inherit; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003437}}
 .box h5 {
   margin-bottom: 20px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003443}}
 .scrollable {
   text-overflow: clip;
   overflow-x: auto !important; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003448}}
 .ember-text-field {
   padding: 3px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003452}}
 .filter-footer {
   padding: 10px; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003456}}
 .variant--pass {
   background-color: #f6fdf9; }
 
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003459}}
 .variant--fail {
   background-color: white; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003463}}
+.inheritance-model {
+  border-right: 2px solid #bdc3c7;
+  padding: 5px 5px 5px 0; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003468}}
+.fixed-tooltip {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  background-color: #f5f7f7;
+  padding: 15px;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 -2px 4px -4px rgba(0, 0, 0, 0.4); }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003478}}
+  .fixed-tooltip .predict__part {
+    border-color: #bdc3c7; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003484}}
+.filter-panel .list__column {
+  padding: 5px 15px 5px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003490}}
+.toggle-slider__input {
+  margin-right: 10px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003494}}
+.family-comments {
+  max-width: 960px;
+  height: auto;
+  margin: 0 auto;
+  border-top: 1px solid #ecf0f1; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003501}}
+  .family-comments > .panel:first-of-type, .family-comments > .panel--menu:first-of-type, .family-comments > .panel--sidebar:first-of-type {
+    border-right: 1px solid #ecf0f1; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003505}}
+  .family-comments > .panel .panel__body, .family-comments > .panel--menu .panel__body, .family-comments > .panel--sidebar .panel__body {
+    padding-top: 50px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003512}}
+.do-wrap > .list__item {
+  white-space: normal; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003517}}
+.no-comments {
+  height: 100px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003521}}
+.rank-score-column {
+  border-right: 1px solid #d8dae3 !important;
+  text-align: center;
+  font-size: 20px; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003526}}
+  .rank-score-column:visited {
+    color: #bdc3c7; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003530}}
+  .rank-score-column.active {
+    background-color: #3498db;
+    color: #fff; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003536}}
+.hide-variant {
+  padding: 5px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003540}}
+.pop-over {
+  cursor: help; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003549}}
+.modal {
+  width: 450px;
+  margin: 10px auto;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 2px; }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003557}}
+.modal__overlay {
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: rgba(13, 0, 13, 0.7); }
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003568}}
+.raw-pedigree > table {
+  border: 1px solid #ecf0f1; }
+@media -sass-debug-info{filename{font-family:file\:\/\/\/Users\/robinandeer\/SciLife\/modules\/scout\/app\/styles\/app\.scss}line{font-family:\00003571}}
+  .raw-pedigree > table td, .raw-pedigree > table th {
+    border: 1px solid #ecf0f1;
+    padding: 1ex; }
 
 /*# sourceMappingURL=app.css.map */
