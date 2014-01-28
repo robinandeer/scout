@@ -3,13 +3,19 @@ App.GTCall = Ember.Model.extend
   compounds: attr()
 
 Ember.GTCallAdapter = Ember.Object.extend
-  host: 'http://localhost:5000/api/v1'
+  host: 'https://localhost:5000/api/v1'
 
   find: (record, id) ->
     $.getJSON("#{@get('host')}/variants/#{id}/gtcall").then (data) ->
+
+      compounds = []
+      for compound in data.COMPOUNDS
+        unless compound.vpk is id
+          compounds.push(App.Compound.create(compound))
+
       objects = {
         gtCalls: (App.Call.create(call) for call in data.GT)
-        compounds: (App.Compound.create(item) for item in data.COMPOUNDS)
+        compounds: compounds
       }
 
       record.load(id, objects)

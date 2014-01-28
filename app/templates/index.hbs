@@ -6,7 +6,7 @@
     <div class="list--vertical">
       <div class="list__item">
         <div class="list__column">Links</div>
-        <div class="list__column">NGS update</div>
+        <div class="list__column right-text">NGS update</div>
       </div>
     </div>
   </div>
@@ -14,22 +14,31 @@
   <div class="panel__body">
     <div class="list--vertical">
       {{#each family in model}}
+      {{#unless family.isHidden}}
         <div class="list__item">
           <div class="list__column">
             <div class="btn-group">
-              {{#link-to "family" family classNames="btn"}}
-                <div class="btn__body">Family {{family.id}}</div>
-              {{/link-to}}
-              {{#link-to "variants" family classNames="btn"}}
-                <div class="btn__body">Variants</div>
-              {{/link-to}}
+              <div class="btn">
+                {{#link-to "family" family}}
+                  <div class="btn__body">Family {{family.id}}</div>
+                {{/link-to}}
+              </div>
+              <div class="btn">
+                {{#link-to "variants" family}}
+                  <div class="btn__body">Variants</div>
+                {{/link-to}}
+              </div>
+              <div {{action "hideFamily" family}} class="btn">
+                <div class="btn__body">Hide</div>
+              </div>
             </div>
           </div>
           
-          <div class="list__column">
+          <div class="list__column right-text">
             {{fromNow family.analyzedDate}}
           </div>
         </div>
+      {{/unless}}
       {{/each}}
     </div>
   </div>

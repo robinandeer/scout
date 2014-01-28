@@ -6,12 +6,15 @@ scout.app
 """
 
 from flask import (Flask, request, redirect, url_for, session, flash,
-                   render_template, jsonify, Response)
+                   render_template, jsonify, Response, make_response)
 from flask_oauth import OAuth
 from flask.ext.login import (LoginManager, login_user, logout_user,
                              current_user, login_required)
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask_debugtoolbar import DebugToolbarExtension
+from OpenSSL import SSL
 
+import re
 import requests
 import arrow
 import ipdb
@@ -32,6 +35,14 @@ REDIRECT_URI = '/authorized'
 app = Flask(__name__, static_url_path='/static')
 app.config['DEBUG'] = DEBUG
 app.config['SECRET_KEY'] = SECRET_KEY
+
+# Setup SSL: http://flask.pocoo.org/snippets/111/
+ctx = SSL.Context(SSL.SSLv23_METHOD)
+ctx.use_privatekey_file('/Users/robinandeer/Downloads/recertifikat/myserver.key')
+ctx.use_certificate_file('/Users/robinandeer/Downloads/recertifikat/server.crt')
+
+# Debug toolbar
+toolbar = DebugToolbarExtension(app)
 
 # Setup OAuth
 oauth = OAuth()
@@ -222,17 +233,51 @@ def api(path):
   url = 'http://clinical-db.scilifelab.se:8082/{path}?{query}'\
         .format(path=path, query=request.query_string)
 
-  print request.query_string
-
   if request.method == 'GET':
     r = requests.get(url, cookies=cookie)
+    mimetype = 'application/json'
 
     # Send JSON response
-    return Response(r.text, mimetype='application/json')
+    return Response(r.text, mimetype=mimetype)
 
   else:
     # POST request
     pass
+
+# Route incoming API calls to the Tornado backend and sends JSON response
+@app.route('/api/static/<bam_file>', methods=['GET'])
+@crossdomain(origin='*', methods=['GET'])
+def api_static(bam_file):
+  # Check if GET 206
+  range_header = request.headers.get('Range', None)
+  if range_header:
+    headers = {'Range': range_header}
+  else:
+    headers = {}
+
+  # Route request to Tornado
+  url = 'http://clinical-db:8082/static/' + bam_file
+  cookie = {'institute': 'cmms'} # current_user.institute
+
+  if request.method == 'GET':
+
+    resp = requests.get(url, cookies=cookie, headers=headers)
+
+    new_resp = make_response(resp.content)
+
+  else:
+    # HEAD request incoming
+    resp = requests.head(url, cookies=cookie, headers=headers)
+
+    new_resp = make_response(u'')
+
+  new_resp.status_code = resp.status_code
+  new_resp.headers['content-length'] = resp.headers.get('content-length')
+  new_resp.headers['accept-ranges'] = resp.headers.get('accept-ranges')
+  new_resp.headers['Content-Type'] = 'application/octet-stream'
+
+  return new_resp
+
 
 @app.route('/issues/', methods=['GET'])
 @crossdomain(origin='*', methods=['GET'])
@@ -279,4 +324,4 @@ def create_issue():
 
 
 if __name__ == '__main__':
-  app.run()
+  app.run('localhost', port=5000, ssl_context=ctx)

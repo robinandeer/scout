@@ -1,9 +1,9 @@
 .comment__wrapper {
   @include display(flex);
   @include justify-content(space-between);
+  @include align-items(center);
 
-  margin-bottom: 50px;
-  padding-bottom: 15px;
+  padding: 15px;
 }
 
 .comment__avatar {
@@ -15,7 +15,7 @@
   min-width: 80px;
   height: 80px;
   background-color: $flat-blue-2;
-  margin-right: 50px;
+  margin-right: 40px;
 }
 
 .comment__letter {
@@ -37,11 +37,7 @@
 }
 
 .comment__body {
-  padding: 0 0 15px;
-}
-
-.comment__header {
-  margin-bottom: 10px;
+  padding: 0 0 10px;
 }
 
 .comment__meta {

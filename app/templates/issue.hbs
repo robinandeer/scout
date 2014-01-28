@@ -1,45 +1,54 @@
-<div class="center-center login-screen">
+<div class="panel--sidebar">
+  {{#each issue in model}}
+    
+  {{/each}}
+</div>
 
-{{#if isWritingMessage}}
+<div class="panel">
 
-  <form class="issue-form" {{action 'confirmIssue' on='submit'}}>
-    <h4>Submit an issue</h4>
-    {{input value=issueTitle type='text' placeholder='Title'}}
-    {{textarea value=issueBody placeholder='Body'}}
+  <div class="center-center">
+  {{#if isWritingMessage}}
 
-    {{#unless isConfirmingIssue}}
-      <button type="submit" class="btn">
-        <div class="btn__body">Submit</div>
-      </button>
-    {{else}}
-      <div {{action 'createIssue'}} class="btn">
-        <div class="btn__body">Are you sure?</div>
-      </div>
-    {{/unless}}
-  </form>
+    <form class="issue-form" {{action 'confirmIssue' on='submit'}}>
+      <h4>Submit an issue</h4>
+      {{input value=issueTitle type="text" placeholder="Subject" classNames="text-input"}}
+      {{textarea value=issueBody placeholder="Describe your problem/request" classNames="text-input"}}
 
-{{else}}
-
-  {{#if hasSentMessage}}
-
-    <div class="issue-form">
-      <h4>Your issue</h4>
-      <a {{bind-attr href="message.html_url"}} class="issue-title">
-        {{message.title}}
-      </a>
-      <div class="issue-body-wrapper">{{{message.html}}}</div>
-
-      <div {{action "reset"}} class="btn">
-        <div class="btn__body">New issue</div>
-      </div>
-    </div>
+      {{#unless isConfirmingIssue}}
+        <button type="submit" class="btn">
+          <div class="btn__body">Submit</div>
+        </button>
+      {{else}}
+        <div {{action 'createIssue'}} class="btn">
+          <div class="btn__body">Are you sure?</div>
+        </div>
+      {{/unless}}
+    </form>
 
   {{else}}
 
-    <div class="issue-sending">Sending issue...</div>
+    {{#if hasSentMessage}}
+
+      <div class="issue-form">
+        <h4>Your issue</h4>
+        <p>Click the title to provide additional information or upload a screenshot.</p>
+        <a {{bind-attr href="message.html_url"}} class="issue-title">
+          {{message.title}}
+        </a>
+        <div class="issue-body-wrapper">{{{message.html}}}</div>
+
+        <div {{action "reset"}} class="btn">
+          <div class="btn__body">New issue</div>
+        </div>
+      </div>
+
+    {{else}}
+
+      <div class="issue-sending">Sending issue...</div>
+
+    {{/if}}
 
   {{/if}}
+  </div>{{! END center-center}}
 
-{{/if}}
-
-</div>
+</div>{{! END panel}}

@@ -1,0 +1,31 @@
+<table style="width: 100%">
+  <thead>
+  <tr>
+    <th class="predict__part">Rank score</th>
+    {{#each idn in gt.compounds.1.idns}}
+    <th class="predict__part">{{idn}}</th>
+    {{/each}}
+    <th class="predict__part">Gene annotation</th>
+    <th class="predict__part">Func. annotation</th>
+    <th class="predict__part">Inheritance</th>
+  </tr>
+  </thead>
+
+  {{#each compound in gt.compounds}}
+    <tr>
+    <td class="predict__part center-text">
+      {{#link-to "variant" compound.vpk}}
+        {{compound.rank_score}}
+      {{/link-to}}
+    </td>
+
+    {{#each call in compound.gtCalls}}
+    <td class="predict__part">{{call}}</td>
+    {{/each}}
+
+    <td class="predict__part">{{compound.gene_annotation}}</td>
+    <td class="predict__part">{{compound.functional_annotation}}</td>
+    <td class="predict__part">{{compound.gene_model}}</td>
+    </tr>
+  {{/each}}
+</table>

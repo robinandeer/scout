@@ -62,12 +62,20 @@ App.Variant = Ember.Model.extend
       return @get('chr').slice(3)
   ).property("chr")
 
+  chromPosString: (->
+    return "#{@get('chr')}: #{@get('startBp')}-#{@get('stopBp')}"
+  ).property 'chr', 'startBp', 'stopBp'
+
   geneModels: (->
     if @get('geneModel')
       return @get('geneModel').split(';').slice(0,-1)
     else
       return []
   ).property('geneModel')
+
+  geneModelString: (->
+    return @get('geneModels').join(' – ')
+  ).property('geneModels')
 
   severity: (->
     sum = @get('polyphenDivHuman') + @get('siftWholeExome') + @get("mutationTaster")
@@ -81,10 +89,49 @@ App.Variant = Ember.Model.extend
     return Math.round(sum/2 * 100)
   ).property 'lrtWholeExome', 'phylopWholeExome'
 
+  gt: (->
+    return App.GTCall.find @get('id')
+  ).property 'id'
+
+  gtString: (->
+    calls  = ("#{call.get('idn')}: #{call.get('gt')}" for call in @get('gt'))
+    return calls.join('\n')
+  ).property 'gt'
+
+  hide: ->
+    # Do this first block to trigger property changes
+    # that otherwise only happens in localStorage
+    @set('isDirtyHidden', yes)
+    Ember.run.later @, =>
+      @set 'isDirtyHidden', no
+    , 1
+
+    return Ember.ls.save('variant', @get('id'))
+
+  unhide: ->
+    # Do this first block to trigger property changes
+    # that otherwise only happens in localStorage
+    @set('isDirtyHidden', yes)
+    Ember.run.later @, =>
+      @set 'isDirtyHidden', no
+    , 1
+
+    return Ember.ls.delete('variant', @get('id'))
+
+  isDirtyHidden: no
+
+  isHidden: (->
+    return Ember.ls.exists('variant', @get('id'))
+  ).property('id', 'hide', 'unhide', 'isDirtyHidden')
+
+  hiddenAt: (->
+    return Ember.ls.find('variant', @get('id'))
+  ).property('id')
+
 App.Variant.camelizeKeys = yes
 
 App.VariantAdapter = Ember.Object.extend
-  host: 'http://localhost:5000/api/v1'
+  host: 'https://localhost:5000/api/v1'
 
   buildQueryString: (queryParams) ->
     queryString = '?'
@@ -100,7 +147,7 @@ App.VariantAdapter = Ember.Object.extend
 
   find: (record, id) ->
     $.getJSON("#{@get('host')}/variants/#{id}").then (data) ->
-      record.load(id, data[0])
+      record.load(id, data)
 
   findQuery: (klass, records, params) ->
     url = "#{@get('host')}/families/#{params.family_id}/iem"

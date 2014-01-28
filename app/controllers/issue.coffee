@@ -1,4 +1,4 @@
-App.IssueController = Ember.Controller.extend
+App.IssueController = Ember.ArrayController.extend
   isWritingMessage: yes
   hasSentMessage: no
   message: null

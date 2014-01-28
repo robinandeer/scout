@@ -1,6 +1,8 @@
 // +-------------------------------------------------------------------+
 // |  The Button
 // +-------------------------------------------------------------------+
+
+%btn,
 .btn {
   // Required
   @include display(flex);
@@ -13,17 +15,18 @@
   outline: none;
 
   // Default
-  border: 1px solid rgba(#000, .1);
-  border-radius: 2px;
+  border: 1px solid darken($flat-gray-1, 10%);
+  border-bottom-width: 2px;
+  border-radius: 3px;
   min-height: 40px;
 
   &:hover {
-    background: rgba(#fff, .3);
-    box-shadow: 0 1px 0 rgba(#000, .05);
+    box-shadow: 0 0 3px darken($flat-gray-1, 0%);
   }
 
   &:active {
-    box-shadow: inset 0 3px 3px -3px rgba(#000, .4);
+    border-bottom-width: 1px;
+    box-shadow: none;
   }
 }
 
@@ -33,6 +36,8 @@
   width: 100%;
   text-align: center;
   padding: 0 15px;
+  // Shouldn't be nessesary but seems to be anyways (Chrome)
+  cursor: pointer;
 }
 
 .btn__segment {
@@ -54,22 +59,28 @@
   margin-left: 15px;
 }
 
-.btn--focus {
-  @extend .btn;
+.btn--focus,
+%btn--focus {
+  @extend %btn;
 
-  background: rgba(255, 255, 255, .3);
+  box-shadow: 0 0 3px darken($flat-gray-1, 0%);
 }
 
 .btn--active,
 .btn.active {
-  @extend .btn--focus;
+  @extend %btn--focus;
 
-  box-shadow: inset 0 3px 3px -3px rgba(0, 0, 0, .4);
+  border-bottom-width: 1px;
+  box-shadow: none;
+
+  &:hover {
+    box-shadow: none;
+  }
 }
 
 .btn--disabled,
 .btn[disabled] {
-  @extend .btn;
+  @extend %btn;
 
   background: rgba(#000, .05);
   cursor: not-allowed;
@@ -82,8 +93,9 @@
   }
 }
 
-.btn--primary {
-  @extend .btn;
+.btn--primary,
+%btn--primary {
+  @extend %btn;
 
   padding-top: 6px;
   padding-bottom: 6px;
@@ -97,7 +109,7 @@
 }
 
 .btn--danger {
-  @extend .btn--primary;
+  @extend %btn--primary;
 
   background: $flat-red-1;
 
@@ -107,14 +119,15 @@
 }
 
 .btn--pill {
-  @extend .btn;
+  @extend %btn;
 
   border-radius: 50px;
 }
 
 // Social buttons
 .btn--facebook {
-  @extend .btn;
+  @extend %btn;
+
   background-color: #2b3f87;
   color: $flat-gray-1;
   font-weight: bold;
@@ -125,7 +138,8 @@
 }
 
 %btn--social {
-  @extend .btn;
+  @extend %btn;
+
   color: $flat-gray-1;
   font-weight: bold;
 }
@@ -186,15 +200,20 @@
   @include justify-content(center);
 
   > .btn {
-    &:not(:first-child) {
+    border-radius: 0;
+
+    // xxx-of-type is compatible with Handlebars metamorphs
+    // simple first/last-child will break down when using e.g. Ember.js
+    &:not(:first-of-type) {
       border-left: none;
+      border-radius: 0;
     }
 
-    &:first-child {
+    &:first-of-type {
       border-radius: 4px 0 0 4px;
     }
 
-    &:last-child {
+    &:last-of-type {
       border-radius: 0 4px 4px 0;
     }
   }

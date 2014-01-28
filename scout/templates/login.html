@@ -1,6 +1,3 @@
-<div class="app-logo">Scout</div>
-<div><a href="{{ url_for('login') }}">Connect with Google</a></div>
-
 <style>
   html,
   body {
@@ -9,17 +6,25 @@
     margin: 0;
     padding: 0;
     display: flex;
+    display: -webkit-flex;
+    display: -moz-flex;
     align-items: center;
+    -webkit-align-items: center;
+    -moz-align-items: center;
     justify-content: center;
+    -webkit-justify-content: center;
+    -moz-justify-content: center;
     flex-direction: column;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
     background-color: #f5f5f5;
+    font-family: Roboto, 'Helvetica Neue', Helvetica, sans-serif;
   }
   a {
     width: 250px;
     padding: 17px 35px 20px;
     background-color: #DD4B39;
     color: #fff;
-    font-family: Lato;
     text-decoration: none;
     border-radius: 2px;
     text-align: center;
@@ -75,9 +80,8 @@
       transform: translateY(0); } }
 
   .app-logo {
-    font-family: Lato, sans-serif;
     color: #bdc3c7;
-    font-size: 40px;
+    font-size: 35px;
     margin-top: -60px;
     margin-bottom: 30px;
     -webkit-animation: slideDown 1s;
@@ -86,3 +90,6 @@
   }
 
 </style>
+
+<div class="app-logo">Scout</div>
+<div><a href="{{ url_for('login') }}">Connect with Google</a></div>

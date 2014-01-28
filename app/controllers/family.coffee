@@ -6,3 +6,7 @@ App.FamilyController = Ember.ObjectController.extend
   changeFamily: (->
     App.family = @get('id')
   ).observes('id')
+
+  filter: (->
+    return App.Filter.find @get('id')
+  ).property 'id'

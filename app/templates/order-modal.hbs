@@ -1,0 +1,28 @@
+{{#modal-dialog action="close"}}
+  <h5>Order Sanger sequencing</h5>
+  <div class="list--vertical">
+    <div class="list__item">
+      <div class="list__column">Family</div>
+      <div class="list__column">{{input value=App.family classNames="text-input"}}</div>
+    </div>
+    <div class="list__item">
+      <div class="list__column">HGNC symbol</div>
+      <div class="list__column">{{input value=hgncSymbol classNames="text-input"}}</div>
+    </div>
+    <div class="list__item">
+      <div class="list__column">Chromosome position</div>
+      <div class="list__column">{{input value=chromPosString classNames="text-input"}}</div>
+    </div>
+    <div class="list__item">
+      <div class="list__column">Amino acid change</div>
+      <div class="list__column">{{input value=hgncTranscriptId classNames="text-input"}}</div>
+    </div>
+    <div class="list__item">
+      <div class="list__column">GT-call</div>
+      <div class="list__column">{{input value=gtString classNames="text-input"}}</div>
+    </div>
+  </div>
+  <div {{action "close"}} class="btn">
+    <div class="btn__body">Confirm</div>
+  </div>
+{{/modal-dialog}}

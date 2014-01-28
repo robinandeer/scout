@@ -1,5 +1,5 @@
 Ember.OmimAdapter = Ember.Object.extend
-  host: "http://localhost:5000/api/v1"
+  host: "https://localhost:5000/api/v1"
 
   find: (record, id) ->
     $.getJSON("#{@get('host')}/omim/#{id}").then (data) ->

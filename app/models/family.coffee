@@ -25,33 +25,6 @@ App.Family = Ember.Model.extend
   analyzedDate: attr(MomentDate)
   pedigree: attr()
   database: attr()
-  functional_annotations: attr()
-  inheritence_models: attr()
-  gene_annotations: attr()
-
-  filters: (->
-    groups = Ember.A()
-    if @get 'inheritence_models'
-      for name in ['inheritence_models', 'functional_annotations', 'gene_annotations']
-        keys = Ember.A()
-        for item in @get(name)
-          for key, value of item
-            keys.pushObject Ember.Object.create {id: key, isActive: no}
-
-        if name is 'inheritence_models'
-          groupName = 'Inheritance models'
-        else if name is 'functional_annotations'
-          groupName = 'Functional annotations'
-        else
-          groupName = 'Gene annotations'
-
-        groups.pushObject Ember.Object.create
-          id: name
-          name: groupName
-          keys: keys
-
-    return groups
-  ).property('inheritence_models', 'functional_annotations', 'gene_annotations').cacheable()
 
   samples: (->
     samples = Em.A()
@@ -95,11 +68,41 @@ App.Family = Ember.Model.extend
     return samples
 
   ).property("pedigree").cacheable()
+  
+  hide: ->
+    # Do this first block to trigger property changes
+    # that otherwise only happens in localStorage
+    @set('isDirtyHidden', yes)
+    Ember.run.later @, =>
+      @set 'isDirtyHidden', no
+    , 1
+
+    return Ember.ls.save('family', @get('id'))
+
+  unhide: ->
+    # Do this first block to trigger property changes
+    # that otherwise only happens in localStorage
+    @set('isDirtyHidden', yes)
+    Ember.run.later @, =>
+      @set 'isDirtyHidden', no
+    , 1
+
+    return Ember.ls.delete('family', @get('id'))
+
+  isDirtyHidden: no
+
+  isHidden: (->
+    return Ember.ls.exists('family', @get('id'))
+  ).property('id', 'hide', 'unhide', 'isDirtyHidden')
+
+  hiddenAt: (->
+    return Ember.ls.find('family', @get('id'))
+  ).property('id')
 
 App.Family.camelizeKeys = yes
 
 App.FamilyAdapter = Ember.Object.extend
-  host: "http://localhost:5000/api/v1"
+  host: "https://localhost:5000/api/v1"
   url: ""
 
   find: (record, id) ->

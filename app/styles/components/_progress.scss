@@ -1,0 +1,86 @@
+$progress-height: 20px;
+
+.progress__wrapper {
+  position: relative;
+  width: 100%;
+  height: $progress-height;
+  border-radius: 3px;
+  margin: 30px 0;
+}
+
+.progress__well {
+  @include display(flex);
+  background-color: $flat-gray-1;
+  height: 100%;
+  box-shadow: inset 0 1px 3px -1px $flat-gray-2;
+  border-radius: 3px;
+}
+
+.progress__mark {
+  position: relative;
+  @include flex-basis(100%);
+  padding-left: 1px;
+  border-right: 1px solid rgba(#000, 0.1);
+  border-left: 1px solid rgba(#fff, 0.1);
+
+  &:first-child {
+    border-left: 0;
+  }
+
+  &:last-child {
+    border-right: 0;
+  }
+}
+
+.progress__mark__label {
+  margin-top: 25px;
+  font-size: 14px;
+  color: $flat-gray-3;
+  margin-left: -15px;
+}
+
+.progress__bar {
+  position: absolute;
+  top: 0;
+  width: 60%;
+  height: 100%;
+  background-color: $flat-gray-2;
+  border-radius: 3px;
+}
+
+.progress__bar__dot {
+  position: absolute;
+  left: -$progress-height * 0.75;
+  top: 50%;
+  border-radius: 100px;
+  margin-top: -$progress-height * 0.75 - 1px;
+  width: $progress-height * 1.5;
+  height: 150%;
+  background-color: #fff;
+  box-shadow: 0 1px 2px $flat-gray-2;
+
+  &:hover {
+    left: -$progress-height * 0.75 * 1.2;
+    margin-top: -$progress-height * 0.75 * 1.2 - 1px;
+    width: $progress-height * 1.5 * 1.2;
+    height: 150% * 1.2;
+
+    background-color: $flat-blue-1;
+    border: 5px solid #fff;
+    box-shadow:
+      0 1px 3px $flat-gray-2,
+      0 0 0 10px rgba($flat-blue-1, 0.2);
+
+    &:after {
+      $diameter: $progress-height + 36px;
+      width: $diameter;
+      height: $diameter;
+      content: " ";
+      position: absolute;
+      border-radius: 100px;
+      top: -16px;
+      left: -16px;
+      border: 1px solid rgba($flat-blue-1, 0.4);
+    }
+  }
+}

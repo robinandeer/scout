@@ -3,7 +3,7 @@
   <div class="panel__overlay--header variant-header">
     <div class="list--vertical">
       <div class="list__item">
-        <div class="list__column fixed center-text">
+        <div class="list__column--small fixed center-text">
           <div class="rank-score">{{rankScore}}</div>
         </div>
         <div class="list__column fixed">
@@ -23,7 +23,26 @@
           </small>
         </div>
         <div class="list__column fixed">
-          {{#link-to 'variants' currentFamily}}All variants{{/link-to}}
+          <div class="btn-group">
+            <div {{action 'openOrderModal' model}} class="btn">
+              <div class="btn__body">Order Sanger</div>
+            </div>
+
+            <div class="btn">
+              <div class="btn__body">{{#link-to 'variants' currentFamily}}All variants{{/link-to}}</div>
+            </div>
+
+            {{#unless isHidden}}
+            <div {{action "hideInList"}} class="btn">
+              <div class="btn__body">Hide</div>
+            </div>
+            {{else}}
+            <div {{action "unhideInList"}} class="btn">
+              <div class="btn__body">Unhide</div>
+            </div>
+            {{/unless}}
+          </div>
+          
         </div>
       </div>
     </div>
@@ -31,9 +50,9 @@
 
   <div class="panel__body">
     <div class="box predictions">
-      <h6>Severity</h6>
       <table class="predict">
         <tr class="predict__top">
+          <td class="predict__main predict__part">Severity</td>
           <td {{bind-attr class=":predict__part siftWholeExome::undef"}}>
             <div class="predict__number">{{fallback siftWholeExome}}</div>
             <div class="predict__text">Avsift</div>
@@ -54,11 +73,9 @@
             <div class="predict__text">GERP exome</div>
           </td>
         </tr>
-      </table>
 
-      <h6>Frequency</h6>
-      <table class="predict">
-        <tr class="predict__top">
+        <tr>
+          <td class="predict__main predict__part">Frequency</td>
           <td {{bind-attr class=":predict__part thousandG::undef"}}>
             <div class="predict__number">{{fallback thousandG}}</div>
             <div class="predict__text">1000 Genomes</div>
@@ -79,11 +96,9 @@
             <div class="predict__text">dbSNP</div>
           </td>
         </tr>
-      </table>
 
-      <h6>Conservation</h6>
-      <table class="predict">
-        <tr class="predict__top">
+        <tr class="conservation-row">
+          <td class="predict__main predict__part">Conservation</td>
           <td {{bind-attr class=":predict__part phylopWholeExome::undef"}}>
             <div class="predict__number">{{fallback phylopWholeExome}}</div>
             <div class="predict__text">Whole-exome PhyloP</div>
@@ -102,84 +117,7 @@
       </table>
     </div>
 
-    <div class="box gt-call">
-      <h6>GT call</h6>
-      <table class="predict gt-call-table">
-        <thead>
-          <tr>
-            <th>IDN</th>
-            <th>Filter</th>
-            <th>GT</th>
-            <th>AD</th>
-            <th>PL</th>
-            <th>GQ</th>
-          </tr>
-        </thead>
-        <tbody>
-        {{#each call in gt.gtCalls}}
-          <tr {{bind-attr class="call.ok:variant--pass:variant--fail"}}>
-            <td class="predict__main predict__part">{{call.idn}}</td>
-            <td class="predict__part">{{call.filter}}</td>
-            <td class="predict__part">{{call.gt}}</td>
-            <td class="predict__part">{{call.ad}}</td>
-            <td class="predict__part">{{call.pl}}</td>
-            <td class="predict__part">{{call.gq}}</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-
-      <table class="predict">
-        <tr>
-          <td class="predict__main predict__part">Possible gene models</td>
-          {{#each model in geneModels}}
-            <td class="predict__part">{{model}}</td>
-          {{/each}}
-        </tr>
-      </table>
-
-      <h5>Compounds</h5>
-      {{#if hasCompounds}}
-      <table style="width: 100%">
-        <thead>
-          <tr>
-            <th>Rank score</th>
-            {{#each idn in gt.compounds.1.idns}}
-            <th>{{idn}}</th>
-            {{/each}}
-            <th>Gene annotation</th>
-            <th>Func. annotation</th>
-            <th>Inheritance</th>
-          </tr>
-        </thead>
-
-        {{#each compound in gt.compounds}}
-        <tr>
-          <td class="predict__part">
-            {{#link-to "variant" compound.vpk}}
-              {{compound.rank_score}}
-            {{/link-to}}
-          </td>
-
-          {{#each call in compound.gtCalls}}
-          <td class="predict__part">{{call}}</td>
-          {{/each}}
-
-          <td class="predict__part">{{compound.gene_annotation}}</td>
-          <td class="predict__part">{{compound.functional_annotation}}</td>
-          <td class="predict__part">{{compound.gene_model}}</td>
-        </tr>
-        {{/each}}
-      </table>
-
-      {{else}}
-      <p>No compounds detected.</p>
-      {{/if}}
-
-    </div>
-
     <div class="box annotations">
-      <h6>External annotations</h6>
       <table class="predict annotate-table">
         <tr>
           <td class="predict__main predict__part">
@@ -208,14 +146,46 @@
       </table>
     </div>
 
-    <div class="box sanger">
-      <button {{action "order"}} class="btn">Order Sanger sequencing</button>
+    <div class="box gt-call">
+      <table class="predict gt-call-table">
+        <thead>
+          <tr>
+            <th class="predict__part">IDN</th>
+            <th class="predict__part">Filter</th>
+            <th class="predict__part">GT</th>
+            <th class="predict__part">AD</th>
+            <th class="predict__part">PL</th>
+            <th class="predict__part">GQ</th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#each call in gt.gtCalls}}
+          <tr>
+            <td class="predict__main predict__part">{{call.idn}}</td>
+            <td class="predict__part">{{call.filter}}</td>
+            <td class="predict__part">{{call.gt}}</td>
+            <td class="predict__part">{{call.ad}}</td>
+            <td class="predict__part">{{call.pl}}</td>
+            <td class="predict__part">{{call.gq}}</td>
+          </tr>
+        {{/each}}
 
-      {{#each comment in comments}}
-        <p>{{comment.variantComment}}</p>
-        <p>{{comment.name}} - {{comment.rating}} - {{fromNow comment.commentDate}}</p>
-      {{/each}}
+        <tr>
+          <td class="predict__main predict__part">Inheritance models</td>
+          {{#each model in geneModels}}
+            <td class="predict__part">{{model}}</td>
+          {{/each}}
+        </tr>
+        </tbody>
+      </table>
+
     </div>
+
+    {{#if hasCompounds}}
+    <div class="box compounds">
+      {{render "gt-call" this}}
+    </div>
+    {{/if}}
 
     <div class="box list--horizontal external-links">
       <a {{bind-attr href=ensemblLink}} class="link" target="_blank">
@@ -248,6 +218,20 @@
         <div class="link__text">IDs</div>
       </a>
 
+      <a {{bind-attr href=igvLink}} class="link" target="_blank">
+        <div class="link__icon"><img src="img/igv-logo-gray.svg"></div>
+        <div class="link__text">IGV</div>
+      </a>
     </div>
+
+    <div class="box sanger">
+      {{#each comment in comments}}
+        <p>{{comment.variantComment}}</p>
+        <p>{{comment.name}} - {{comment.rating}} - {{fromNow comment.commentDate}}</p>
+      {{/each}}
+    </div>
+
   </div>
+
+  {{outlet modal}}
 </div>

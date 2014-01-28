@@ -8,7 +8,7 @@ App.User = Ember.Model.extend
 App.User.camelizeKeys = yes
 
 App.UserAdapter = Ember.Object.extend
-  host: "http://localhost:5000"
+  host: "https://localhost:5000"
 
   find: (record, id) ->
     $.getJSON("#{@get('host')}/user").then (data) ->

@@ -36,49 +36,29 @@
             </div>
 
             <div class="list__item">
-              <div class="list__column">
-                <label for="genomes">1000 Genomes</label>
-              </div>
-              <div class="list__column">
-                {{input id="genomes" type="text" valueBinding="staticFilters.1000 Genomes" placeholder='0.1'}}
-              </div>
+              <label for="genomes">1000 Genomes</label>
+              {{input id="genomes" type="text" valueBinding="staticFilters.1000 Genomes" placeholder='0.1' classNames="text-input"}}
             </div>
 
             <div class="list__item">
-              <div class="list__column">
-                <label for="dbSNP129">dbSNP 129</label>
-              </div>
-              <div class="list__column">
-                {{input id="dbSNP129" type="text" valueBinding="staticFilters.dbsnp129" placeholder='0.1'}}
-              </div>
+              <label for="dbSNP129">dbSNP 129</label>
+              {{input id="dbSNP129" type="text" valueBinding="staticFilters.dbsnp129" placeholder='0.1' classNames="text-input"}}
             </div>
 
             <div class="list__item">
-              <div class="list__column">
-                <label for="dbSNP132">dbSNP 132</label>
-              </div>
-              <div class="list__column">
-                {{input id="dbSNP132" type="text" valueBinding="staticFilters.dbsnp132" placeholder='0.1'}}
-              </div>
+              <label for="dbSNP132">dbSNP 132</label>
+              {{input id="dbSNP132" type="text" valueBinding="staticFilters.dbsnp132" placeholder='0.1' classNames="text-input"}}
             </div>
 
             <div class="list__item">
-              <div class="list__column">
-                <label for="esp6500">esp6500</label>
-              </div>
-              <div class="list__column">
-                {{input id="esp6500" type="text" valueBinding="staticFilters.esp6500" placeholder='0.1'}}
-              </div>
+              <label for="esp6500">esp6500</label>
+              {{input id="esp6500" type="text" valueBinding="staticFilters.esp6500" placeholder='0.1' classNames="text-input"}}
             </div>
 
             <div class="divider">Misc.</div>
             <div class="list__item">
-              <div class="list__column">
-                <label for="gene-name">Gene name</label>
-              </div>
-              <div class="list__column">
-                {{input id="gene-name" type="text" valueBinding="staticFilters.gene_name" placeholder='ADK'}}
-              </div>
+              <label for="gene-name">Gene name</label>
+              {{input id="gene-name" type="text" valueBinding="staticFilters.gene_name" placeholder='ADK' classNames="text-input"}}
             </div>
 
           </div>
@@ -96,9 +76,9 @@
 
               {{#each key in group.keys}}
                 <div class="list__item">
-                  <div class="list__column">{{key.id}}</div>
                   <div class="list__column">
                     {{input type="checkbox" checkedBinding="key.isActive" classNames="toggle-slider__input"}}
+                    {{key.name}}
                   </div>
                 </div>
               {{/each}}
@@ -142,15 +122,17 @@
       </div>
 
       <div class="list__item">
-        <div class="list__column fixed">Rank score</div>
-        <div class="list__column fixed">Gene</div>
+        <div class="list__column--small fixed">Rank score</div>
+        <div class="list__column--small fixed">Gene</div>
         {{#unless variantLoaded}}
-        <div class="list__column fixed">Inheritance</div>
-        <div class="list__column fixed">1000 Genomes</div>
-        <div class="list__column fixed">PolyPhen</div>
-        <div class="list__column fixed">Gene annotation</div>
+        <div class="list__column--small fixed">1000 Genomes</div>
+        <div class="list__column--small fixed">PolyPhen</div>
+        <div class="list__column--small fixed">Gene annotation</div>
         <div class="list__column fixed">Functional annotation</div>
-        <div class="list__column fixed">HGMD</div>
+        <div class="list__column fixed">Inheritance models</div>
+        <div class="list__column fixed">Disease group</div>
+        <div class="list__column--small fixed">HGMD</div>
+        <div class="list__column--small fixed">Hide</div>
         {{/unless}}
       </div>
     </div>
@@ -159,54 +141,72 @@
   <div class="panel__body v-panel">
     <div class="list--vertical">
       {{#each variant in model}}
-        {{#link-to "variant" variant classNames="list__item"}}
+      {{#unless variant.isHidden}}
+      <div class="list__item">
 
-          <div class="list__column fixed">{{variant.rankScore}}</div>
-          <div class="list__column fixed">
-            <div class="hgnc-symbol">{{variant.hgncSymbol}}</div>
-          </div>
-
-          {{#unless variantLoaded}}
-          <div {{bind-attr class=":list__column :fixed :scrollable variant.geneModel::undef"}}>
-            {{#each model in variant.geneModels}}
-              <span class="inheritance-model">{{model}}</span>
-            {{else}}
-              Nada
-            {{/each}}
-          </div>
-
-          <div {{bind-attr class=":list__column :fixed variant.thousandG::undef"}}>
-            {{fallback variant.thousandG}}
-          </div>
-
-          <div {{bind-attr class=":list__column :fixed variant.polyphenDivHuman::undef"}}>
-            {{fallback variant.polyphenDivHuman}}
-          </div>
-
-          <div class="list__column fixed">{{variant.geneAnnotation}}</div>
-
-          <div {{bind-attr class=":list__column :fixed variant.functionalAnnotation::undef"}}>
-            {{#if variant.functionalAnnotation}}
-              {{variant.functionalAnnotation}}
-            {{else}}
-              Nada
-            {{/if}}
-          </div>
-
-          <div {{bind-attr class=":list__column :fixed variant.hgmd::undef"}}>
-            {{#if variant.hgmd}}
-              {{variant.hgmd}}
-            {{else}}
-              Nada
-            {{/if}}
-          </div>
-          
-          {{/unless}}
-
+        {{#link-to "variant" variant classNames="list__column--small fixed rank-score-column"}}
+          {{variant.rankScore}}
         {{/link-to}}
+        <div class="list__column--small fixed">
+          <div class="hgnc-symbol">{{variant.hgncSymbol}}</div>
+        </div>
+
+        {{#unless variantLoaded}}
+        <div {{bind-attr class=":list__column--small :fixed variant.thousandG::undef"}}>
+          {{fallback variant.thousandG}}
+        </div>
+
+        <div {{bind-attr class=":list__column--small :fixed variant.polyphenDivHuman::undef"}}>
+          {{fallback variant.polyphenDivHuman}}
+        </div>
+
+        <div class="list__column--small fixed">{{variant.geneAnnotation}}</div>
+
+        <div {{bind-attr class=":list__column :fixed variant.functionalAnnotation::undef"}}>
+          {{#if variant.functionalAnnotation}}
+            {{variant.functionalAnnotation}}
+          {{else}}
+            Nada
+          {{/if}}
+        </div>
+
+        <div {{bind-attr class=":list__column :fixed :scrollable variant.geneModel::undef"}}>
+          {{#if variant.geneModels}}
+            {{pop-over title=variant.geneModelString variant=variant show="showPopOver" hide="hidePopOver"}}
+          {{else}}
+            Nada
+          {{/if}}
+        </div>
+
+        <div class="list__column fixed">{{variant.diseaseGroup}}</div>
+
+        <div {{bind-attr class=":list__column--small :fixed variant.hgmd::undef"}}>
+          {{#if variant.hgmd}}
+            {{variant.hgmd}}
+          {{else}}
+            Nada
+          {{/if}}
+        </div>
+
+        <div class="list__column--small fixed hide-variant">
+          <div class="btn">
+            <div {{action "hideVariant" variant}} class="btn__body">Hide</div>
+          </div>
+        </div>
+        
+        {{/unless}}
+
+      </div>{{! END list__item }}
+      {{/unless}}
       {{/each}}
-    </div>
-  </div>
+
+      {{#if isShowingGtCall}}
+      <div class="fixed-tooltip">
+        {{render "gt-call" hoveredVariant}}
+      </div>
+      {{/if}}
+    </div>{{! END list--vertical }}
+  </div>{{! END panel__body }}
 </div>
 
 {{outlet}}

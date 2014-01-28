@@ -1,5 +1,5 @@
 App.VariantController = Ember.ObjectController.extend
-  needs: ['family']
+  needs: ['family', 'variants']
 
   currentFamilyBinding: 'controllers.family.model'
   maxValue: 100
@@ -12,11 +12,43 @@ App.VariantController = Ember.ObjectController.extend
     comment: ->
       console.log @get('comment')
 
-    order: ->
-      alert("Consider it done.")
+    hideInList: ->
+      # Add variant to the list of hidden elements (localStorage)
+      @get('model').hide()
+
+    unhideInList: ->
+      # Add back variant to the list of hidden elements (localStorage)
+      @get('model').unhide()
+
+      return null
+
+  adjacentVariant: (direction) ->
+    # Get variants controller
+    variantsCtrl = @get("controllers.variants")
+    indexOf = variantsCtrl.indexOf(@get('model'))
+
+    if direction is 'next'
+      # If we are already at the last variant
+      if indexOf + 1 is variantsCtrl.get('length')
+        model = variantsCtrl.objectAt(0)
+      else
+        model = variantsCtrl.objectAt(indexOf + 1)
+
+    else if direction is 'prev'
+      # If we are at the topmost variant
+      if indexOf - 1 < 0
+        model = variantsCtrl.objectAt(variantsCtrl.get('length') - 1)
+      else
+        model = variantsCtrl.objectAt(indexOf - 1)
+
+    else
+      # Error
+      model = @get('model')
+
+    return model
 
   hasCompounds: (->
-    return @get('gt.compounds.length') > 0
+    return @get('gt.compounds.length') > 1
   ).property('gt.compounds')
 
   comments: (->
@@ -24,12 +56,9 @@ App.VariantController = Ember.ObjectController.extend
   ).property('id')
 
   omim: (->
-    return App.Omim.find @get('hgncSymbol')
+    if @get('hgncSymbol')
+      return App.Omim.find @get('hgncSymbol')
   ).property 'hgncSymbol'
-
-  gt: (->
-    return App.GTCall.find @get('id')
-  ).property 'id'
 
   ensemblLink: (->
     return "http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=#{@get('ensemblGeneid')}"
@@ -58,3 +87,7 @@ App.VariantController = Ember.ObjectController.extend
   omimLink: (->
     return "http://www.omim.org/entry/#{@get('omim.OMIM_ID')}"
   ).property 'omim.OMIM_ID'
+
+  igvLink: (->
+    return "http://www.broadinstitute.org/igv/projects/current/igv.php?sessionURL=http://localhost:5000/api/v1/variants/#{@get('id')}/igv.xml"
+  ).property 'id'

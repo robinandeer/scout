@@ -1,7 +1,30 @@
-var App, MomentDate, ReplaceNull, attr, belongsTo, hasMany;
+var App, MomentDate, ReplaceNull, attr, belongsTo, hasMany, keyMaker;
+
+keyMaker = function(klass, id) {
+  return "" + klass + "-" + id;
+};
+
+Ember.LocalStorage = Ember.Object.extend({
+  exists: function(klass, id) {
+    return keyMaker(klass, id) in localStorage;
+  },
+  find: function(klass, id) {
+    var value;
+    value = localStorage.getItem(keyMaker(klass, id));
+    return moment(value);
+  },
+  save: function(klass, id) {
+    return localStorage[keyMaker(klass, id)] = moment().format('YYYY-MM-DD');
+  },
+  "delete": function(klass, id) {
+    return delete localStorage[keyMaker(klass, id)];
+  }
+});
+
+Ember.ls = Ember.LocalStorage.create();
 
 Ember.OmimAdapter = Ember.Object.extend({
-  host: "http://localhost:5000/api/v1",
+  host: "https://localhost:5000/api/v1",
   find: function(record, id) {
     return $.getJSON("" + (this.get('host')) + "/omim/" + id).then(function(data) {
       var syn;
@@ -30,7 +53,13 @@ App = Ember.Application.create({
 App.family = "1";
 
 App.ApplicationView = Ember.View.extend({
-  classNames: ["app"]
+  classNames: ["app"],
+  didInsertElement: function() {
+    var _this = this;
+    return $(document).keyup(function(event) {
+      return _this.get('controller').send('keyup', event);
+    });
+  }
 });
 
 Ember.Handlebars.registerBoundHelper("fromNow", function(date) {
@@ -47,47 +76,61 @@ String.prototype.capitalize = function() {
   return lower_case.charAt(0).toUpperCase() + lower_case.slice(1);
 };
 
-App.EmberHintComponent = Ember.Component.extend({
-  mouseEnter: function() {
-    return this.set('hovered', true);
-  },
-  mouseLeave: function() {
-    return this.set('hovered', false);
+App.ModalDialogComponent = Ember.Component.extend({
+  actions: {
+    close: function() {
+      return this.sendAction();
+    }
   }
 });
 
-App.HintBubbleComponent = Ember.Component.extend({
-  classNames: ['ember-hint'],
-  classNameBindings: ['position', 'hovered:in:out'],
-  hovered: (function() {
-    return this.get('parentView.hovered');
-  }).property('parentView.hovered')
-});
-
-App.MyGaugeComponent = Ember.Component.extend({
-  classNames: ["gauge"],
-  classNameBindings: ["isMaxValueExceeded:exceeded"],
-  isMaxValueExceeded: (function() {
-    var maxValue, value;
-    value = parseInt(this.get("value"), 10);
-    maxValue = parseInt(this.get("maxValue"), 10);
-    return value > maxValue;
-  }).property("value", "maxValue"),
-  computedAngle: (function() {
-    var angle, maxValue, styles, value;
-    value = parseInt(this.get("value"), 10);
-    maxValue = parseInt(this.get("maxValue"), 10);
-    angle = Math.floor(180 * value / maxValue - 90);
-    if (this.get('isMaxValueExceeded')) {
-      styles = "-webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); transform: rotate(90deg);";
-    } else {
-      styles = "-webkit-transform: rotate(" + angle + "deg); -2moz-transform: rotate(" + angle + "deg); -ms-transform: rotate(" + angle + "deg); transform: rotate(" + angle + "deg);";
+App.PopOverComponent = Ember.Component.extend({
+  classNames: ['pop-over'],
+  variant: null,
+  title: null,
+  show: null,
+  hide: null,
+  lock: null,
+  isLocked: false,
+  mouseEnter: function() {
+    return this.sendAction('show', this.get('variant'));
+  },
+  mouseLeave: function() {
+    if (!this.get('isLocked')) {
+      return this.sendAction('hide');
     }
-    return styles;
-  }).property("value", "maxValue", "isMaxValueExceeded")
+  },
+  click: function() {
+    var _this = this;
+    this.set('isLocked', true);
+    return Ember.run.later(this, function() {
+      return $(document).on('click', function() {
+        _this.toggleProperty('isLocked');
+        return $(document).off();
+      });
+    }, 1);
+  }
 });
 
-App.ApplicationController = Ember.Controller.extend({});
+App.ApplicationController = Ember.Controller.extend({
+  needs: ['variants', 'variant'],
+  actions: {
+    keyup: function(event) {
+      var model, _ref;
+      if (this.get('controllers.variants.variantLoaded')) {
+        if ((_ref = event.which) === 38 || _ref === 40) {
+          event.preventDefault();
+          if (event.which === 38) {
+            model = this.get('controllers.variant').adjacentVariant('prev');
+          } else if (event.which === 40) {
+            model = this.get('controllers.variant').adjacentVariant('next');
+          }
+          return this.transitionToRoute('variant', model);
+        }
+      }
+    }
+  }
+});
 
 App.AuthController = Ember.Controller.extend({
   model: Ember.Object.create({
@@ -117,7 +160,31 @@ App.FamilyIndexController = Ember.Controller.extend({
     return App.FamilyComment.find({
       family_id: this.get("family.id")
     });
-  }).property("family.id")
+  }).property('family.id'),
+  diagnosticComments: (function() {
+    var comments;
+    comments = Em.A();
+    if (this.get('comments.isLoaded')) {
+      this.get('comments').forEach(function(comment) {
+        if (comment.get('isDiagnostic')) {
+          return comments.pushObject(comment);
+        }
+      });
+    }
+    return comments;
+  }).property('comments.isLoaded', 'comments'),
+  researchComments: (function() {
+    var comments;
+    comments = Em.A();
+    if (this.get('comments.isLoaded')) {
+      this.get('comments').forEach(function(comment) {
+        if (comment.get('isResearch')) {
+          return comments.pushObject(comment);
+        }
+      });
+    }
+    return comments;
+  }).property('comments.isLoaded', 'comments')
 });
 
 App.FamilyController = Ember.ObjectController.extend({
@@ -125,10 +192,21 @@ App.FamilyController = Ember.ObjectController.extend({
   currentPathBinding: "controllers.application.currentPath",
   changeFamily: (function() {
     return App.family = this.get('id');
-  }).observes('id')
+  }).observes('id'),
+  filter: (function() {
+    return App.Filter.find(this.get('id'));
+  }).property('id')
 });
 
-App.IssueController = Ember.Controller.extend({
+App.IndexController = Ember.Controller.extend({
+  actions: {
+    hideFamily: function(family) {
+      return family.hide();
+    }
+  }
+});
+
+App.IssueController = Ember.ArrayController.extend({
   isWritingMessage: true,
   hasSentMessage: false,
   message: null,
@@ -162,8 +240,24 @@ App.IssueController = Ember.Controller.extend({
   }
 });
 
+App.OrderModalController = Ember.ObjectController.extend({
+  actions: {
+    close: function() {
+      return this.send('closeOrderModal');
+    }
+  }
+});
+
+App.OrderModalController = Ember.ObjectController.extend({
+  actions: {
+    close: function() {
+      return this.send('closeOrderModal');
+    }
+  }
+});
+
 App.VariantController = Ember.ObjectController.extend({
-  needs: ['family'],
+  needs: ['family', 'variants'],
   currentFamilyBinding: 'controllers.family.model',
   maxValue: 100,
   testValue: 35,
@@ -173,12 +267,37 @@ App.VariantController = Ember.ObjectController.extend({
     comment: function() {
       return console.log(this.get('comment'));
     },
-    order: function() {
-      return alert("Consider it done.");
+    hideInList: function() {
+      return this.get('model').hide();
+    },
+    unhideInList: function() {
+      this.get('model').unhide();
+      return null;
     }
   },
+  adjacentVariant: function(direction) {
+    var indexOf, model, variantsCtrl;
+    variantsCtrl = this.get("controllers.variants");
+    indexOf = variantsCtrl.indexOf(this.get('model'));
+    if (direction === 'next') {
+      if (indexOf + 1 === variantsCtrl.get('length')) {
+        model = variantsCtrl.objectAt(0);
+      } else {
+        model = variantsCtrl.objectAt(indexOf + 1);
+      }
+    } else if (direction === 'prev') {
+      if (indexOf - 1 < 0) {
+        model = variantsCtrl.objectAt(variantsCtrl.get('length') - 1);
+      } else {
+        model = variantsCtrl.objectAt(indexOf - 1);
+      }
+    } else {
+      model = this.get('model');
+    }
+    return model;
+  },
   hasCompounds: (function() {
-    return this.get('gt.compounds.length') > 0;
+    return this.get('gt.compounds.length') > 1;
   }).property('gt.compounds'),
   comments: (function() {
     return App.VariantComment.find({
@@ -186,11 +305,10 @@ App.VariantController = Ember.ObjectController.extend({
     });
   }).property('id'),
   omim: (function() {
-    return App.Omim.find(this.get('hgncSymbol'));
+    if (this.get('hgncSymbol')) {
+      return App.Omim.find(this.get('hgncSymbol'));
+    }
   }).property('hgncSymbol'),
-  gt: (function() {
-    return App.GTCall.find(this.get('id'));
-  }).property('id'),
   ensemblLink: (function() {
     return "http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=" + (this.get('ensemblGeneid'));
   }).property('ensemblGeneid'),
@@ -211,15 +329,17 @@ App.VariantController = Ember.ObjectController.extend({
   }).property('ensemblGeneid'),
   omimLink: (function() {
     return "http://www.omim.org/entry/" + (this.get('omim.OMIM_ID'));
-  }).property('omim.OMIM_ID')
+  }).property('omim.OMIM_ID'),
+  igvLink: (function() {
+    return "http://www.broadinstitute.org/igv/projects/current/igv.php?sessionURL=http://localhost:5000/api/v1/variants/" + (this.get('id')) + "/igv.xml";
+  }).property('id')
 });
 
 App.VariantsController = Ember.ArrayController.extend({
   needs: ['application', 'family'],
   currentPathBinding: 'controllers.application.currentPath',
   currentFamilyModelBinding: 'controllers.family.model',
-  filtersBinding: 'controllers.family.filters',
-  isShowingModal: false,
+  filtersBinding: 'controllers.family.filter.groups',
   staticFilters: Ember.Object.create({
     relation: 'LESSER',
     '1000 Genomes': null,
@@ -232,33 +352,51 @@ App.VariantsController = Ember.ArrayController.extend({
     return this.get('family');
   },
   actions: {
+    showPopOver: function(variant) {
+      this.set('hoveredVariant', variant);
+      return this.set('isShowingGtCall', true);
+    },
+    hidePopOver: function() {
+      return this.set('isShowingGtCall', false);
+    },
     clinicalFilter: function() {
-      var filter, filters, groups, key, _;
-      groups = {
-        inheritence_models: {
-          'AD': true
-        },
-        functional_annotations: {
-          '-': true,
-          'frameshift deletion': true,
-          'frameshift insertion': true,
-          'nonframeshift deletion': true,
-          'nonframeshift insertion': true,
-          'nonsynonymous SNV': true,
-          'stopgain SNV': true,
-          'stoploss SNV': true
-        },
-        gene_annotations: {
-          'exonic': true,
-          'splicing': true
+      var filter, filters, _i, _len;
+      filters = [
+        {
+          group: 'functional_annotations',
+          id: 'functional_annotations_-'
+        }, {
+          group: 'functional_annotations',
+          id: 'functional_annotations_frameshift deletion'
+        }, {
+          group: 'functional_annotations',
+          id: 'functional_annotations_frameshift insertion'
+        }, {
+          group: 'functional_annotations',
+          id: 'functional_annotations_nonframeshift deletion'
+        }, {
+          group: 'functional_annotations',
+          id: 'functional_annotations_nonframeshift insertion'
+        }, {
+          group: 'functional_annotations',
+          id: 'functional_annotations_nonsynonymous SNV'
+        }, {
+          group: 'functional_annotations',
+          id: 'functional_annotations_stopgain SNV'
+        }, {
+          group: 'functional_annotations',
+          id: 'functional_annotations_stoploss SNV'
+        }, {
+          group: 'gene_annotations',
+          id: 'gene_annotations_exonic'
+        }, {
+          group: 'gene_annotations',
+          id: 'gene_annotations_splicing'
         }
-      };
-      for (key in groups) {
-        filters = groups[key];
-        for (filter in filters) {
-          _ = filters[filter];
-          this.activateFilter(key, filter);
-        }
+      ];
+      for (_i = 0, _len = filters.length; _i < _len; _i++) {
+        filter = filters[_i];
+        this.activateFilter(filter.group, filter.id);
       }
       return this.get('staticFilters').set('1000 Genomes', 0.01);
     },
@@ -309,6 +447,9 @@ App.VariantsController = Ember.ArrayController.extend({
         })());
       }
       return _results;
+    },
+    hideVariant: function(variant) {
+      return variant.hide();
     }
   },
   activateFilter: function(group_id, filter) {
@@ -316,6 +457,8 @@ App.VariantsController = Ember.ArrayController.extend({
     filters = this.get("filters");
     return filters.findBy('id', group_id).get('keys').findBy('id', filter).set('isActive', true);
   },
+  hoveredVariant: null,
+  isShowingGtCall: false,
   variantLoaded: (function() {
     if (this.get('currentPath').match(/variants.variant/)) {
       return true;
@@ -325,7 +468,7 @@ App.VariantsController = Ember.ArrayController.extend({
   }).property('currentPath'),
   modalObserver: (function() {
     if (this.get('variantLoaded')) {
-      return this.set('isShowingModal', false);
+      return this.set('isShowingGtCall', false);
     }
   }).observes('variantLoaded')
 });
@@ -350,6 +493,27 @@ Ember.Handlebars.registerBoundHelper("fallback", function(obj, options) {
   }
 });
 
+Handlebars.registerHelper('ifCond', function(v1, v2) {
+  if (v1 || v2) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
+Handlebars.registerHelper('join', function(val, delimiter, start, end) {
+  var arry;
+  arry = [].concat(val);
+  if (typeof delimiter !== "string") {
+    delimiter = ',';
+  }
+  start = start || 0;
+  if (!end) {
+    end = arry.length;
+  }
+  return arry.slice(start, end).join(delimiter);
+});
+
 MomentDate = {
   deserialize: function(raw_date) {
     return moment(raw_date, "YYYY-MM-DD");
@@ -363,19 +527,26 @@ App.FamilyComment = Ember.Model.extend({
   id: Em.attr(),
   userComment: Em.attr(),
   logDate: Em.attr(MomentDate),
-  logComment: Em.attr(),
+  logColumn: Em.attr(),
   positionInColumn: Em.attr(),
   userName: Em.attr(),
   email: Em.attr(),
   firstLetter: (function() {
     return this.get('userName')[0].capitalize();
-  }).property('userName')
+  }).property('userName'),
+  isDiagnostic: (function() {
+    var _ref;
+    return (_ref = this.get('logColumn')) === 'IEM' || _ref === 'EP';
+  }).property('logColumn'),
+  isResearch: (function() {
+    return this.get('logColumn') === 'research';
+  }).property('logColumn')
 });
 
 App.FamilyComment.camelizeKeys = true;
 
 App.FamilyCommentAdapter = Ember.Object.extend({
-  host: "http://localhost:5000/api/v1/families",
+  host: "https://localhost:5000/api/v1/families",
   findQuery: function(klass, records, params) {
     var url;
     url = "" + (this.get('host')) + "/" + params.family_id + "/comments";
@@ -407,7 +578,7 @@ App.VariantComment = Ember.Model.extend({
 App.VariantComment.camelizeKeys = true;
 
 App.VariantCommentAdapter = Ember.Object.extend({
-  host: "http://localhost:5000/api/v1/variants",
+  host: "https://localhost:5000/api/v1/variants",
   findQuery: function(klass, records, params) {
     var url;
     url = "" + (this.get('host')) + "/" + params.variant_id + "/comments";
@@ -457,44 +628,6 @@ App.Family = Ember.Model.extend({
   analyzedDate: attr(MomentDate),
   pedigree: attr(),
   database: attr(),
-  functional_annotations: attr(),
-  inheritence_models: attr(),
-  gene_annotations: attr(),
-  filters: (function() {
-    var groupName, groups, item, key, keys, name, value, _i, _j, _len, _len1, _ref, _ref1;
-    groups = Ember.A();
-    if (this.get('inheritence_models')) {
-      _ref = ['inheritence_models', 'functional_annotations', 'gene_annotations'];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        name = _ref[_i];
-        keys = Ember.A();
-        _ref1 = this.get(name);
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          item = _ref1[_j];
-          for (key in item) {
-            value = item[key];
-            keys.pushObject(Ember.Object.create({
-              id: key,
-              isActive: false
-            }));
-          }
-        }
-        if (name === 'inheritence_models') {
-          groupName = 'Inheritance models';
-        } else if (name === 'functional_annotations') {
-          groupName = 'Functional annotations';
-        } else {
-          groupName = 'Gene annotations';
-        }
-        groups.pushObject(Ember.Object.create({
-          id: name,
-          name: groupName,
-          keys: keys
-        }));
-      }
-    }
-    return groups;
-  }).property('inheritence_models', 'functional_annotations', 'gene_annotations').cacheable(),
   samples: (function() {
     var data, gender, row, rows, sample, samples, type, _i, _len;
     samples = Em.A();
@@ -527,13 +660,36 @@ App.Family = Ember.Model.extend({
       samples.pushObject(sample);
     }
     return samples;
-  }).property("pedigree").cacheable()
+  }).property("pedigree").cacheable(),
+  hide: function() {
+    var _this = this;
+    this.set('isDirtyHidden', true);
+    Ember.run.later(this, function() {
+      return _this.set('isDirtyHidden', false);
+    }, 1);
+    return Ember.ls.save('family', this.get('id'));
+  },
+  unhide: function() {
+    var _this = this;
+    this.set('isDirtyHidden', true);
+    Ember.run.later(this, function() {
+      return _this.set('isDirtyHidden', false);
+    }, 1);
+    return Ember.ls["delete"]('family', this.get('id'));
+  },
+  isDirtyHidden: false,
+  isHidden: (function() {
+    return Ember.ls.exists('family', this.get('id'));
+  }).property('id', 'hide', 'unhide', 'isDirtyHidden'),
+  hiddenAt: (function() {
+    return Ember.ls.find('family', this.get('id'));
+  }).property('id')
 });
 
 App.Family.camelizeKeys = true;
 
 App.FamilyAdapter = Ember.Object.extend({
-  host: "http://localhost:5000/api/v1",
+  host: "https://localhost:5000/api/v1",
   url: "",
   find: function(record, id) {
     return $.getJSON("" + (this.get('host')) + "/families/" + id).then(function(data) {
@@ -549,37 +705,89 @@ App.FamilyAdapter = Ember.Object.extend({
 
 App.Family.adapter = App.FamilyAdapter.create();
 
+App.Filter = Ember.Model.extend({
+  id: attr(),
+  database: attr(),
+  groups: attr()
+});
+
+Ember.FilterAdapter = Ember.Object.extend({
+  host: 'https://localhost:5000/api/v1',
+  find: function(record, id) {
+    return $.getJSON("" + (this.get('host')) + "/families/" + id + "/filter").then(function(data) {
+      var anno, group, groupName, groups, key, keys, newData, _, _i, _j, _len, _len1, _ref, _ref1;
+      groups = Ember.A();
+      _ref = ['functional_annotations', 'gene_annotations', 'inheritence_models'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        group = _ref[_i];
+        keys = Ember.A();
+        _ref1 = data[group];
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          anno = _ref1[_j];
+          for (key in anno) {
+            _ = anno[key];
+            keys.pushObject(Em.Object.create({
+              id: "" + group + "_" + key,
+              isActive: false,
+              name: key
+            }));
+          }
+        }
+        if (group === 'inheritence_models') {
+          groupName = 'Inheritance models';
+        } else if (group === 'functional_annotations') {
+          groupName = 'Functional annotations';
+        } else {
+          groupName = 'Gene annotations';
+        }
+        groups.pushObject(Ember.Object.create({
+          id: group,
+          name: groupName,
+          keys: keys
+        }));
+      }
+      newData = {
+        id: data.id,
+        database: data.database,
+        groups: groups
+      };
+      return record.load(id, newData);
+    });
+  }
+});
+
+App.Filter.adapter = Ember.FilterAdapter.create();
+
 App.GTCall = Ember.Model.extend({
   gtCalls: attr(),
   compounds: attr()
 });
 
 Ember.GTCallAdapter = Ember.Object.extend({
-  host: 'http://localhost:5000/api/v1',
+  host: 'https://localhost:5000/api/v1',
   find: function(record, id) {
     return $.getJSON("" + (this.get('host')) + "/variants/" + id + "/gtcall").then(function(data) {
-      var call, item, objects;
+      var call, compound, compounds, objects, _i, _len, _ref;
+      compounds = [];
+      _ref = data.COMPOUNDS;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        compound = _ref[_i];
+        if (compound.vpk !== id) {
+          compounds.push(App.Compound.create(compound));
+        }
+      }
       objects = {
         gtCalls: (function() {
-          var _i, _len, _ref, _results;
-          _ref = data.GT;
+          var _j, _len1, _ref1, _results;
+          _ref1 = data.GT;
           _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            call = _ref[_i];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            call = _ref1[_j];
             _results.push(App.Call.create(call));
           }
           return _results;
         })(),
-        compounds: (function() {
-          var _i, _len, _ref, _results;
-          _ref = data.COMPOUNDS;
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            item = _ref[_i];
-            _results.push(App.Compound.create(item));
-          }
-          return _results;
-        })()
+        compounds: compounds
       };
       return record.load(id, objects);
     });
@@ -655,6 +863,46 @@ App.Compound = Ember.Object.extend({
   }).property('idn')
 });
 
+App.Issue = Ember.Model.extend({
+  id: attr(),
+  title: attr(),
+  body: attr(),
+  html: attr(),
+  created_at: attr(MomentDate),
+  url: attr()
+});
+
+Ember.IssueAdapter = Ember.Object.extend({
+  host: 'https://localhost:5000/api/v1/issues',
+  find: function(record, id) {
+    return $.getJSON("" + (this.get('host')) + "/families/" + id).then(function(data) {
+      return record.load(id, data);
+    });
+  },
+  findAll: function(klass, records) {
+    return $.getJSON(this.get('host')).then(function(data) {
+      return records.load(klass, data);
+    });
+  },
+  createRecord: function(record) {
+    return new Ember.RSVP.Promise(function(resolve, reject) {
+      resolve(record);
+      return record.didCreateRecord();
+    });
+  },
+  saveRecord: function(record) {
+    return $.post("" + (this.get('host')) + "/new", record.toJSON(), function(data) {
+      record.setProperties(data);
+      return record.didSaveRecord();
+    });
+  },
+  deleteRecord: function(record) {
+    return $["delete"]("" + (this.get('host')) + "/" + record.id);
+  }
+});
+
+App.Issue.adapter = Ember.GTCallAdapter.create();
+
 App.Omim = Ember.Model.extend({
   CHR: attr(),
   NT_START: attr(),
@@ -677,7 +925,7 @@ App.User = Ember.Model.extend({
 App.User.camelizeKeys = true;
 
 App.UserAdapter = Ember.Object.extend({
-  host: "http://localhost:5000",
+  host: "https://localhost:5000",
   find: function(record, id) {
     return $.getJSON("" + (this.get('host')) + "/user").then(function(data) {
       return record.load(data.id, data);
@@ -746,6 +994,9 @@ App.Variant = Ember.Model.extend({
       return this.get('chr').slice(3);
     }
   }).property("chr"),
+  chromPosString: (function() {
+    return "" + (this.get('chr')) + ": " + (this.get('startBp')) + "-" + (this.get('stopBp'));
+  }).property('chr', 'startBp', 'stopBp'),
   geneModels: (function() {
     if (this.get('geneModel')) {
       return this.get('geneModel').split(';').slice(0, -1);
@@ -753,6 +1004,9 @@ App.Variant = Ember.Model.extend({
       return [];
     }
   }).property('geneModel'),
+  geneModelString: (function() {
+    return this.get('geneModels').join(' – ');
+  }).property('geneModels'),
   severity: (function() {
     var sum;
     sum = this.get('polyphenDivHuman') + this.get('siftWholeExome') + this.get("mutationTaster");
@@ -762,13 +1016,53 @@ App.Variant = Ember.Model.extend({
     var sum;
     sum = this.get('lrtWholeExome') + this.get('phylopWholeExome');
     return Math.round(sum / 2 * 100);
-  }).property('lrtWholeExome', 'phylopWholeExome')
+  }).property('lrtWholeExome', 'phylopWholeExome'),
+  gt: (function() {
+    return App.GTCall.find(this.get('id'));
+  }).property('id'),
+  gtString: (function() {
+    var call, calls;
+    calls = (function() {
+      var _i, _len, _ref, _results;
+      _ref = this.get('gt');
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        call = _ref[_i];
+        _results.push("" + (call.get('idn')) + ": " + (call.get('gt')));
+      }
+      return _results;
+    }).call(this);
+    return calls.join('\n');
+  }).property('gt'),
+  hide: function() {
+    var _this = this;
+    this.set('isDirtyHidden', true);
+    Ember.run.later(this, function() {
+      return _this.set('isDirtyHidden', false);
+    }, 1);
+    return Ember.ls.save('variant', this.get('id'));
+  },
+  unhide: function() {
+    var _this = this;
+    this.set('isDirtyHidden', true);
+    Ember.run.later(this, function() {
+      return _this.set('isDirtyHidden', false);
+    }, 1);
+    return Ember.ls["delete"]('variant', this.get('id'));
+  },
+  isDirtyHidden: false,
+  isHidden: (function() {
+    return Ember.ls.exists('variant', this.get('id'));
+  }).property('id', 'hide', 'unhide', 'isDirtyHidden'),
+  hiddenAt: (function() {
+    return Ember.ls.find('variant', this.get('id'));
+  }).property('id')
 });
 
 App.Variant.camelizeKeys = true;
 
 App.VariantAdapter = Ember.Object.extend({
-  host: 'http://localhost:5000/api/v1',
+  host: 'https://localhost:5000/api/v1',
   buildQueryString: function(queryParams) {
     var key, queryString, value;
     queryString = '?';
@@ -784,7 +1078,7 @@ App.VariantAdapter = Ember.Object.extend({
   },
   find: function(record, id) {
     return $.getJSON("" + (this.get('host')) + "/variants/" + id).then(function(data) {
-      return record.load(id, data[0]);
+      return record.load(id, data);
     });
   },
   findQuery: function(klass, records, params) {
@@ -810,7 +1104,7 @@ App.Router.map(function() {
   }, function() {
     this.route('status');
     return this.resource('variants', {
-      queryParams: ['relation', '1000 Genomes', 'dbsnp129', 'dbsnp132', 'esp6500', 'AD', 'AD_denovo', 'AR', 'AR_compound', 'AR_denovo', 'Na', 'X', 'X_denovo', 'priority', '-', 'frameshift deletion', 'frameshift insertion', 'nonframeshift deletion', 'nonframeshift insertion', 'nonsynonymous SNV', 'stopgain SNV', 'stoploss SNV', 'synonymous SNV', 'unknown', 'downstream', 'exonic', 'intergenic', 'intronic', 'ncRNA_exonic', 'ncRNA_intronic', 'ncRNA_splicing', 'ncRNA_UTR3', 'ncRNA_UTR5', 'splicing', 'upstream', 'UTR3', 'UTR5', 'gene_name']
+      queryParams: ['relation', '1000 Genomes', 'dbsnp129', 'dbsnp132', 'esp6500', 'inheritence_models_AD', 'inheritence_models_AD_denovo', 'inheritence_models_AR', 'inheritence_models_AR_compound', 'inheritence_models_AR_denovo', 'inheritence_models_Na', 'inheritence_models_X', 'inheritence_models_X_denovo', 'priority', 'functional_annotations_-', 'functional_annotations_frameshift deletion', 'functional_annotations_frameshift insertion', 'functional_annotations_nonframeshift deletion', 'functional_annotations_nonframeshift insertion', 'functional_annotations_nonsynonymous SNV', 'functional_annotations_stopgain SNV', 'functional_annotations_stoploss SNV', 'functional_annotations_synonymous SNV', 'functional_annotations_unknown', 'gene_annotations_downstream', 'gene_annotations_exonic', 'gene_annotations_intergenic', 'gene_annotations_intronic', 'gene_annotations_ncRNA_exonic', 'gene_annotations_ncRNA_intronic', 'gene_annotations_ncRNA_splicing', 'gene_annotations_ncRNA_UTR3', 'gene_annotations_ncRNA_UTR5', 'gene_annotations_splicing', 'gene_annotations_upstream', 'gene_annotations_UTR3', 'gene_annotations_UTR5', 'gene_name']
     }, function() {
       return this.resource('variant', {
         path: '/:variant_id'
@@ -837,9 +1131,30 @@ App.IndexRoute = Ember.Route.extend({
   }
 });
 
+App.IssueRoute = Ember.Route.extend({
+  model: function() {
+    return App.Issue.find();
+  }
+});
+
 App.VariantRoute = Ember.Route.extend({
   model: function(params) {
     return App.Variant.find(params.variant_id);
+  },
+  actions: {
+    openOrderModal: function(model) {
+      this.controllerFor('order-modal').set('model', model);
+      return this.render('order-modal', {
+        into: 'variant',
+        outlet: 'modal'
+      });
+    },
+    closeOrderModal: function() {
+      return this.disconnectOutlet({
+        outlet: 'modal',
+        parentView: 'variant'
+      });
+    }
   }
 });
 
@@ -865,7 +1180,3 @@ Ember.RadioButton = Ember.View.extend({
     return this.get('value') === this.get('selection');
   }).property()
 });
-
-/*
-//@ sourceMappingURL=app.js.map
-*/

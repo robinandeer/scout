@@ -9,7 +9,7 @@ App.FamilyComment = Ember.Model.extend
   id: Em.attr()
   userComment: Em.attr()
   logDate: Em.attr(MomentDate)
-  logComment: Em.attr()
+  logColumn: Em.attr()
   positionInColumn: Em.attr()
   userName: Em.attr()
   email: Em.attr()
@@ -18,10 +18,18 @@ App.FamilyComment = Ember.Model.extend
     return @get('userName')[0].capitalize()
   ).property('userName')
 
+  isDiagnostic: (->
+    return @get('logColumn') in ['IEM', 'EP']
+  ).property('logColumn')
+
+  isResearch: (->
+    return @get('logColumn') is 'research'
+  ).property('logColumn')
+
 App.FamilyComment.camelizeKeys = yes
 
 App.FamilyCommentAdapter = Ember.Object.extend
-  host: "http://localhost:5000/api/v1/families"
+  host: "https://localhost:5000/api/v1/families"
 
   findQuery: (klass, records, params) ->
     url = "#{@get('host')}/#{params.family_id}/comments"
@@ -49,7 +57,7 @@ App.VariantComment = Ember.Model.extend
 App.VariantComment.camelizeKeys = yes
 
 App.VariantCommentAdapter = Ember.Object.extend
-  host: "http://localhost:5000/api/v1/variants"
+  host: "https://localhost:5000/api/v1/variants"
 
   findQuery: (klass, records, params) ->
     url = "#{@get('host')}/#{params.variant_id}/comments"
