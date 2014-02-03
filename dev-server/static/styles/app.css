@@ -1070,12 +1070,8 @@ h4 {
   flex-direction: column;
   position: relative; }
 
-.v-panel {
-  -webkit-flex-basis: 100%;
-  -moz-flex-basis: 100%;
-  flex-basis: 100%; }
-  .v-panel .list__column {
-    min-width: 200px; }
+.v-panel .list__column {
+  min-width: 200px; }
 
 .filter-panel {
   -webkit-flex-basis: 450px;
@@ -1189,7 +1185,6 @@ h5 {
     padding: 1ex; }
 
 .notification, .notification--bubble {
-  float: right;
   background: #f29f97;
   color: #fff;
   padding: 0 3px;
@@ -1241,4 +1236,10 @@ h5 {
   -moz-justify-content: space-between;
   justify-content: space-between; }
 
-/*# sourceMappingURL=17afe884-8b33-49d0-92dd-e1a19075ec99.scss.map */
+.float-left {
+  float: left; }
+
+.float-right {
+  float: right; }
+
+/*# sourceMappingURL=3aa27455-cb68-4ffb-849e-a10c4810b773.scss.map */

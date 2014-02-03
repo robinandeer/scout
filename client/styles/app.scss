@@ -411,8 +411,6 @@ h4 {
 }
 
 .v-panel {
-  @include flex-basis(100%);
-
   .list__column {
     min-width: 200px;
   }
@@ -578,7 +576,6 @@ h5 {
 }
 
 .notification {
-  float: right;
   background: lighten($flat-red-1, 20%);
   color: #fff;
   padding: 0 3px;
@@ -638,4 +635,11 @@ h5 {
 .column__wrapper {
   @include display(flex);
   @include justify-content(space-between);
+}
+
+.float-left {
+  float: left;
+}
+.float-right {
+  float: right;
 }

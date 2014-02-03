@@ -957,9 +957,9 @@ function program23(depth0,data) {
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'class': (":list__column--small :fixed variant.thousandG::undef")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push(">\n          ");
+  data.buffer.push(">\n          <div class=\"float-left\">");
   data.buffer.push(escapeExpression((helper = helpers.fallback || (depth0 && depth0.fallback),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "variant.thousandG", options) : helperMissing.call(depth0, "fallback", "variant.thousandG", options))));
-  data.buffer.push("\n\n          ");
+  data.buffer.push("</div>\n\n          ");
   stack1 = helpers['if'].call(depth0, "variant.isInOtherFamilies", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(24, program24, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n        </div>\n\n        <div ");
@@ -1003,7 +1003,7 @@ function program23(depth0,data) {
 function program24(depth0,data) {
   
   var buffer = '', stack1;
-  data.buffer.push("\n          <div class=\"notification\">");
+  data.buffer.push("\n          <div class=\"notification float-right\">");
   stack1 = helpers._triageMustache.call(depth0, "variant.otherFamiliesCount", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</div>\n          ");

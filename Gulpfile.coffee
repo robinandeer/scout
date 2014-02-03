@@ -19,8 +19,10 @@ serverPort = 8080
 isDist = gutil.env._[0] is 'dist'
 if isDist
   ROOT = 'server'
+  gutil.log 'Running Gulp in', gutil.colors.cyan('production'), 'mode'
 else
   ROOT = 'dev-server'
+  gutil.log 'Running Gulp in', gutil.colors.cyan('development'), 'mode'
 
 # +--------------------------------------------------------------------+
 # |  Express server configuration

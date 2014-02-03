@@ -168,10 +168,10 @@
 
         {{#unless variantLoaded}}
         <div {{bind-attr class=":list__column--small :fixed variant.thousandG::undef"}}>
-          {{fallback variant.thousandG}}
+          <div class="float-left">{{fallback variant.thousandG}}</div>
 
           {{#if variant.isInOtherFamilies}}
-          <div class="notification">{{variant.otherFamiliesCount}}</div>
+          <div class="notification float-right">{{variant.otherFamiliesCount}}</div>
           {{/if}}
         </div>
 
