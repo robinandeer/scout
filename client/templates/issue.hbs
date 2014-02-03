@@ -1,0 +1,65 @@
+<div class="panel--sidebar issue-sidebar">
+  <div class="panel__body">
+    <div class="list--vertical">
+      {{#each issue in model}}
+      <div class="list__item">
+        <div class="list__column fixed">
+          <a {{bind-attr href="issue.url"}} target="_blank">{{issue.title}}</a>
+        </div>
+        <div class="list__column--small fixed">
+          {{fromNow issue.createdAt}}
+        </div>
+      </div>
+      {{else}}
+      <div class="center-center no-comments"><small>No open issues.</small></div>
+      {{/each}}
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+
+  <div class="center-center">
+  {{#if newIssue.isNew}}
+
+    {{#if newIssue.isSaving}}
+    <div class="issue-sending">Sending issue...</div>
+
+    {{else}}
+    <form class="issue-form" {{action 'confirmIssue' on='submit'}}>
+      <h4>Submit a new issue</h4>
+      {{input value=newIssue.title type="text" placeholder="Title" classNames="text-input"}}
+      {{textarea value=newIssue.body placeholder="Describe your problem/request" classNames="text-input"}}
+
+      {{#unless isConfirmingIssue}}
+        <button type="submit" class="btn">
+          <div class="btn__body">Submit</div>
+        </button>
+      {{else}}
+        <div {{action 'createIssue'}} class="btn">
+          <div class="btn__body">Are you sure?</div>
+        </div>
+      {{/unless}}
+    </form>
+    {{/if}}
+
+  {{else}}
+
+    {{! The new issue was successfully created }}
+    <div class="issue-form">
+      <h4>Your issue</h4>
+      <p>Click the title to provide additional information and upload a screenshot.</p>
+      <a {{bind-attr href="message.html_url"}} class="issue-title">
+        {{message.title}}
+      </a>
+      <div class="issue-body-wrapper">{{{message.html}}}</div>
+
+      <div {{action "reset"}} class="btn">
+        <div class="btn__body">New issue</div>
+      </div>
+    </div>    
+
+  {{/if}}
+  </div>{{! END center-center}}
+
+</div>{{! END panel}}

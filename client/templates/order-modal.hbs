@@ -1,0 +1,39 @@
+{{#modal-dialog action="close"}}
+  <h5>Order Sanger sequencing</h5>
+
+  <form class="form--complex">
+    <label for="famil-id">Family</label>
+    <div class="form__input-wrapper">
+      {{input valueBinding="family_id" id="famil-id" classNames="text-input"}}
+    </div>
+
+    <label for="hgnc-symbol">HGNC symbol</label>
+    <div class="form__input-wrapper">
+      {{input valueBinding="hgnc_symbol" id="hgnc-symbol" classNames="text-input"}}
+    </div>
+
+    <label for="chr-pos">Chromosome position</label>
+    <div class="form__input-wrapper">
+      {{input valueBinding="chr_pos" id="chr-pos" classNames="text-input"}}
+    </div>
+
+    <label for="amino-change">Amino acid change</label>
+    <div class="form__input-wrapper">
+      {{textarea valueBinding="amino_change" id="amino-change" classNames="text-input"}}
+    </div>
+
+    <label for="gt-call">GT Call</label>
+    <div class="form__input-wrapper">
+      {{textarea valueBinding="gt_call" id="gt-call" classNames="text-input"}}
+    </div>
+
+    <div class="btn-group">
+      <button {{action "sendForm"}} class="btn">
+        <div class="btn__body">Confirm</div>
+      </button>
+      <button {{action "close"}} class="btn">
+        <div class="btn__body">Cancel</div>
+      </button>
+    </div>
+  </form>
+{{/modal-dialog}}

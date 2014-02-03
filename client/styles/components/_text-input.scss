@@ -1,0 +1,48 @@
+// Complex form
+.form--complex {
+  label {
+    display: block;
+    font-size: 13px;
+    color: $flat-gray-2;
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+}
+
+.form__input-wrapper {
+  @include display(flex);
+  @include justify-content(center);
+}
+
+.form__text-input,
+%form__text-input {
+  padding: 10px;
+  border: 1px solid darken($flat-gray-1, 10%);
+  border-bottom-width: 2px;
+  border-radius: 3px;
+  margin-right: 5px;
+  outline: none;
+
+  &:focus {
+    background: lighten($flat-gray-1, 5%);
+  }
+}
+
+.text-input,
+%text-input {
+  @extend %form__text-input;
+}
+
+.text-input--error {
+  @extend %text-input;
+
+  background-color: #feebea;
+
+  &:focus {
+    background-color: #fee0de;
+  }
+}

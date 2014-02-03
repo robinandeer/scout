@@ -16,16 +16,15 @@
     "tests"
   ],
   "dependencies": {
-    "ember": "~1.4.0",
+    "ember": "http://builds.emberjs.com/canary/ember.js",
+    "ember-min": "http://builds.emberjs.com/canary/ember.min.js",
     "jquery": ">=2.0.3",
-    "qunit": "~1.12.0",
     "handlebars": ">=1.3.0",
     "normalize-css": ">=2.1.3",
     "momentjs": ">=2.1.0",
     "ember-model": ">=0.0.10"
   },
   "resolutions": {
-    "handlebars": ">= 1.0.0",
-    "ember": ">=1.2.0"
+    "ember": "e-tag:9a8b28f84"
   }
 }

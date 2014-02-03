@@ -22,11 +22,14 @@ setup(
 
   # Project dependencies
   install_requires = [
-    'github3',
-    'flask',
-    'flask_login',
-    'flask_sqlalchemy',
-    'flask_oauth',
+    'github3.py',
+    'Flask',
+    'Flask-Login',
+    'Flask-SQLAlchemy',
+    'Flask-OAuth',
+    'Flask-SSLify',
+    'Flask-Mail',
+    'pyOpenSSL',
     'requests',
     'arrow',
   ],

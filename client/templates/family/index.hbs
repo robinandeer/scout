@@ -1,0 +1,170 @@
+<div class="panel family">
+
+  <div class="panel__overlay--header family-header">
+
+    <div class="list--vertical">
+      <div class="list__item">
+        <div class="list__column fixed center-text">
+          <div class="family-id">Family {{family.id}}</div>
+        </div>
+        <div class="list__column fixed center-text">
+          Last update: {{fromNow family.analyzedDate}}
+        </div>
+        <div class="list__column fixed">
+          <div class="btn-group">
+            <div class="btn">
+              <div class="btn__body">
+                {{#link-to "variants" family}}Variants{{/link-to}}
+              </div>
+            </div>
+
+            <div {{action toggleProperty "isShowingRawPedigree"}} class="btn">
+              <div class="btn__body">
+                {{#unless isShowingRawPedigree}}
+                Show raw pedigree
+                {{else}}
+                Hide raw pedigree
+                {{/unless}}
+              </div>
+            </div>
+          </div>{{! END btn-group }}
+        </div>{{! END list__column }}
+      </div>
+    </div>
+  </div>
+
+  <div class="panel__body family-body">
+
+    {{#if isShowingRawPedigree}}
+    <div class="box raw-pedigree">
+      {{{family.pedigree}}}
+    </div>
+
+    {{else}}
+    <div class="box family">
+      <h5>Family members</h5>
+      <table class="predict gt-call-table">
+
+        {{#each sample in family.samples}}
+          <tr>
+            <td class="predict__main predict__part">{{sample.id}}</td>
+            <td class="predict__part affected">
+              {{!<img src="/img/icon-boy.svg" class="family-member-icon">}}
+              <div class="family-member">{{sample.gender}} {{sample.type}}</div>
+            </td>
+            <td class="predict__part">{{sample.captureKit}}</td>
+          </tr>
+        {{/each}}
+      </table>
+    </div>{{! END box, family }}
+
+    <div class="box">
+      <table class="predict">
+        <tr>
+          <td class="predict__main predict__part">Possible gene models</td>
+          {{#each model in family.samples.1.inheritanceModels}}
+            <td class="predict__part">{{model}}</td>
+          {{/each}}
+        </tr>
+      </table>
+    </div>
+
+    <div class="box panel__wrapper family-comments">
+      <div class="panel">
+        <div class="panel__overlay--header">
+          <div class="panel__overlay__title">Diagnostic comments</div>
+        </div>
+        <div class="panel__body">
+          <div class="list--vertical do-wrap">
+            {{#each comment in diagnosticComments}}
+            <div class="list__item">
+              <div class="comment__wrapper">
+                <div class="comment__avatar">
+                  <div class="comment__letter">{{comment.firstLetter}}</div>
+                </div>
+                <div class="comment">
+                  <div class="comment__header">
+                    <div class="comment__username">{{comment.userName}}:</div>
+                  </div>
+
+                  <div class="comment__body">{{comment.userComment}}</div>
+                  <div class="comment__meta">
+                    <div {{action "deleteComment" comment}} class="comment__date--clickable">delete</div>
+                    <div class="comment__date">{{fromNow comment.createdDate}}</div>
+                    <div class="comment__tag">{{comment.positionInColumn}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{else}}
+            <div class="center-center no-comments"><small>No comments added yet.</small></div>
+            {{/each}}
+          </div>{{! END list--vertical }}
+        </div>{{! End panel__body }}
+      </div>{{! End panel }}
+
+      <div class="panel">
+        <div class="panel__overlay--header">
+          <div class="panel__overlay__title">Research comments</div>
+        </div>
+        <div class="panel__body">
+
+          <div class="list--vertical do-wrap">
+            {{#each comment in researchComments}}
+            <div class="list__item">
+              <div class="comment__wrapper">
+                <div class="comment__avatar">
+                  <div class="comment__letter">{{comment.firstLetter}}</div>
+                </div>
+                <div class="comment">
+                  <div class="comment__header">
+                    <div class="comment__username">{{comment.userName}}:</div>
+                  </div>
+
+                  <div class="comment__body">{{comment.userComment}}</div>
+                  <div class="comment__meta">
+                    <div {{action "deleteComment" comment}} class="comment__date--clickable">delete</div>
+                    <div class="comment__date">{{fromNow comment.createdDate}}</div>
+                    <div class="comment__tag">{{comment.positionInColumn}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {{else}}
+            <div class="center-center no-comments"><small>No comments added yet.</small></div>
+            {{/each}}
+          </div>{{! END list--vertical }}
+
+        </div>{{! End panel__body }}
+      </div>{{! End panel }}
+    </div>{{! End box panel__wrapper }}
+
+    <div class="box">
+      <div class="comment-box">
+        <form class="form--complex">
+          <div class="column__wrapper">
+            <div class="list__column--small">
+              <label>{{user.name}} says:</label>
+              {{textarea valueBinding="commentBody" classNames="text-input"}}
+            </div>
+            <div class="list__column">
+              <label>Category:</label>
+              {{view Ember.Select
+                     content=commentCategories
+                     value=selectedCommentCategory
+                     optionValuePath="content.id"
+                     optionLabelPath="content.label"
+                     prompt="Select a category"}}
+
+              <div {{action 'postComment'}} class="btn">
+                <div class="btn__body">Submit</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>{{! END box }}
+    {{/if}}
+
+  </div>{{! End panel__body }}
+</div>

@@ -49,11 +49,11 @@ node_modules
 docs/_build
 
 # Secrets
-scout/secrets.py
+server/secrets.py
 
 # Bower
-public/vendor
+client/static/js/vendor
 
 # SASS
 .sass-cache
-app/styles/vendor/*
+client/styles/vendor/*
