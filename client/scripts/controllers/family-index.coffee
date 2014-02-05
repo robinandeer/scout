@@ -3,6 +3,9 @@ App.FamilyIndexController = Ember.Controller.extend
 
   userBinding: 'controllers.application.user'
   familyBinding: 'controllers.family'
+  hasGeneModels: (->
+    return @get('family.samples.1.inheritanceModels.length') > 0
+  ).property 'family.samples.1.inheritanceModels'
   isShowingRawPedigree: no
 
   actions:
@@ -49,7 +52,6 @@ App.FamilyIndexController = Ember.Controller.extend
     return comments
   ).property 'comments.isLoaded', 'comments'
 
-  selectedCommentCategory: null
   commentCategories: [
     { label: 'Finding', id: 'finding' },
     { label: 'Action', id: 'action' },

@@ -92,45 +92,72 @@ Ember.OmimAdapter = Ember.Object.extend({
   }
 });
 
-Ember.Handlebars.registerBoundHelper("capitalize", function(str) {
-  if (str) {
-    return str.capitalize();
-  }
-});
-
-Ember.Handlebars.registerBoundHelper("fallback", function(obj, options) {
-  var roundedNum;
-  if (obj) {
-    roundedNum = Math.round(obj * 1000) / 1000;
-    if (isNaN(roundedNum)) {
-      return obj;
-    } else {
-      return roundedNum;
+App.CommentBoxComponent = Ember.Component.extend({
+  classNames: ['comment-box__wrapper'],
+  type: null,
+  body: null,
+  title: 'Comment',
+  selectedTag: null,
+  tagPrompt: 'Tag comment',
+  tags: [],
+  hasTags: (function() {
+    return this.get('tags.length') > 0;
+  }).property('tags'),
+  actions: {
+    clear: function() {
+      return this.setProperties({
+        body: null,
+        selectedTag: null
+      });
+    },
+    submit: function() {
+      this.sendAction('submit', {
+        type: this.get('type'),
+        body: this.get('body'),
+        tag: this.get('selectedTag')
+      });
+      return this.setProperties({
+        body: null,
+        selectedTag: null
+      });
     }
-  } else {
-    return options.fallback || 'null';
   }
 });
 
-Handlebars.registerHelper('ifCond', function(v1, v2) {
-  if (v1 || v2) {
-    return true;
-  } else {
-    return false;
+App.ModalDialogComponent = Ember.Component.extend({
+  actions: {
+    close: function() {
+      return this.sendAction();
+    }
   }
 });
 
-Handlebars.registerHelper('join', function(val, delimiter, start, end) {
-  var arry;
-  arry = [].concat(val);
-  if (typeof delimiter !== "string") {
-    delimiter = ',';
+App.PopOverComponent = Ember.Component.extend({
+  classNames: ['pop-over'],
+  variant: null,
+  title: null,
+  show: null,
+  hide: null,
+  lock: null,
+  isLocked: false,
+  mouseEnter: function() {
+    return this.sendAction('show', this.get('variant'));
+  },
+  mouseLeave: function() {
+    if (!this.get('isLocked')) {
+      return this.sendAction('hide');
+    }
+  },
+  click: function() {
+    var _this = this;
+    this.set('isLocked', true);
+    return Ember.run.later(this, function() {
+      return $(document).on('click', function() {
+        _this.toggleProperty('isLocked');
+        return $(document).off();
+      });
+    }, 1);
   }
-  start = start || 0;
-  if (!end) {
-    end = arry.length;
-  }
-  return arry.slice(start, end).join(delimiter);
 });
 
 App.ApplicationController = Ember.Controller.extend({
@@ -175,6 +202,9 @@ App.FamilyIndexController = Ember.Controller.extend({
   needs: ['family', 'application'],
   userBinding: 'controllers.application.user',
   familyBinding: 'controllers.family',
+  hasGeneModels: (function() {
+    return this.get('family.samples.1.inheritanceModels.length') > 0;
+  }).property('family.samples.1.inheritanceModels'),
   isShowingRawPedigree: false,
   actions: {
     toggleProperty: function(target) {
@@ -226,7 +256,6 @@ App.FamilyIndexController = Ember.Controller.extend({
     }
     return comments;
   }).property('comments.isLoaded', 'comments'),
-  selectedCommentCategory: null,
   commentCategories: [
     {
       label: 'Finding',
@@ -555,72 +584,45 @@ App.VariantsController = Ember.ArrayController.extend({
   }).property('currentPath')
 });
 
-App.CommentBoxComponent = Ember.Component.extend({
-  classNames: ['comment-box__wrapper'],
-  type: null,
-  body: null,
-  title: 'Comment',
-  selectedTag: null,
-  tagPrompt: 'Tag comment',
-  tags: [],
-  hasTags: (function() {
-    return this.get('tags.length') > 0;
-  }).property('tags'),
-  actions: {
-    clear: function() {
-      return this.setProperties({
-        body: null,
-        selectedTag: null
-      });
-    },
-    submit: function() {
-      this.sendAction('submit', {
-        type: this.get('type'),
-        body: this.get('body'),
-        tag: this.get('selectedTag')
-      });
-      return this.setProperties({
-        body: null,
-        selectedTag: null
-      });
-    }
+Ember.Handlebars.registerBoundHelper("capitalize", function(str) {
+  if (str) {
+    return str.capitalize();
   }
 });
 
-App.ModalDialogComponent = Ember.Component.extend({
-  actions: {
-    close: function() {
-      return this.sendAction();
+Ember.Handlebars.registerBoundHelper("fallback", function(obj, options) {
+  var roundedNum;
+  if (obj) {
+    roundedNum = Math.round(obj * 1000) / 1000;
+    if (isNaN(roundedNum)) {
+      return obj;
+    } else {
+      return roundedNum;
     }
+  } else {
+    return options.fallback || 'null';
   }
 });
 
-App.PopOverComponent = Ember.Component.extend({
-  classNames: ['pop-over'],
-  variant: null,
-  title: null,
-  show: null,
-  hide: null,
-  lock: null,
-  isLocked: false,
-  mouseEnter: function() {
-    return this.sendAction('show', this.get('variant'));
-  },
-  mouseLeave: function() {
-    if (!this.get('isLocked')) {
-      return this.sendAction('hide');
-    }
-  },
-  click: function() {
-    var _this = this;
-    this.set('isLocked', true);
-    return Ember.run.later(this, function() {
-      return $(document).on('click', function() {
-        _this.toggleProperty('isLocked');
-        return $(document).off();
-      });
-    }, 1);
+Handlebars.registerHelper('ifCond', function(v1, v2) {
+  if (v1 || v2) {
+    return true;
+  } else {
+    return false;
   }
+});
+
+Handlebars.registerHelper('join', function(val, delimiter, start, end) {
+  var arry;
+  arry = [].concat(val);
+  if (typeof delimiter !== "string") {
+    delimiter = ',';
+  }
+  start = start || 0;
+  if (!end) {
+    end = arry.length;
+  }
+  return arry.slice(start, end).join(delimiter);
 });
 
 var MomentDate;
@@ -1076,13 +1078,26 @@ App.Variant = Ember.Model.extend({
   chr: attr(),
   startBp: attr(),
   stopBp: attr(),
+  isSingleBase: (function() {
+    return this.get('startBp') === this.get('stopBp');
+  }).property('startBp', 'stopBp'),
   refNt: attr(),
   altNt: attr(),
   hgncSymbol: attr(),
   hgncSynonyms: attr(),
+  hgncSynonymsString: (function() {
+    if (this.get('hgncSynonyms')) {
+      return this.get('hgncSynonyms').split(';').slice(0, -1).join(', ');
+    }
+  }).property('hgncSynonyms'),
   hgncApprovedName: attr(),
   hgncTranscriptId: attr(),
   ensemblGeneid: attr(),
+  ensemblGeneIdString: (function() {
+    if (this.get('ensemblGeneid')) {
+      return this.get('ensemblGeneid').split(';').slice(0, -1).join(', ');
+    }
+  }).property('ensemblGeneid'),
   siftWholeExome: attr(),
   polyphenDivHuman: attr(),
   gerpWholeExome: attr(),
@@ -1090,6 +1105,11 @@ App.Variant = Ember.Model.extend({
   thousandG: attr(),
   dbsnpId: attr(),
   dbsnp: attr(),
+  dbsnpFlag: (function() {
+    if (this.get('dbsnp')) {
+      return this.get('dbsnp').replace('snp137', '');
+    }
+  }).property('dbsnp'),
   dbsnp129: attr(),
   dbsnp132: attr(),
   esp6500: attr(),

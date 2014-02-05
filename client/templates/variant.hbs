@@ -6,13 +6,22 @@
         <div class="list__column--small fixed center-text">
           <div class="rank-score">{{rankScore}}</div>
         </div>
-        <div class="list__column fixed">
-          {{hgncSymbol}}
+        <div {{action "toggleProperty" "isShowingFullGeneName"}} class="list__column fixed">
+          {{#if isShowingFullGeneName}}
+            {{capitalize hgncApprovedName}}
+          {{else}}
+            {{hgncSymbol}} <small>{{hgncSynonymsString}}</small>
+          {{/if}}
           <br>
-          <small>Chr {{chrom}}</small>
+          <small>{{ensemblGeneIdString}}</small>
         </div>
         <div class="list__column fixed">
-          {{refNt}} &rarr; {{altNt}}<br>
+          Chr {{chrom}} | {{startBp}}
+          {{#unless isSingleBase}} - {{stopBp}}{{/unless}} |
+          {{refNt}} &rarr; {{altNt}}
+
+          <br>
+
           <small>
             {{capitalize geneAnnotation}} |
             {{#if functionalAnnotation}}
@@ -98,8 +107,8 @@
           </td>
 
           <td {{bind-attr class=":predict__part dbsnp::undef"}}>
-            <div class="predict__number">{{dbsnp}}</div>
-            <div class="predict__text">dbSNP</div>
+            <div class="predict__number">{{dbsnpFlag}}</div>
+            <div class="predict__text">dbSNP 137</div>
           </td>
         </tr>
 

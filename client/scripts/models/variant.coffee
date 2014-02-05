@@ -14,14 +14,25 @@ App.Variant = Ember.Model.extend
   chr: attr()
   startBp: attr()
   stopBp: attr()
+  isSingleBase: (->
+    return @get('startBp') == @get('stopBp')
+  ).property 'startBp', 'stopBp'
   refNt: attr()
   altNt: attr()
 
   hgncSymbol: attr()
   hgncSynonyms: attr()
+  hgncSynonymsString: (->
+    if @get('hgncSynonyms')
+      return @get('hgncSynonyms').split(';').slice(0, -1).join(', ')
+  ).property 'hgncSynonyms'
   hgncApprovedName: attr()
   hgncTranscriptId: attr()
   ensemblGeneid: attr()
+  ensemblGeneIdString: (->
+    if @get('ensemblGeneid')
+      return @get('ensemblGeneid').split(';').slice(0, -1).join(', ')
+  ).property 'ensemblGeneid'
 
   siftWholeExome: attr()
   polyphenDivHuman: attr()
@@ -31,6 +42,10 @@ App.Variant = Ember.Model.extend
   thousandG: attr()
   dbsnpId: attr()
   dbsnp: attr()
+  dbsnpFlag: (->
+    if @get('dbsnp')
+      return @get('dbsnp').replace('snp137', '')
+  ).property 'dbsnp'
   dbsnp129: attr()
   dbsnp132: attr()
   esp6500: attr()

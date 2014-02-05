@@ -446,25 +446,56 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', helper, options;
+  data.buffer.push("\n            ");
+  data.buffer.push(escapeExpression((helper = helpers.capitalize || (depth0 && depth0.capitalize),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "hgncApprovedName", options) : helperMissing.call(depth0, "capitalize", "hgncApprovedName", options))));
+  data.buffer.push("\n          ");
+  return buffer;
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n            ");
+  stack1 = helpers._triageMustache.call(depth0, "hgncSymbol", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" <small>");
+  stack1 = helpers._triageMustache.call(depth0, "hgncSynonymsString", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</small>\n          ");
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push(" - ");
+  stack1 = helpers._triageMustache.call(depth0, "stopBp", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  return buffer;
+  }
+
+function program7(depth0,data) {
+  
+  var buffer = '', helper, options;
   data.buffer.push("\n              ");
   data.buffer.push(escapeExpression((helper = helpers.capitalize || (depth0 && depth0.capitalize),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "functionalAnnotation", options) : helperMissing.call(depth0, "capitalize", "functionalAnnotation", options))));
   data.buffer.push("\n            ");
   return buffer;
   }
 
-function program3(depth0,data) {
+function program9(depth0,data) {
   
   
   data.buffer.push("\n              No functional annotation\n            ");
   }
 
-function program5(depth0,data) {
+function program11(depth0,data) {
   
   
   data.buffer.push("All variants");
   }
 
-function program7(depth0,data) {
+function program13(depth0,data) {
   
   var buffer = '';
   data.buffer.push("\n            <div ");
@@ -473,7 +504,7 @@ function program7(depth0,data) {
   return buffer;
   }
 
-function program9(depth0,data) {
+function program15(depth0,data) {
   
   var buffer = '';
   data.buffer.push("\n            <div ");
@@ -482,7 +513,7 @@ function program9(depth0,data) {
   return buffer;
   }
 
-function program11(depth0,data) {
+function program17(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push("\n              <div>");
@@ -492,7 +523,7 @@ function program11(depth0,data) {
   return buffer;
   }
 
-function program13(depth0,data) {
+function program19(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push("\n          <tr>\n            <td class=\"predict__main predict__part\">");
@@ -514,7 +545,7 @@ function program13(depth0,data) {
   return buffer;
   }
 
-function program15(depth0,data) {
+function program21(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push("\n            <td class=\"predict__part\">");
@@ -524,7 +555,7 @@ function program15(depth0,data) {
   return buffer;
   }
 
-function program17(depth0,data) {
+function program23(depth0,data) {
   
   var buffer = '', helper, options;
   data.buffer.push("\n    <div class=\"box compounds\">\n      ");
@@ -533,7 +564,7 @@ function program17(depth0,data) {
   return buffer;
   }
 
-function program19(depth0,data) {
+function program25(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push("\n            <div class=\"comment-box__wrapper\">\n              <div class=\"comment-box\">\n                <div class=\"comment-box__header\">\n                  <div class=\"comment-box__header__body\">\n                    <b>");
@@ -548,7 +579,7 @@ function program19(depth0,data) {
   return buffer;
   }
 
-function program21(depth0,data) {
+function program27(depth0,data) {
   
   
   data.buffer.push("\n            <div class=\"center-center no-comments\"><small>No comments added yet.</small></div>\n            ");
@@ -557,30 +588,41 @@ function program21(depth0,data) {
   data.buffer.push("<div class=\"panel variant\">\n\n  <div class=\"panel__overlay--header variant-header\">\n    <div class=\"list--vertical\">\n      <div class=\"list__item\">\n        <div class=\"list__column--small fixed center-text\">\n          <div class=\"rank-score\">");
   stack1 = helpers._triageMustache.call(depth0, "rankScore", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div>\n        </div>\n        <div class=\"list__column fixed\">\n          ");
-  stack1 = helpers._triageMustache.call(depth0, "hgncSymbol", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  data.buffer.push("</div>\n        </div>\n        <div ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleProperty", "isShowingFullGeneName", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
+  data.buffer.push(" class=\"list__column fixed\">\n          ");
+  stack1 = helpers['if'].call(depth0, "isShowingFullGeneName", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n          <br>\n          <small>Chr ");
+  data.buffer.push("\n          <br>\n          <small>");
+  stack1 = helpers._triageMustache.call(depth0, "ensemblGeneIdString", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</small>\n        </div>\n        <div class=\"list__column fixed\">\n          Chr ");
   stack1 = helpers._triageMustache.call(depth0, "chrom", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</small>\n        </div>\n        <div class=\"list__column fixed\">\n          ");
+  data.buffer.push(" | ");
+  stack1 = helpers._triageMustache.call(depth0, "startBp", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n          ");
+  stack1 = helpers.unless.call(depth0, "isSingleBase", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push(" |\n          ");
   stack1 = helpers._triageMustache.call(depth0, "refNt", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push(" &rarr; ");
   stack1 = helpers._triageMustache.call(depth0, "altNt", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("<br>\n          <small>\n            ");
+  data.buffer.push("\n\n          <br>\n\n          <small>\n            ");
   data.buffer.push(escapeExpression((helper = helpers.capitalize || (depth0 && depth0.capitalize),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "geneAnnotation", options) : helperMissing.call(depth0, "capitalize", "geneAnnotation", options))));
   data.buffer.push(" |\n            ");
-  stack1 = helpers['if'].call(depth0, "functionalAnnotation", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "functionalAnnotation", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n          </small>\n        </div>\n        <div class=\"list__column fixed\">\n          <div class=\"btn-group\">\n            <div ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "openOrderModal", "sangerData", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
   data.buffer.push(" class=\"btn\">\n              <div class=\"btn__body\">Order Sanger</div>\n            </div>\n\n            <div class=\"btn\">\n              <div class=\"btn__body\">");
-  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0,depth0],types:["STRING","ID"],data:data},helper ? helper.call(depth0, "variants", "currentFamily", options) : helperMissing.call(depth0, "link-to", "variants", "currentFamily", options));
+  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0,depth0],types:["STRING","ID"],data:data},helper ? helper.call(depth0, "variants", "currentFamily", options) : helperMissing.call(depth0, "link-to", "variants", "currentFamily", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</div>\n            </div>\n\n            ");
-  stack1 = helpers.unless.call(depth0, "isHidden", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers.unless.call(depth0, "isHidden", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(15, program15, data),fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n          </div>\n          \n        </div>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"panel__body\">\n    <div class=\"box predictions\">\n      <table class=\"predict\">\n        <tr class=\"predict__top\">\n          <td class=\"predict__main predict__part\">Severity</td>\n          <td ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
@@ -635,9 +677,9 @@ function program21(depth0,data) {
     'class': (":predict__part dbsnp::undef")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(">\n            <div class=\"predict__number\">");
-  stack1 = helpers._triageMustache.call(depth0, "dbsnp", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers._triageMustache.call(depth0, "dbsnpFlag", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div>\n            <div class=\"predict__text\">dbSNP</div>\n          </td>\n        </tr>\n\n        <tr class=\"conservation-row\">\n          <td class=\"predict__main predict__part\">Conservation</td>\n          <td ");
+  data.buffer.push("</div>\n            <div class=\"predict__text\">dbSNP 137</div>\n          </td>\n        </tr>\n\n        <tr class=\"conservation-row\">\n          <td class=\"predict__main predict__part\">Conservation</td>\n          <td ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'class': (":predict__part phylopWholeExome::undef")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
@@ -660,7 +702,7 @@ function program21(depth0,data) {
     'href': ("omimLink")
   },hashTypes:{'href': "ID"},hashContexts:{'href': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(" class=\"link\" target=\"_blank\">\n              <div class=\"logo--omim\">OMIM</div>\n            </a>\n          </td>\n          <td class=\"predict__part\">\n            ");
-  stack1 = helpers.each.call(depth0, "syn", "in", "omim.SYNDROMS", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  stack1 = helpers.each.call(depth0, "syn", "in", "omim.SYNDROMS", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n          </td>\n        </tr>\n        <tr>\n          <td class=\"predict__main predict__part\">\n            <a href=\"http://www.hgmd.cf.ac.uk/ac/index.php\" class=\"link\" target=\"_blank\">\n              <img src=\"/static/img/hgmd-logo.svg\">\n            </a>\n          </td>\n          <td class=\"predict__part\">");
   stack1 = helpers._triageMustache.call(depth0, "hgmd", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
@@ -669,13 +711,13 @@ function program21(depth0,data) {
   stack1 = helpers._triageMustache.call(depth0, "diseaseGroup", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\n        </tr>\n      </table>\n    </div>\n\n    <div class=\"box gt-call\">\n      <table class=\"predict gt-call-table\">\n        <thead>\n          <tr>\n            <th class=\"predict__part\">IDN</th>\n            <th class=\"predict__part\">GT</th>\n            <th class=\"predict__part\">AD</th>\n            <th class=\"predict__part\">PL</th>\n            <th class=\"predict__part\">GQ</th>\n          </tr>\n        </thead>\n        <tbody>\n        ");
-  stack1 = helpers.each.call(depth0, "call", "in", "gt.gtCalls", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  stack1 = helpers.each.call(depth0, "call", "in", "gt.gtCalls", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(19, program19, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n        <tr>\n          <td class=\"predict__main predict__part\">Inheritance models</td>\n          ");
-  stack1 = helpers.each.call(depth0, "model", "in", "geneModels", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  stack1 = helpers.each.call(depth0, "model", "in", "geneModels", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(21, program21, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n        </tr>\n        </tbody>\n      </table>\n\n    </div>\n\n    ");
-  stack1 = helpers['if'].call(depth0, "hasCompounds", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "hasCompounds", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n    <div class=\"box list--horizontal external-links\">\n      <a ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
@@ -706,7 +748,7 @@ function program21(depth0,data) {
     'href': ("igvLink")
   },hashTypes:{'href': "ID"},hashContexts:{'href': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(" class=\"link\" target=\"_blank\">\n        <div class=\"link__icon\"><img src=\"/static/img/igv-logo-gray.svg\"></div>\n        <div class=\"link__text\">IGV</div>\n      </a>\n    </div>\n\n    <div class=\"box variant-comments\">\n      <div class=\"panel__wrapper family-comments\">\n        <div class=\"panel\">\n          <div class=\"panel__overlay--header\">\n            <div class=\"panel__overlay__title\">Comments</div>\n          </div>\n          <div class=\"panel__body\">\n            ");
-  stack1 = helpers.each.call(depth0, "comment", "in", "comments", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(21, program21, data),fn:self.program(19, program19, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  stack1 = helpers.each.call(depth0, "comment", "in", "comments", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(27, program27, data),fn:self.program(25, program25, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n          </div>\n        </div>\n\n        <div class=\"panel\">\n          <div class=\"panel__overlay--header\">\n            <div class=\"panel__overlay__title\">Submit new comment</div>\n          </div>\n          <div class=\"panel__body\">\n            ");
   data.buffer.push(escapeExpression((helper = helpers['comment-box'] || (depth0 && depth0['comment-box']),options={hash:{
@@ -842,8 +884,12 @@ function program5(depth0,data) {
 
 function program7(depth0,data) {
   
-  
-  data.buffer.push("\n\n        <span class=\"panel__overlay__title\">Variants</span>\n\n        ");
+  var buffer = '', stack1;
+  data.buffer.push("\n\n        <span class=\"panel__overlay__title\">\n          Variants <small>| ");
+  stack1 = helpers._triageMustache.call(depth0, "database", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</small>\n        </span>\n\n        ");
+  return buffer;
   }
 
 function program9(depth0,data) {
@@ -854,7 +900,10 @@ function program9(depth0,data) {
     'classNames': ("btn")
   },hashTypes:{'classNames': "STRING"},hashContexts:{'classNames': depth0},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "index", options) : helperMissing.call(depth0, "link-to", "index", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        </div>\n\n        <div class=\"list__column--slim\">Variants</div>\n\n        <div class=\"list__column--slim\">\n          <div ");
+  data.buffer.push("\n        </div>\n\n        <div class=\"list__column--slim\">\n          Variants <small>| ");
+  stack1 = helpers._triageMustache.call(depth0, "database", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</small>\n        </div>\n\n        <div class=\"list__column--slim\">\n          <div ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleProperty", "isShowingModal", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(" class=\"btn\">\n            <div class=\"btn__body\">\n              ");
   stack1 = helpers['if'].call(depth0, "isShowingModal", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(14, program14, data),fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],data:data});
@@ -1196,14 +1245,14 @@ function program9(depth0,data) {
   data.buffer.push("\n    <div class=\"box family\">\n      <h5>Family members</h5>\n      <table class=\"predict gt-call-table\">\n\n        ");
   stack1 = helpers.each.call(depth0, "sample", "in", "family.samples", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n      </table>\n    </div>\n\n    <div class=\"box\">\n      <table class=\"predict\">\n        <tr>\n          <td class=\"predict__main predict__part\">Possible gene models</td>\n          ");
-  stack1 = helpers.each.call(depth0, "model", "in", "family.samples.1.inheritanceModels", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  data.buffer.push("\n      </table>\n    </div>\n\n    ");
+  stack1 = helpers['if'].call(depth0, "hasGeneModels", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        </tr>\n      </table>\n    </div>\n\n    <div class=\"box panel__wrapper family-comments\">\n      <div class=\"panel\">\n        <div class=\"panel__overlay--header\">\n          <div class=\"panel__overlay__title\">Diagnostic comments</div>\n        </div>\n        <div class=\"panel__body\">\n          ");
-  stack1 = helpers.each.call(depth0, "comment", "in", "diagnosticComments", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(16, program16, data),fn:self.program(14, program14, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  data.buffer.push("\n\n    <div class=\"box panel__wrapper family-comments\">\n      <div class=\"panel\">\n        <div class=\"panel__overlay--header\">\n          <div class=\"panel__overlay__title\">Diagnostic comments</div>\n        </div>\n        <div class=\"panel__body\">\n          ");
+  stack1 = helpers.each.call(depth0, "comment", "in", "diagnosticComments", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(17, program17, data),fn:self.program(15, program15, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n        </div>\n      </div>\n\n      <div class=\"panel\">\n        <div class=\"panel__overlay--header\">\n          <div class=\"panel__overlay__title\">Research comments</div>\n        </div>\n        <div class=\"panel__body\">\n\n          ");
-  stack1 = helpers.each.call(depth0, "comment", "in", "researchComments", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(16, program16, data),fn:self.program(14, program14, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  stack1 = helpers.each.call(depth0, "comment", "in", "researchComments", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(17, program17, data),fn:self.program(15, program15, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n        </div>\n      </div>\n    </div>\n\n    <div class=\"box panel__wrapper family-submit-comment\">\n\n      <div class=\"panel\">\n        <div class=\"panel__body\">\n          ");
   data.buffer.push(escapeExpression((helper = helpers['comment-box'] || (depth0 && depth0['comment-box']),options={hash:{
@@ -1244,6 +1293,15 @@ function program10(depth0,data) {
 function program12(depth0,data) {
   
   var buffer = '', stack1;
+  data.buffer.push("\n    <div class=\"box\">\n      <table class=\"predict\">\n        <tr>\n          <td class=\"predict__main predict__part\">Possible gene models</td>\n          ");
+  stack1 = helpers.each.call(depth0, "model", "in", "family.samples.1.inheritanceModels", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n        </tr>\n      </table>\n    </div>\n    ");
+  return buffer;
+  }
+function program13(depth0,data) {
+  
+  var buffer = '', stack1;
   data.buffer.push("\n            <td class=\"predict__part\">");
   stack1 = helpers._triageMustache.call(depth0, "model", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
@@ -1251,7 +1309,7 @@ function program12(depth0,data) {
   return buffer;
   }
 
-function program14(depth0,data) {
+function program15(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push("\n          <div class=\"comment-box__wrapper\">\n            <div class=\"comment-box\">\n              <div class=\"comment-box__header\">\n                <div class=\"comment-box__header__body\">\n                  <b>");
@@ -1266,7 +1324,7 @@ function program14(depth0,data) {
   return buffer;
   }
 
-function program16(depth0,data) {
+function program17(depth0,data) {
   
   
   data.buffer.push("\n          <div class=\"center-center no-comments\"><small>No comments added yet.</small></div>\n          ");

@@ -105,7 +105,9 @@
       <div class="list__item">
         {{#if variantLoaded}}
 
-        <span class="panel__overlay__title">Variants</span>
+        <span class="panel__overlay__title">
+          Variants <small>| {{database}}</small>
+        </span>
 
         {{else}}
 
@@ -115,7 +117,9 @@
           {{/link-to}}
         </div>
 
-        <div class="list__column--slim">Variants</div>
+        <div class="list__column--slim">
+          Variants <small>| {{database}}</small>
+        </div>
 
         <div class="list__column--slim">
           <div {{action "toggleProperty" "isShowingModal"}} class="btn">
