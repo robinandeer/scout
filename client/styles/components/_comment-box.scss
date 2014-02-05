@@ -1,0 +1,137 @@
+$comment-box-color: #fff;
+
+.comment-box__wrapper {
+  @include display(flex);
+  width: 100%;
+
+  // DEMO
+  width: 90%;
+  margin: 20px auto;
+
+  > div:nth-child(2) {
+    margin-left: 25px;
+  }
+}
+
+.comment-box__avatar {
+  // Use this to fix the avatar width
+  min-width: 70px;
+  height: 70px;
+  background-color: $flat-blue-1;
+}
+
+.comment-box {
+  position: relative;
+  z-index: 10;
+  background-color: $comment-box-color;
+  border: 1px solid #d8e0e8;
+  @include flex-basis(100%);
+}
+
+%comment-box__overlay {
+  font-size: 12px;
+  background-color: #f9f9f9;
+}
+
+%comment-box__header,
+.comment-box__header {
+  @extend %comment-box__overlay;
+  border-bottom: 1px solid #d8e0e8;
+  padding: 4px 10px 4px 10px;
+  @include display(flex);
+  @include justify-content(space-between);
+}
+
+%comment-box__triangle {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 15px; height: 15px; top: 7px;
+  border: 1px solid #d8e0e8;
+  background-color: #fdfdfd;
+  @include transform(rotate(45deg));
+}
+
+.comment-box__header--right {
+  @extend %comment-box__header;
+
+  &:before {
+    @extend %comment-box__triangle;
+    left: -7px;
+  }
+}
+
+.comment-box__header--left {
+  @extend %comment-box__header;
+
+  &:before {
+    @extend %comment-box__triangle;
+    right: -7px;
+  }
+}
+
+.comment-box__footer {
+  @extend %comment-box__overlay;
+  border-top: 1px solid #d8e0e8;
+  border-radius: 0 0 3px 3px;
+  @include display(flex);
+  @include justify-content(space-between);
+  @include align-items(center);
+}
+
+.comment-box__footer__body {
+  padding-left: 10px;
+}
+
+%comment-box__body,
+.comment-box__body {
+  padding: 5px 10px 7px;
+}
+
+.comment-box__body--input {
+  @extend %comment-box__body;
+  padding: 7px 10px 5px;
+  width: 100%;
+  border: 0;
+}
+
+.comment-box__submit {
+  padding: 4px 10px;
+  border-left: 1px solid #d8e0e8;
+  background-color: #f6f6f6;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    box-shadow: 0 1px 2px #e0e0e0;
+  }
+
+  &:active {
+    box-shadow: none;
+    background-color: #f9f9f9;
+  }
+}
+
+.comment-box__header__action {
+  cursor: pointer;
+}
+
+.comment-box__date,
+%comment-box__date {
+  color: $flat-gray-2;
+}
+
+.comment-box__date--clickable {
+  @extend %comment-box__date;
+
+  cursor: pointer;
+}
+
+.comment-box__tag {
+  border: 2px solid $flat-gray-1;
+  border-radius: 50px;
+  text-align: center;
+  font-size: 14px;
+  color: $flat-gray-2;
+  padding: 0 10px;
+}

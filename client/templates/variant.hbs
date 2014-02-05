@@ -60,7 +60,12 @@
 
           <td {{bind-attr class=":predict__part polyphenDivHuman::undef"}}>
             <div class="predict__number">{{fallback polyphenDivHuman}}</div>
-            <div class="predict__text">PolyPhen</div>
+            <div class="predict__text">PolyPhen Div</div>
+          </td>
+
+          <td {{bind-attr class=":predict__part polyphenVarHuman::undef"}}>
+            <div class="predict__number">{{fallback polyphenVarHuman}}</div>
+            <div class="predict__text">PolyPhen Var</div>
           </td>
 
           <td {{bind-attr class=":predict__part mutationTaster::undef"}}>
@@ -72,6 +77,7 @@
             <div class="predict__number">{{fallback gerpWholeExome}}</div>
             <div class="predict__text">GERP exome</div>
           </td>
+
         </tr>
 
         <tr>
@@ -101,7 +107,7 @@
           <td class="predict__main predict__part">Conservation</td>
           <td {{bind-attr class=":predict__part phylopWholeExome::undef"}}>
             <div class="predict__number">{{fallback phylopWholeExome}}</div>
-            <div class="predict__text">Whole-exome PhyloP</div>
+            <div class="predict__text">WE PhyloP</div>
           </td>
 
           <td {{bind-attr class=":predict__part gerpElement::undef"}}>
@@ -111,7 +117,7 @@
 
           <td {{bind-attr class=":predict__part lrtWholeExome::undef"}}>
             <div class="predict__number">{{fallback lrtWholeExome}}</div>
-            <div class="predict__text">Whole-exome LRT</div>
+            <div class="predict__text">WE LRT</div>
           </td>
         </tr>
       </table>
@@ -151,7 +157,6 @@
         <thead>
           <tr>
             <th class="predict__part">IDN</th>
-            <th class="predict__part">Filter</th>
             <th class="predict__part">GT</th>
             <th class="predict__part">AD</th>
             <th class="predict__part">PL</th>
@@ -162,7 +167,6 @@
         {{#each call in gt.gtCalls}}
           <tr>
             <td class="predict__main predict__part">{{call.idn}}</td>
-            <td class="predict__part">{{call.filter}}</td>
             <td class="predict__part">{{call.gt}}</td>
             <td class="predict__part">{{call.ad}}</td>
             <td class="predict__part">{{call.pl}}</td>
@@ -231,59 +235,34 @@
             <div class="panel__overlay__title">Comments</div>
           </div>
           <div class="panel__body">
-            <div class="list--vertical do-wrap">
-              {{#each comment in comments}}
-              <div class="list__item">
-                <div class="comment__wrapper">
-                  <div class="comment__avatar">
-                    <div class="comment__letter">{{comment.firstLetter}}</div>
+            {{#each comment in comments}}
+            <div class="comment-box__wrapper">
+              <div class="comment-box">
+                <div class="comment-box__header">
+                  <div class="comment-box__header__body">
+                    <b>{{comment.userName}}</b> commented 3 days ago
                   </div>
-                  <div class="comment">
-                    <div class="comment__header">
-                      <div class="comment__username">{{comment.userName}}:</div>
-                    </div>
-
-                    <div class="comment__body">{{comment.userComment}}</div>
-                    <div class="comment__meta">
-                      <div {{action "deleteComment" comment}} class="comment__date--clickable">delete</div>
-                      <div class="comment__date">{{fromNow comment.createdDate}}</div>
-                      <div class="comment__tag">{{comment.rating}}</div>
-                    </div>
-                  </div>
+                  <div {{action "deleteComment" comment}} class="comment-box__header__action">Delete</div>
                 </div>
+                <div class="comment-box__body">{{comment.userComment}}</div>
               </div>
-              {{else}}
-              <div class="center-center no-comments"><small>No comments added yet.</small></div>
-              {{/each}}
-            </div>{{! END list--vertical }}
+            </div>
+            {{else}}
+            <div class="center-center no-comments"><small>No comments added yet.</small></div>
+            {{/each}}
           </div>{{! END panel__body }}
         </div>{{! END panel }}
-      </div>{{! END panel__wrapper }}
-    </div>{{! END box }}
 
-    <div class="box">
-      <div class="comment-box">
-        <form class="form--complex">
-          <div class="column__wrapper">
-            <div class="list__column--small">
-              <label>Anna Wedell says:</label>
-              {{textarea valueBinding="commentBody" classNames="text-input"}}
-            </div>
-            <div class="list__column">
-              <label>Priority:</label>
-              {{view Ember.Select
-                     content=commentCategories
-                     value=selectedCommentCategory
-                     optionValuePath="content.id"
-                     optionLabelPath="content.label"}}
-
-              <div {{action 'postComment'}} class="btn">
-                <div class="btn__body">Submit</div>
-              </div>
-            </div>
+        <div class="panel">
+          <div class="panel__overlay--header">
+            <div class="panel__overlay__title">Submit new comment</div>
           </div>
-        </form>
-      </div>
+          <div class="panel__body">
+            {{comment-box submit="postComment" tags=variantPriorities
+                          title="Variant comment" tagPrompt="Set priority"}}
+          </div>
+        </div>{{! END panel }}
+      </div>{{! END panel__wrapper }}
     </div>{{! END box }}
 
   </div>

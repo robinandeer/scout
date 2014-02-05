@@ -7,6 +7,7 @@ refresh = require 'gulp-livereload'
 gulpif = require 'gulp-if'
 csso = require 'gulp-csso'
 uglify = require 'gulp-uglify'
+replace = require 'gulp-replace'
 emberTemplates = require 'gulp-ember-templates'
 
 lr = require 'connect-livereload'
@@ -75,7 +76,8 @@ gulp.task 'coffee', ->
   gulp.src(['client/scripts/{,*/}/*.coffee'])
       .pipe(coffee(options))
       .pipe(concat('app.js'))
-      .pipe(gulpif(isDist, uglify()))
+      .pipe(gulpif(false, uglify()))
+      .pipe(gulpif(isDist, replace('http://localhost:5000', '')))
       .pipe(gulp.dest("#{ROOT}/static/js/"))
       .pipe(refresh(lrServer))
 

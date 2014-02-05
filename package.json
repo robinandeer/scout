@@ -30,6 +30,7 @@
     "ejs": "~0.8.5",
     "gulp-if": "0.0.4",
     "gulp-uglify": "~0.2.0",
-    "gulp-csso": "~0.2.3"
+    "gulp-csso": "~0.2.3",
+    "gulp-replace": "~0.2.0"
   }
 }

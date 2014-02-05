@@ -41,7 +41,7 @@
 @import 'components/btn';
 @import 'components/list';
 @import 'components/predict';
-@import 'components/comment';
+@import 'components/comment-box';
 @import 'components/toggle-slider';
 @import 'components/progress';
 @import 'components/tooltip';
@@ -498,14 +498,18 @@ h5 {
   border-top: 1px solid $flat-gray-1;
 
   > .panel {
-    &:first-of-type {
-      border-right: 1px solid $flat-gray-1;
+    &:nth-child(n+2) {
+      border-left: 1px solid $flat-gray-1;
     }
 
     .panel__body {
       padding-top: 50px;
     }
   }
+}
+
+.family-submit-comment {
+  height: auto;
 }
 
 .do-wrap {
@@ -642,4 +646,11 @@ h5 {
 }
 .float-right {
   float: right;
+}
+
+.panel__menu--footer {
+  position: absolute;
+  left: 15px;
+  bottom: 15px;
+  color: $flat-gray-2;
 }

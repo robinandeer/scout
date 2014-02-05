@@ -230,7 +230,10 @@ def logout():
 @app.route('/user', methods=['GET'])
 @crossdomain(origin='*', methods=['GET'])
 def user():
-  user = current_user.to_dict()
+  try:
+    user = current_user.to_dict()
+  except AttributeError:
+    user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
 
   # Return json object for the logged in user
   return jsonify(**user)
@@ -310,7 +313,7 @@ def issues():
     'html': issue.body_html,
     'created_at': issue.created_at.date().isoformat(),
     'url': issue.html_url
-  } for issue in it.find() if issue.user.login == 'clinician']
+  } for issue in it.find()]
 
   return jsonify(issues=issues)
 
@@ -388,4 +391,4 @@ if __name__ == '__main__':
     app.run('localhost', port=5000)
 
   else:
-    app.run('localhost', port=8080, ssl_context=ctx)
+    app.run('0.0.0.0', port=8081, ssl_context=ctx)

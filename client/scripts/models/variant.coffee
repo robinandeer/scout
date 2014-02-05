@@ -9,6 +9,7 @@ App.Variant = Ember.Model.extend
   id: attr()
   rankScore: attr()
   rating: attr()
+  GTCallFilter: attr()
 
   chr: attr()
   startBp: attr()
@@ -38,6 +39,7 @@ App.Variant = Ember.Model.extend
   lrtWholeExome: attr()
   phastConstElements: attr()
   gerpElement: attr()
+  polyphenVarHuman: attr()
 
   hgmd: attr(ReplaceNull)
   omimGeneDesc: attr()
@@ -76,8 +78,14 @@ App.Variant = Ember.Model.extend
   ).property 'chr', 'startBp', 'stopBp'
 
   geneModels: (->
-    if @get('geneModel')
-      return @get('geneModel').split(';').slice(0,-1)
+    modelString = @get('geneModel')
+    if modelString
+      delimiter = ':'
+      sliceEnd = 1
+      if modelString.indexOf(';') is not -1
+        delimiter = ';'
+        sliceEnd = -1
+      return @get('geneModel').split(delimiter).slice(0, sliceEnd)
     else
       return []
   ).property('geneModel')

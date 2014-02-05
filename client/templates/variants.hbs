@@ -28,8 +28,7 @@
             <div class="list__item">
               {{#each db in filter.databases}}
               <div class="list__column">
-                {{db}}
-                {{view Ember.RadioButton name="database" selectionBinding="database" value=db}}
+                {{view Ember.RadioButton name="database" selectionBinding="database" value=db}} {{db}}
               </div>
               {{/each}}
             </div>
@@ -197,7 +196,13 @@
           {{/if}}
         </div>
 
-        <div class="list__column fixed">{{variant.diseaseGroup}}</div>
+        <div {{bind-attr class=":list__column :fixed :scrollable variant.diseaseGroup::undef"}}>
+          {{#if variant.diseaseGroup}}
+            {{variant.diseaseGroup}}
+          {{else}}
+            Nada
+          {{/if}}
+        </div>
 
         <div {{bind-attr class=":list__column--small :fixed variant.hgmd::undef"}}>
           {{#if variant.hgmd}}

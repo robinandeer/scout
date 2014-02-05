@@ -499,9 +499,6 @@ function program13(depth0,data) {
   stack1 = helpers._triageMustache.call(depth0, "call.idn", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\n            <td class=\"predict__part\">");
-  stack1 = helpers._triageMustache.call(depth0, "call.filter", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\n            <td class=\"predict__part\">");
   stack1 = helpers._triageMustache.call(depth0, "call.gt", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</td>\n            <td class=\"predict__part\">");
@@ -538,31 +535,23 @@ function program17(depth0,data) {
 
 function program19(depth0,data) {
   
-  var buffer = '', stack1, helper, options;
-  data.buffer.push("\n              <div class=\"list__item\">\n                <div class=\"comment__wrapper\">\n                  <div class=\"comment__avatar\">\n                    <div class=\"comment__letter\">");
-  stack1 = helpers._triageMustache.call(depth0, "comment.firstLetter", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div>\n                  </div>\n                  <div class=\"comment\">\n                    <div class=\"comment__header\">\n                      <div class=\"comment__username\">");
+  var buffer = '', stack1;
+  data.buffer.push("\n            <div class=\"comment-box__wrapper\">\n              <div class=\"comment-box\">\n                <div class=\"comment-box__header\">\n                  <div class=\"comment-box__header__body\">\n                    <b>");
   stack1 = helpers._triageMustache.call(depth0, "comment.userName", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push(":</div>\n                    </div>\n\n                    <div class=\"comment__body\">");
+  data.buffer.push("</b> commented 3 days ago\n                  </div>\n                  <div ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "deleteComment", "comment", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
+  data.buffer.push(" class=\"comment-box__header__action\">Delete</div>\n                </div>\n                <div class=\"comment-box__body\">");
   stack1 = helpers._triageMustache.call(depth0, "comment.userComment", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div>\n                    <div class=\"comment__meta\">\n                      <div ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "deleteComment", "comment", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
-  data.buffer.push(" class=\"comment__date--clickable\">delete</div>\n                      <div class=\"comment__date\">");
-  data.buffer.push(escapeExpression((helper = helpers.fromNow || (depth0 && depth0.fromNow),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "comment.createdDate", options) : helperMissing.call(depth0, "fromNow", "comment.createdDate", options))));
-  data.buffer.push("</div>\n                      <div class=\"comment__tag\">");
-  stack1 = helpers._triageMustache.call(depth0, "comment.rating", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div>\n                    </div>\n                  </div>\n                </div>\n              </div>\n              ");
+  data.buffer.push("</div>\n              </div>\n            </div>\n            ");
   return buffer;
   }
 
 function program21(depth0,data) {
   
   
-  data.buffer.push("\n              <div class=\"center-center no-comments\"><small>No comments added yet.</small></div>\n              ");
+  data.buffer.push("\n            <div class=\"center-center no-comments\"><small>No comments added yet.</small></div>\n            ");
   }
 
   data.buffer.push("<div class=\"panel variant\">\n\n  <div class=\"panel__overlay--header variant-header\">\n    <div class=\"list--vertical\">\n      <div class=\"list__item\">\n        <div class=\"list__column--small fixed center-text\">\n          <div class=\"rank-score\">");
@@ -605,7 +594,13 @@ function program21(depth0,data) {
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(">\n            <div class=\"predict__number\">");
   data.buffer.push(escapeExpression((helper = helpers.fallback || (depth0 && depth0.fallback),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "polyphenDivHuman", options) : helperMissing.call(depth0, "fallback", "polyphenDivHuman", options))));
-  data.buffer.push("</div>\n            <div class=\"predict__text\">PolyPhen</div>\n          </td>\n\n          <td ");
+  data.buffer.push("</div>\n            <div class=\"predict__text\">PolyPhen Div</div>\n          </td>\n\n          <td ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":predict__part polyphenVarHuman::undef")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(">\n            <div class=\"predict__number\">");
+  data.buffer.push(escapeExpression((helper = helpers.fallback || (depth0 && depth0.fallback),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "polyphenVarHuman", options) : helperMissing.call(depth0, "fallback", "polyphenVarHuman", options))));
+  data.buffer.push("</div>\n            <div class=\"predict__text\">PolyPhen Var</div>\n          </td>\n\n          <td ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'class': (":predict__part mutationTaster::undef")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
@@ -617,7 +612,7 @@ function program21(depth0,data) {
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(">\n            <div class=\"predict__number\">");
   data.buffer.push(escapeExpression((helper = helpers.fallback || (depth0 && depth0.fallback),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "gerpWholeExome", options) : helperMissing.call(depth0, "fallback", "gerpWholeExome", options))));
-  data.buffer.push("</div>\n            <div class=\"predict__text\">GERP exome</div>\n          </td>\n        </tr>\n\n        <tr>\n          <td class=\"predict__main predict__part\">Frequency</td>\n          <td ");
+  data.buffer.push("</div>\n            <div class=\"predict__text\">GERP exome</div>\n          </td>\n\n        </tr>\n\n        <tr>\n          <td class=\"predict__main predict__part\">Frequency</td>\n          <td ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'class': (":predict__part thousandG::undef")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
@@ -648,7 +643,7 @@ function program21(depth0,data) {
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(">\n            <div class=\"predict__number\">");
   data.buffer.push(escapeExpression((helper = helpers.fallback || (depth0 && depth0.fallback),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "phylopWholeExome", options) : helperMissing.call(depth0, "fallback", "phylopWholeExome", options))));
-  data.buffer.push("</div>\n            <div class=\"predict__text\">Whole-exome PhyloP</div>\n          </td>\n\n          <td ");
+  data.buffer.push("</div>\n            <div class=\"predict__text\">WE PhyloP</div>\n          </td>\n\n          <td ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'class': (":predict__part gerpElement::undef")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
@@ -660,7 +655,7 @@ function program21(depth0,data) {
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(">\n            <div class=\"predict__number\">");
   data.buffer.push(escapeExpression((helper = helpers.fallback || (depth0 && depth0.fallback),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "lrtWholeExome", options) : helperMissing.call(depth0, "fallback", "lrtWholeExome", options))));
-  data.buffer.push("</div>\n            <div class=\"predict__text\">Whole-exome LRT</div>\n          </td>\n        </tr>\n      </table>\n    </div>\n\n    <div class=\"box annotations\">\n      <table class=\"predict annotate-table\">\n        <tr>\n          <td class=\"predict__main predict__part\">\n            <a ");
+  data.buffer.push("</div>\n            <div class=\"predict__text\">WE LRT</div>\n          </td>\n        </tr>\n      </table>\n    </div>\n\n    <div class=\"box annotations\">\n      <table class=\"predict annotate-table\">\n        <tr>\n          <td class=\"predict__main predict__part\">\n            <a ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'href': ("omimLink")
   },hashTypes:{'href': "ID"},hashContexts:{'href': depth0},contexts:[],types:[],data:data})));
@@ -673,7 +668,7 @@ function program21(depth0,data) {
   data.buffer.push("</td>\n        </tr>\n        <tr>\n          <td class=\"predict__main predict__part\">Disease group</td>\n          <td class=\"predict__part\">");
   stack1 = helpers._triageMustache.call(depth0, "diseaseGroup", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</td>\n        </tr>\n      </table>\n    </div>\n\n    <div class=\"box gt-call\">\n      <table class=\"predict gt-call-table\">\n        <thead>\n          <tr>\n            <th class=\"predict__part\">IDN</th>\n            <th class=\"predict__part\">Filter</th>\n            <th class=\"predict__part\">GT</th>\n            <th class=\"predict__part\">AD</th>\n            <th class=\"predict__part\">PL</th>\n            <th class=\"predict__part\">GQ</th>\n          </tr>\n        </thead>\n        <tbody>\n        ");
+  data.buffer.push("</td>\n        </tr>\n      </table>\n    </div>\n\n    <div class=\"box gt-call\">\n      <table class=\"predict gt-call-table\">\n        <thead>\n          <tr>\n            <th class=\"predict__part\">IDN</th>\n            <th class=\"predict__part\">GT</th>\n            <th class=\"predict__part\">AD</th>\n            <th class=\"predict__part\">PL</th>\n            <th class=\"predict__part\">GQ</th>\n          </tr>\n        </thead>\n        <tbody>\n        ");
   stack1 = helpers.each.call(depth0, "call", "in", "gt.gtCalls", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n        <tr>\n          <td class=\"predict__main predict__part\">Inheritance models</td>\n          ");
@@ -710,24 +705,17 @@ function program21(depth0,data) {
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'href': ("igvLink")
   },hashTypes:{'href': "ID"},hashContexts:{'href': depth0},contexts:[],types:[],data:data})));
-  data.buffer.push(" class=\"link\" target=\"_blank\">\n        <div class=\"link__icon\"><img src=\"/static/img/igv-logo-gray.svg\"></div>\n        <div class=\"link__text\">IGV</div>\n      </a>\n    </div>\n\n    <div class=\"box variant-comments\">\n      <div class=\"panel__wrapper family-comments\">\n        <div class=\"panel\">\n          <div class=\"panel__overlay--header\">\n            <div class=\"panel__overlay__title\">Comments</div>\n          </div>\n          <div class=\"panel__body\">\n            <div class=\"list--vertical do-wrap\">\n              ");
+  data.buffer.push(" class=\"link\" target=\"_blank\">\n        <div class=\"link__icon\"><img src=\"/static/img/igv-logo-gray.svg\"></div>\n        <div class=\"link__text\">IGV</div>\n      </a>\n    </div>\n\n    <div class=\"box variant-comments\">\n      <div class=\"panel__wrapper family-comments\">\n        <div class=\"panel\">\n          <div class=\"panel__overlay--header\">\n            <div class=\"panel__overlay__title\">Comments</div>\n          </div>\n          <div class=\"panel__body\">\n            ");
   stack1 = helpers.each.call(depth0, "comment", "in", "comments", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(21, program21, data),fn:self.program(19, program19, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n            </div>\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"box\">\n      <div class=\"comment-box\">\n        <form class=\"form--complex\">\n          <div class=\"column__wrapper\">\n            <div class=\"list__column--small\">\n              <label>Anna Wedell says:</label>\n              ");
-  data.buffer.push(escapeExpression((helper = helpers.textarea || (depth0 && depth0.textarea),options={hash:{
-    'valueBinding': ("commentBody"),
-    'classNames': ("text-input")
-  },hashTypes:{'valueBinding': "STRING",'classNames': "STRING"},hashContexts:{'valueBinding': depth0,'classNames': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
-  data.buffer.push("\n            </div>\n            <div class=\"list__column\">\n              <label>Priority:</label>\n              ");
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.Select", {hash:{
-    'content': ("commentCategories"),
-    'value': ("selectedCommentCategory"),
-    'optionValuePath': ("content.id"),
-    'optionLabelPath': ("content.label")
-  },hashTypes:{'content': "ID",'value': "ID",'optionValuePath': "STRING",'optionLabelPath': "STRING"},hashContexts:{'content': depth0,'value': depth0,'optionValuePath': depth0,'optionLabelPath': depth0},contexts:[depth0],types:["ID"],data:data})));
-  data.buffer.push("\n\n              <div ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "postComment", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push(" class=\"btn\">\n                <div class=\"btn__body\">Submit</div>\n              </div>\n            </div>\n          </div>\n        </form>\n      </div>\n    </div>\n\n  </div>\n\n  ");
+  data.buffer.push("\n          </div>\n        </div>\n\n        <div class=\"panel\">\n          <div class=\"panel__overlay--header\">\n            <div class=\"panel__overlay__title\">Submit new comment</div>\n          </div>\n          <div class=\"panel__body\">\n            ");
+  data.buffer.push(escapeExpression((helper = helpers['comment-box'] || (depth0 && depth0['comment-box']),options={hash:{
+    'submit': ("postComment"),
+    'tags': ("variantPriorities"),
+    'title': ("Variant comment"),
+    'tagPrompt': ("Set priority")
+  },hashTypes:{'submit': "STRING",'tags': "ID",'title': "STRING",'tagPrompt': "STRING"},hashContexts:{'submit': depth0,'tags': depth0,'title': depth0,'tagPrompt': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "comment-box", options))));
+  data.buffer.push("\n          </div>\n        </div>\n      </div>\n    </div>\n\n  </div>\n\n  ");
   data.buffer.push(escapeExpression((helper = helpers.outlet || (depth0 && depth0.outlet),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "modal", options) : helperMissing.call(depth0, "outlet", "modal", options))));
   data.buffer.push("\n</div>");
   return buffer;
@@ -812,14 +800,14 @@ function program2(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push("\n              <div class=\"list__column\">\n                ");
-  stack1 = helpers._triageMustache.call(depth0, "db", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                ");
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.RadioButton", {hash:{
     'name': ("database"),
     'selectionBinding': ("database"),
     'value': ("db")
   },hashTypes:{'name': "STRING",'selectionBinding': "STRING",'value': "ID"},hashContexts:{'name': depth0,'selectionBinding': depth0,'value': depth0},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push(" ");
+  stack1 = helpers._triageMustache.call(depth0, "db", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n              </div>\n              ");
   return buffer;
   }
@@ -985,15 +973,19 @@ function program23(depth0,data) {
   data.buffer.push(">\n          ");
   stack1 = helpers['if'].call(depth0, "variant.geneModels", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(28, program28, data),fn:self.program(30, program30, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        </div>\n\n        <div class=\"list__column fixed\">");
-  stack1 = helpers._triageMustache.call(depth0, "variant.diseaseGroup", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  data.buffer.push("\n        </div>\n\n        <div ");
+  data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
+    'class': (":list__column :fixed :scrollable variant.diseaseGroup::undef")
+  },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
+  data.buffer.push(">\n          ");
+  stack1 = helpers['if'].call(depth0, "variant.diseaseGroup", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(28, program28, data),fn:self.program(32, program32, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div>\n\n        <div ");
+  data.buffer.push("\n        </div>\n\n        <div ");
   data.buffer.push(escapeExpression(helpers['bind-attr'].call(depth0, {hash:{
     'class': (":list__column--small :fixed variant.hgmd::undef")
   },hashTypes:{'class': "STRING"},hashContexts:{'class': depth0},contexts:[],types:[],data:data})));
   data.buffer.push(">\n          ");
-  stack1 = helpers['if'].call(depth0, "variant.hgmd", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(28, program28, data),fn:self.program(32, program32, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "variant.hgmd", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(28, program28, data),fn:self.program(34, program34, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n        </div>\n\n        <div class=\"list__column--small fixed hide-variant\">\n          <div class=\"btn\">\n            <div ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "hideVariant", "variant", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
@@ -1044,13 +1036,23 @@ function program32(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push("\n            ");
-  stack1 = helpers._triageMustache.call(depth0, "variant.hgmd", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers._triageMustache.call(depth0, "variant.diseaseGroup", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n          ");
   return buffer;
   }
 
 function program34(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n            ");
+  stack1 = helpers._triageMustache.call(depth0, "variant.hgmd", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n          ");
+  return buffer;
+  }
+
+function program36(depth0,data) {
   
   var buffer = '', helper, options;
   data.buffer.push("\n      <div class=\"fixed-tooltip\">\n        ");
@@ -1076,12 +1078,50 @@ function program34(depth0,data) {
   stack1 = helpers.each.call(depth0, "variant", "in", "model", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(18, program18, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n      ");
-  stack1 = helpers['if'].call(depth0, "isShowingGtCall", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(34, program34, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "isShowingGtCall", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(36, program36, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n    </div>\n  </div>\n</div>\n\n");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n");
+  return buffer;
+  
+});
+Ember.TEMPLATES['components/comment-box'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push("\n    ");
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.Select", {hash:{
+    'content': ("tags"),
+    'value': ("selectedTag"),
+    'optionValuePath': ("content.id"),
+    'optionLabelPath': ("content.label"),
+    'prompt': ("tagPrompt")
+  },hashTypes:{'content': "ID",'value': "ID",'optionValuePath': "STRING",'optionLabelPath': "STRING",'prompt': "ID"},hashContexts:{'content': depth0,'value': depth0,'optionValuePath': depth0,'optionLabelPath': depth0,'prompt': depth0},contexts:[depth0],types:["ID"],data:data})));
+  data.buffer.push("\n    ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"comment-box\">\n  ");
+  data.buffer.push(escapeExpression((helper = helpers.textarea || (depth0 && depth0.textarea),options={hash:{
+    'valueBinding': ("body"),
+    'classNames': ("comment-box__body--input"),
+    'placeholder': ("Write your words here...")
+  },hashTypes:{'valueBinding': "STRING",'classNames': "STRING",'placeholder': "STRING"},hashContexts:{'valueBinding': depth0,'classNames': depth0,'placeholder': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
+  data.buffer.push("\n  <div class=\"comment-box__footer\">\n    <div class=\"comment-box__footer__body\">");
+  stack1 = helpers._triageMustache.call(depth0, "title", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</div>\n    ");
+  stack1 = helpers['if'].call(depth0, "hasTags", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n    <div ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "submit", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
+  data.buffer.push(" class=\"comment-box__submit\">Submit</div>\n  </div>\n</div>\n");
   return buffer;
   
 });
@@ -1119,7 +1159,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES['family/index'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+  var buffer = '', stack1, helper, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
@@ -1159,31 +1199,27 @@ function program9(depth0,data) {
   data.buffer.push("\n      </table>\n    </div>\n\n    <div class=\"box\">\n      <table class=\"predict\">\n        <tr>\n          <td class=\"predict__main predict__part\">Possible gene models</td>\n          ");
   stack1 = helpers.each.call(depth0, "model", "in", "family.samples.1.inheritanceModels", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        </tr>\n      </table>\n    </div>\n\n    <div class=\"box panel__wrapper family-comments\">\n      <div class=\"panel\">\n        <div class=\"panel__overlay--header\">\n          <div class=\"panel__overlay__title\">Diagnostic comments</div>\n        </div>\n        <div class=\"panel__body\">\n          <div class=\"list--vertical do-wrap\">\n            ");
+  data.buffer.push("\n        </tr>\n      </table>\n    </div>\n\n    <div class=\"box panel__wrapper family-comments\">\n      <div class=\"panel\">\n        <div class=\"panel__overlay--header\">\n          <div class=\"panel__overlay__title\">Diagnostic comments</div>\n        </div>\n        <div class=\"panel__body\">\n          ");
   stack1 = helpers.each.call(depth0, "comment", "in", "diagnosticComments", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(16, program16, data),fn:self.program(14, program14, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n          </div>\n        </div>\n      </div>\n\n      <div class=\"panel\">\n        <div class=\"panel__overlay--header\">\n          <div class=\"panel__overlay__title\">Research comments</div>\n        </div>\n        <div class=\"panel__body\">\n\n          <div class=\"list--vertical do-wrap\">\n            ");
+  data.buffer.push("\n        </div>\n      </div>\n\n      <div class=\"panel\">\n        <div class=\"panel__overlay--header\">\n          <div class=\"panel__overlay__title\">Research comments</div>\n        </div>\n        <div class=\"panel__body\">\n\n          ");
   stack1 = helpers.each.call(depth0, "comment", "in", "researchComments", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(16, program16, data),fn:self.program(14, program14, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n          </div>\n\n        </div>\n      </div>\n    </div>\n\n    <div class=\"box\">\n      <div class=\"comment-box\">\n        <form class=\"form--complex\">\n          <div class=\"column__wrapper\">\n            <div class=\"list__column--small\">\n              <label>");
-  stack1 = helpers._triageMustache.call(depth0, "user.name", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push(" says:</label>\n              ");
-  data.buffer.push(escapeExpression((helper = helpers.textarea || (depth0 && depth0.textarea),options={hash:{
-    'valueBinding': ("commentBody"),
-    'classNames': ("text-input")
-  },hashTypes:{'valueBinding': "STRING",'classNames': "STRING"},hashContexts:{'valueBinding': depth0,'classNames': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
-  data.buffer.push("\n            </div>\n            <div class=\"list__column\">\n              <label>Category:</label>\n              ");
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.Select", {hash:{
-    'content': ("commentCategories"),
-    'value': ("selectedCommentCategory"),
-    'optionValuePath': ("content.id"),
-    'optionLabelPath': ("content.label"),
-    'prompt': ("Select a category")
-  },hashTypes:{'content': "ID",'value': "ID",'optionValuePath': "STRING",'optionLabelPath': "STRING",'prompt': "STRING"},hashContexts:{'content': depth0,'value': depth0,'optionValuePath': depth0,'optionLabelPath': depth0,'prompt': depth0},contexts:[depth0],types:["ID"],data:data})));
-  data.buffer.push("\n\n              <div ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "postComment", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push(" class=\"btn\">\n                <div class=\"btn__body\">Submit</div>\n              </div>\n            </div>\n          </div>\n        </form>\n      </div>\n    </div>\n    ");
+  data.buffer.push("\n\n        </div>\n      </div>\n    </div>\n\n    <div class=\"box panel__wrapper family-submit-comment\">\n\n      <div class=\"panel\">\n        <div class=\"panel__body\">\n          ");
+  data.buffer.push(escapeExpression((helper = helpers['comment-box'] || (depth0 && depth0['comment-box']),options={hash:{
+    'submit': ("postComment"),
+    'tags': ("commentCategories"),
+    'type': ("IEM"),
+    'title': ("IEM Comment")
+  },hashTypes:{'submit': "STRING",'tags': "ID",'type': "STRING",'title': "STRING"},hashContexts:{'submit': depth0,'tags': depth0,'type': depth0,'title': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "comment-box", options))));
+  data.buffer.push("\n        </div>\n      </div>\n\n      <div class=\"panel\">\n        <div class=\"panel__body\">\n          ");
+  data.buffer.push(escapeExpression((helper = helpers['comment-box'] || (depth0 && depth0['comment-box']),options={hash:{
+    'submit': ("postComment"),
+    'tags': ("commentCategories"),
+    'type': ("research"),
+    'title': ("Research Comment")
+  },hashTypes:{'submit': "STRING",'tags': "ID",'type': "STRING",'title': "STRING"},hashContexts:{'submit': depth0,'tags': depth0,'type': depth0,'title': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "comment-box", options))));
+  data.buffer.push("\n        </div>\n      </div>\n\n    </div>\n    ");
   return buffer;
   }
 function program10(depth0,data) {
@@ -1217,31 +1253,23 @@ function program12(depth0,data) {
 
 function program14(depth0,data) {
   
-  var buffer = '', stack1, helper, options;
-  data.buffer.push("\n            <div class=\"list__item\">\n              <div class=\"comment__wrapper\">\n                <div class=\"comment__avatar\">\n                  <div class=\"comment__letter\">");
-  stack1 = helpers._triageMustache.call(depth0, "comment.firstLetter", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div>\n                </div>\n                <div class=\"comment\">\n                  <div class=\"comment__header\">\n                    <div class=\"comment__username\">");
+  var buffer = '', stack1;
+  data.buffer.push("\n          <div class=\"comment-box__wrapper\">\n            <div class=\"comment-box\">\n              <div class=\"comment-box__header\">\n                <div class=\"comment-box__header__body\">\n                  <b>");
   stack1 = helpers._triageMustache.call(depth0, "comment.userName", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push(":</div>\n                  </div>\n\n                  <div class=\"comment__body\">");
+  data.buffer.push("</b> commented 3 days ago\n                </div>\n                <div ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "deleteComment", "comment", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
+  data.buffer.push(" class=\"comment-box__header__action\">Delete</div>\n              </div>\n              <div class=\"comment-box__body\">");
   stack1 = helpers._triageMustache.call(depth0, "comment.userComment", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div>\n                  <div class=\"comment__meta\">\n                    <div ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "deleteComment", "comment", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","ID"],data:data})));
-  data.buffer.push(" class=\"comment__date--clickable\">delete</div>\n                    <div class=\"comment__date\">");
-  data.buffer.push(escapeExpression((helper = helpers.fromNow || (depth0 && depth0.fromNow),options={hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data},helper ? helper.call(depth0, "comment.createdDate", options) : helperMissing.call(depth0, "fromNow", "comment.createdDate", options))));
-  data.buffer.push("</div>\n                    <div class=\"comment__tag\">");
-  stack1 = helpers._triageMustache.call(depth0, "comment.positionInColumn", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div>\n                  </div>\n                </div>\n              </div>\n            </div>\n            ");
+  data.buffer.push("</div>\n            </div>\n          </div>\n          ");
   return buffer;
   }
 
 function program16(depth0,data) {
   
   
-  data.buffer.push("\n            <div class=\"center-center no-comments\"><small>No comments added yet.</small></div>\n            ");
+  data.buffer.push("\n          <div class=\"center-center no-comments\"><small>No comments added yet.</small></div>\n          ");
   }
 
   data.buffer.push("<div class=\"panel family\">\n\n  <div class=\"panel__overlay--header family-header\">\n\n    <div class=\"list--vertical\">\n      <div class=\"list__item\">\n        <div class=\"list__column fixed center-text\">\n          <div class=\"family-id\">Family ");
@@ -1253,7 +1281,7 @@ function program16(depth0,data) {
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0],types:["STRING","ID"],data:data},helper ? helper.call(depth0, "variants", "family", options) : helperMissing.call(depth0, "link-to", "variants", "family", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n              </div>\n            </div>\n\n            <div ");
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleProperty", "isShowingRawPedigree", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["ID","STRING"],data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleProperty", "isShowingRawPedigree", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0,depth0],types:["STRING","STRING"],data:data})));
   data.buffer.push(" class=\"btn\">\n              <div class=\"btn__body\">\n                ");
   stack1 = helpers.unless.call(depth0, "isShowingRawPedigree", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }

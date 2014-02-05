@@ -2,18 +2,20 @@ App.FamilyIndexController = Ember.Controller.extend
   needs: ['family', 'application']
 
   userBinding: 'controllers.application.user'
-  familyBinding: "controllers.family"
+  familyBinding: 'controllers.family'
+  isShowingRawPedigree: no
 
   actions:
     toggleProperty: (target) ->
       @toggleProperty(target)
+      return null
 
-    postComment: ->
+    postComment: (comment) ->
       newComment = App.FamilyComment.create
         family: @get('family.id')
-        userComment: @get('commentBody')
-        logColumn: 'IEM'
-        positionInColumn: @get('selectedCommentCategory')
+        userComment: comment.body
+        logColumn: comment.type
+        positionInColumn: comment.tag
         email: @get('user.email')
 
       newComment.save()

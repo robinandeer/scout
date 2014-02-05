@@ -13,7 +13,7 @@ Ember.CommentAdapter = Ember.Object.extend
 
     $.getJSON url, (data) ->
       for record, i in data
-        record['id'] = i
+        record['id'] = record['pk']
 
       records.load(klass, data)
 
@@ -23,25 +23,28 @@ Ember.CommentAdapter = Ember.Object.extend
 
     # This is called when saving a new record
     # Make the POST call to the server
-    $.ajax
+    $.ajax({
       type: 'POST'
       url: "#{@get('host')}/#{klass_id}/comments"
       data: record.toJSON()
       dataType: 'json'
-
-      success: (data) ->
-        # Make nessesary updates to the client record
+    }).done((data) ->
+      # Make nessesary updates to the client record
+      for key, value of data[0]
         record.setProperties data[0]
 
-        # Tell the world
-        record.didCreateRecord()
+      # Tell the world
+      record.didCreateRecord()
+    ).fail((error) ->
+      console.log error
+    )
 
   deleteRecord: (record) ->
     klass = record.constructor
     klass_id = record.get(Em.get(klass, 'klassIdField'))
 
     $.ajax
-      url: "#{@get('host')}/#{klass_id}/comments/#{record.get('email')}"
+      url: "#{@get('host')}/#{klass_id}/comments/#{record.get('id')}"
       type: 'DELETE'
       dataType: 'json'
       success: (data) ->

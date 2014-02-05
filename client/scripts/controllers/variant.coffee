@@ -20,11 +20,11 @@ App.VariantController = Ember.ObjectController.extend
 
       return null
 
-    postComment: ->
+    postComment: (comment) ->
       newComment = App.VariantComment.create
         variantid: @get('id')
-        rating: @get('selectedCommentCategory')
-        userComment: @get('commentBody')
+        rating: comment.tag
+        userComment: comment.body
         email: @get('user.email')
 
       newComment.save()
@@ -79,8 +79,7 @@ App.VariantController = Ember.ObjectController.extend
     return App.VariantComment.find({ record_id: @get('id') })
   ).property 'id'
 
-  selectedCommentCategory: null
-  commentCategories: [
+  variantPriorities: [
     { label: 'Top', id: 'TOP' },
     { label: 'Middle', id: 'MIDDLE' },
     { label: 'Low', id: 'LOW' }

@@ -1,0 +1,15 @@
+<div class="comment-box">
+  {{textarea valueBinding="body" classNames="comment-box__body--input" placeholder="Write your words here..."}}
+  <div class="comment-box__footer">
+    <div class="comment-box__footer__body">{{title}}</div>
+    {{#if hasTags}}
+    {{view Ember.Select
+           content=tags
+           value=selectedTag
+           optionValuePath="content.id"
+           optionLabelPath="content.label"
+           prompt=tagPrompt}}
+    {{/if}}
+    <div {{action 'submit'}} class="comment-box__submit">Submit</div>
+  </div>
+</div>
