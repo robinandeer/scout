@@ -2,7 +2,7 @@
 <div class="panel__wrapper">
 
   <div class="panel--menu">
-    <div class="panel__menu--footer">{{user.name}}</div>
+    <div class="panel__menu--footer">{{user.email}}</div>
 
     <div class="panel__body">
       {{#link-to 'index' classNames='menu__item'}}
@@ -15,7 +15,7 @@
       {{/link-to}}
       {{#link-to 'issue' classNames='menu__item'}}
         <div class="menu__item__icon"><img src="/static/img/icon_4240.svg"></div>
-        <div class="menu__item__label">Submit issue</div>
+        <div class="menu__item__label">Issue</div>
       {{/link-to}}
       <a href="/logout" class="menu__item">
         <div class="menu__item__icon"><img src="/static/img/icon_4930.svg"></div>

@@ -26,6 +26,7 @@ $comment-box-color: #fff;
   background-color: $comment-box-color;
   border: 1px solid #d8e0e8;
   @include flex-basis(100%);
+  border-bottom-width: 2px;
 }
 
 %comment-box__overlay {

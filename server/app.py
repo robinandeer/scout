@@ -266,7 +266,7 @@ def api(path):
     return jsonify(error='Not a valid REST method.')
 
   # Send JSON response
-  return Response(r.text, mimetype=mimetype)
+  return Response(r.text, mimetype=mimetype), r.status_code, dict(r.headers)
 
 # Route incoming API calls to the Tornado backend and sends JSON response
 @app.route('/api/static/<bam_file>', methods=['GET'])

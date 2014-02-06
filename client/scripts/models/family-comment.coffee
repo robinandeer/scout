@@ -31,7 +31,9 @@ Ember.CommentAdapter = Ember.Object.extend
     }).done((data) ->
       # Make nessesary updates to the client record
       for key, value of data[0]
-        record.setProperties data[0]
+        if key is 'created_date'
+          value = moment(value)
+        record.set key.camelize(), value
 
       # Tell the world
       record.didCreateRecord()

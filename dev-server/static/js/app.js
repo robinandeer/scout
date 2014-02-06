@@ -212,7 +212,8 @@ App.FamilyIndexController = Ember.Controller.extend({
       return null;
     },
     postComment: function(comment) {
-      var newComment;
+      var newComment,
+        _this = this;
       newComment = App.FamilyComment.create({
         family: this.get('family.id'),
         userComment: comment.body,
@@ -220,7 +221,11 @@ App.FamilyIndexController = Ember.Controller.extend({
         positionInColumn: comment.tag,
         email: this.get('user.email')
       });
-      return newComment.save();
+      return newComment.save().done(function(data) {
+        return _this.get('comments').pushObject(newComment);
+      }).fail(function(error) {
+        return console.log(error);
+      });
     },
     deleteComment: function(commentModel) {
       commentModel.destroy();
@@ -357,14 +362,19 @@ App.VariantController = Ember.ObjectController.extend({
       return null;
     },
     postComment: function(comment) {
-      var newComment;
+      var newComment,
+        _this = this;
       newComment = App.VariantComment.create({
         variantid: this.get('id'),
         rating: comment.tag,
         userComment: comment.body,
         email: this.get('user.email')
       });
-      return newComment.save();
+      return newComment.save().done(function(data) {
+        return _this.get('comments').pushObject(newComment);
+      }).fail(function(error) {
+        return console.log(error);
+      });
     },
     deleteComment: function(commentModel) {
       return commentModel.destroy();
@@ -664,7 +674,10 @@ Ember.CommentAdapter = Ember.Object.extend({
       _ref = data[0];
       for (key in _ref) {
         value = _ref[key];
-        record.setProperties(data[0]);
+        if (key === 'created_date') {
+          value = moment(value);
+        }
+        record.set(key.camelize(), value);
       }
       return record.didCreateRecord();
     }).fail(function(error) {

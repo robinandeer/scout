@@ -5,10 +5,6 @@
     <div class="panel__wrapper">
       {{! Static filters}}
       <div class="panel">
-        <div class="panel__overlay--header">
-          <div class="panel__overlay__title">Frequency cutoffs</div>
-        </div>
-
         <div class="panel__overlay--footer filter-footer">
           <div class="btn-group">
             <div class="btn" {{action 'filter'}}>
@@ -25,14 +21,7 @@
 
         <div class="panel__body">
           <div class="list--vertical">
-            <div class="list__item">
-              {{#each db in filter.databases}}
-              <div class="list__column">
-                {{view Ember.RadioButton name="database" selectionBinding="database" value=db}} {{db}}
-              </div>
-              {{/each}}
-            </div>
-
+            <div class="divider">Frequency cutoffs</div>
             <div class="list__item">
               <div class="list__column">
                 {{view Ember.RadioButton name="relation" selectionBinding="relation" value="LESSER"}} Lesser
@@ -44,29 +33,47 @@
             </div>
 
             <div class="list__item">
-              <label for="genomes">1000 Genomes</label>
-              {{input id="genomes" type="text" valueBinding="thousand_g" placeholder='0.1' classNames="text-input"}}
+              <div class="list__column space-between">
+                <label for="genomes">1000 Genomes</label>
+                {{input id="genomes" type="text" valueBinding="thousand_g" placeholder='0.1' classNames="text-input"}}
+              </div>
             </div>
 
             <div class="list__item">
-              <label for="dbSNP129">dbSNP 129</label>
-              {{input id="dbSNP129" type="text" valueBinding="dbsnp129" placeholder='0.1' classNames="text-input"}}
+              <div class="list__column space-between">
+                <label for="dbSNP129">dbSNP 129</label>
+                {{input id="dbSNP129" type="text" valueBinding="dbsnp129" placeholder='0.1' classNames="text-input"}}
+              </div>
             </div>
 
             <div class="list__item">
-              <label for="dbSNP132">dbSNP 132</label>
-              {{input id="dbSNP132" type="text" valueBinding="dbsnp132" placeholder='0.1' classNames="text-input"}}
+              <div class="list__column space-between">
+                <label for="dbSNP132">dbSNP 132</label>
+                {{input id="dbSNP132" type="text" valueBinding="dbsnp132" placeholder='0.1' classNames="text-input"}}
+              </div>
             </div>
 
             <div class="list__item">
-              <label for="esp6500">esp6500</label>
-              {{input id="esp6500" type="text" valueBinding="esp6500" placeholder='0.1' classNames="text-input"}}
+              <div class="list__column space-between">
+                <label for="esp6500">esp6500</label>
+                {{input id="esp6500" type="text" valueBinding="esp6500" placeholder='0.1' classNames="text-input"}}
+              </div>
             </div>
 
-            <div class="divider">Misc.</div>
+            <div class="divider">Database and gene search</div>
             <div class="list__item">
-              <label for="gene-name">Gene name</label>
-              {{input id="gene-name" type="text" valueBinding="gene_name" placeholder='ADK' classNames="text-input"}}
+              {{#each db in filter.databases}}
+              <div class="list__column">
+                {{view Ember.RadioButton name="database" selectionBinding="database" value=db}} {{db}}
+              </div>
+              {{/each}}
+            </div>
+
+            <div class="list__item">
+              <div class="list__column space-between">
+                <label for="gene-name">Gene name</label>
+                {{input id="gene-name" type="text" valueBinding="gene_name" placeholder='ADK' classNames="text-input"}}
+              </div>
             </div>
 
           </div>
@@ -76,11 +83,9 @@
       {{! Multiple dynamic filter panels}}
       {{#each group in filterGroups}}
         <div class="panel">
-          <div class="panel__overlay--header">
-            <div class="panel__overlay__title">{{group.name}}</div>
-          </div>
           <div class="panel__body">
             <div class="list--vertical">
+              <div class="divider">{{group.name}}</div>
 
               {{#each filter in group.filters}}
                 <div class="list__item">

@@ -27,7 +27,10 @@ App.VariantController = Ember.ObjectController.extend
         userComment: comment.body
         email: @get('user.email')
 
-      newComment.save()
+      newComment.save().done((data) =>
+        @get('comments').pushObject(newComment)
+      ).fail (error) ->
+        console.log error
 
     deleteComment: (commentModel) ->
       # Delete the record from the server

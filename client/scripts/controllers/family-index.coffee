@@ -21,7 +21,10 @@ App.FamilyIndexController = Ember.Controller.extend
         positionInColumn: comment.tag
         email: @get('user.email')
 
-      newComment.save()
+      newComment.save().done((data) =>
+        @get('comments').pushObject(newComment)
+      ).fail (error) ->
+        console.log error
 
     deleteComment: (commentModel) ->
       # Delete the record from the server

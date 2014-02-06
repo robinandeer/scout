@@ -52,7 +52,6 @@
 // +-------------------------------------------------------------------+
 
 .panel--menu {
-  max-width: 130px;
   background-color: #23313b;
 }
 
@@ -275,6 +274,7 @@ h4 {
 
 .menu__item {
   // Required
+  position: relative;
   display: block;  // Something other than 'inline'
   padding: 15px;
   cursor: pointer;
@@ -290,6 +290,10 @@ h4 {
   &:hover {
     color: #74b0e9;
     background-color: rgba(#fff, 0.1);
+
+    .menu__item__label {
+      display: block;
+    }
   }
 
   &:active {
@@ -300,13 +304,24 @@ h4 {
 }
 
 .menu__item__icon {
-  width: 50px;
-  height: 50px;
-  background-size: cover;
+  width: 40px;
+  height: 40px;
   margin: 0 auto;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .menu__item__label {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  z-index: 10;
+  display: none;
+  background: #000;
+  padding: 0 10px 2px;
   margin-top: 5px;
   font-size: 13px;
   text-align: center;
@@ -424,11 +439,18 @@ h4 {
   overflow: hidden;
   background-color: lighten($flat-gray-1, 4%);
 
+  input[type=text] {
+    width: 150px;
+  }
+
   .panel {
     border-right: 1px solid $flat-gray-1;
 
-    > .panel__body {
-      padding-top: 50px;
+    > .panel__overlay--header {
+      ~ .panel__body {
+        // Add space before content to clear the overlay
+        padding-top: 50px;
+      }
     }
   }
 
@@ -650,7 +672,17 @@ h5 {
 
 .panel__menu--footer {
   position: absolute;
-  left: 15px;
-  bottom: 15px;
-  color: $flat-gray-2;
+  left: -62px;
+  bottom: 115px;
+  color: #CFCFCF;
+  width: 200px;
+  text-align: left;
+  @include transform(rotate(-90deg));
+}
+
+.space-between {
+  width: 100%;
+  @include display(flex);
+  @include justify-content(space-between);
+  @include align-items(center);
 }

@@ -18,11 +18,11 @@ function program3(depth0,data) {
 function program5(depth0,data) {
   
   
-  data.buffer.push("\n        <div class=\"menu__item__icon\"><img src=\"/static/img/icon_4240.svg\"></div>\n        <div class=\"menu__item__label\">Submit issue</div>\n      ");
+  data.buffer.push("\n        <div class=\"menu__item__icon\"><img src=\"/static/img/icon_4240.svg\"></div>\n        <div class=\"menu__item__label\">Issue</div>\n      ");
   }
 
   data.buffer.push("\n<div class=\"panel__wrapper\">\n\n  <div class=\"panel--menu\">\n    <div class=\"panel__menu--footer\">");
-  stack1 = helpers._triageMustache.call(depth0, "user.name", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers._triageMustache.call(depth0, "user.email", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</div>\n\n    <div class=\"panel__body\">\n      ");
   stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
@@ -771,16 +771,13 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, helper, options;
-  data.buffer.push("\n  <div class=\"v-panel filter-panel\">\n    <div class=\"panel__wrapper\">\n      \n      <div class=\"panel\">\n        <div class=\"panel__overlay--header\">\n          <div class=\"panel__overlay__title\">Frequency cutoffs</div>\n        </div>\n\n        <div class=\"panel__overlay--footer filter-footer\">\n          <div class=\"btn-group\">\n            <div class=\"btn\" ");
+  data.buffer.push("\n  <div class=\"v-panel filter-panel\">\n    <div class=\"panel__wrapper\">\n      \n      <div class=\"panel\">\n        <div class=\"panel__overlay--footer filter-footer\">\n          <div class=\"btn-group\">\n            <div class=\"btn\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "filter", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
   data.buffer.push(">\n              <div class=\"btn__body\">Filter</div>\n            </div>\n            <div class=\"btn\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clinicalFilter", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
   data.buffer.push(">\n              <div class=\"btn__body\">Clinical filter</div>\n            </div>\n            <div class=\"btn\" ");
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clearFilter", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push(">\n              <div class=\"btn__body\">Clear</div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"panel__body\">\n          <div class=\"list--vertical\">\n            <div class=\"list__item\">\n              ");
-  stack1 = helpers.each.call(depth0, "db", "in", "filter.databases", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n            </div>\n\n            <div class=\"list__item\">\n              <div class=\"list__column\">\n                ");
+  data.buffer.push(">\n              <div class=\"btn__body\">Clear</div>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"panel__body\">\n          <div class=\"list--vertical\">\n            <div class=\"divider\">Frequency cutoffs</div>\n            <div class=\"list__item\">\n              <div class=\"list__column\">\n                ");
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.RadioButton", {hash:{
     'name': ("relation"),
     'selectionBinding': ("relation"),
@@ -792,7 +789,7 @@ function program1(depth0,data) {
     'selectionBinding': ("relation"),
     'value': ("GREATER")
   },hashTypes:{'name': "STRING",'selectionBinding': "STRING",'value': "STRING"},hashContexts:{'name': depth0,'selectionBinding': depth0,'value': depth0},contexts:[depth0],types:["ID"],data:data})));
-  data.buffer.push(" Greater\n              </div>\n            </div>\n\n            <div class=\"list__item\">\n              <label for=\"genomes\">1000 Genomes</label>\n              ");
+  data.buffer.push(" Greater\n              </div>\n            </div>\n\n            <div class=\"list__item\">\n              <div class=\"list__column space-between\">\n                <label for=\"genomes\">1000 Genomes</label>\n                ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'id': ("genomes"),
     'type': ("text"),
@@ -800,7 +797,7 @@ function program1(depth0,data) {
     'placeholder': ("0.1"),
     'classNames': ("text-input")
   },hashTypes:{'id': "STRING",'type': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING"},hashContexts:{'id': depth0,'type': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n            </div>\n\n            <div class=\"list__item\">\n              <label for=\"dbSNP129\">dbSNP 129</label>\n              ");
+  data.buffer.push("\n              </div>\n            </div>\n\n            <div class=\"list__item\">\n              <div class=\"list__column space-between\">\n                <label for=\"dbSNP129\">dbSNP 129</label>\n                ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'id': ("dbSNP129"),
     'type': ("text"),
@@ -808,7 +805,7 @@ function program1(depth0,data) {
     'placeholder': ("0.1"),
     'classNames': ("text-input")
   },hashTypes:{'id': "STRING",'type': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING"},hashContexts:{'id': depth0,'type': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n            </div>\n\n            <div class=\"list__item\">\n              <label for=\"dbSNP132\">dbSNP 132</label>\n              ");
+  data.buffer.push("\n              </div>\n            </div>\n\n            <div class=\"list__item\">\n              <div class=\"list__column space-between\">\n                <label for=\"dbSNP132\">dbSNP 132</label>\n                ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'id': ("dbSNP132"),
     'type': ("text"),
@@ -816,7 +813,7 @@ function program1(depth0,data) {
     'placeholder': ("0.1"),
     'classNames': ("text-input")
   },hashTypes:{'id': "STRING",'type': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING"},hashContexts:{'id': depth0,'type': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n            </div>\n\n            <div class=\"list__item\">\n              <label for=\"esp6500\">esp6500</label>\n              ");
+  data.buffer.push("\n              </div>\n            </div>\n\n            <div class=\"list__item\">\n              <div class=\"list__column space-between\">\n                <label for=\"esp6500\">esp6500</label>\n                ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'id': ("esp6500"),
     'type': ("text"),
@@ -824,7 +821,10 @@ function program1(depth0,data) {
     'placeholder': ("0.1"),
     'classNames': ("text-input")
   },hashTypes:{'id': "STRING",'type': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING"},hashContexts:{'id': depth0,'type': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n            </div>\n\n            <div class=\"divider\">Misc.</div>\n            <div class=\"list__item\">\n              <label for=\"gene-name\">Gene name</label>\n              ");
+  data.buffer.push("\n              </div>\n            </div>\n\n            <div class=\"divider\">Database and gene search</div>\n            <div class=\"list__item\">\n              ");
+  stack1 = helpers.each.call(depth0, "db", "in", "filter.databases", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n            </div>\n\n            <div class=\"list__item\">\n              <div class=\"list__column space-between\">\n                <label for=\"gene-name\">Gene name</label>\n                ");
   data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
     'id': ("gene-name"),
     'type': ("text"),
@@ -832,7 +832,7 @@ function program1(depth0,data) {
     'placeholder': ("ADK"),
     'classNames': ("text-input")
   },hashTypes:{'id': "STRING",'type': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING"},hashContexts:{'id': depth0,'type': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n            </div>\n\n          </div>\n        </div>\n      </div> \n\n      \n      ");
+  data.buffer.push("\n              </div>\n            </div>\n\n          </div>\n        </div>\n      </div> \n\n      \n      ");
   stack1 = helpers.each.call(depth0, "group", "in", "filterGroups", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n    </div>\n  </div>\n  ");
@@ -857,10 +857,10 @@ function program2(depth0,data) {
 function program4(depth0,data) {
   
   var buffer = '', stack1;
-  data.buffer.push("\n        <div class=\"panel\">\n          <div class=\"panel__overlay--header\">\n            <div class=\"panel__overlay__title\">");
+  data.buffer.push("\n        <div class=\"panel\">\n          <div class=\"panel__body\">\n            <div class=\"list--vertical\">\n              <div class=\"divider\">");
   stack1 = helpers._triageMustache.call(depth0, "group.name", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</div>\n          </div>\n          <div class=\"panel__body\">\n            <div class=\"list--vertical\">\n\n              ");
+  data.buffer.push("</div>\n\n              ");
   stack1 = helpers.each.call(depth0, "filter", "in", "group.filters", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n            </div>\n          </div>\n        </div>\n      ");
@@ -1242,7 +1242,7 @@ function program7(depth0,data) {
 function program9(depth0,data) {
   
   var buffer = '', stack1, helper, options;
-  data.buffer.push("\n    <div class=\"box family\">\n      <h5>Family members</h5>\n      <table class=\"predict gt-call-table\">\n\n        ");
+  data.buffer.push("\n    <div class=\"box family\">\n      <table class=\"predict gt-call-table\">\n\n        ");
   stack1 = helpers.each.call(depth0, "sample", "in", "family.samples", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n      </table>\n    </div>\n\n    ");
