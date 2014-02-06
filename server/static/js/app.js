@@ -18,16 +18,6 @@ Ember.Handlebars.registerBoundHelper("fromNow", function(date) {
   return date.fromNow();
 });
 
-Ember.Handlebars.registerBoundHelper("cap", function(str) {
-  return str.toLowerCase().capitalize();
-});
-
-String.prototype.capitalize = function() {
-  var lower_case;
-  lower_case = this.toLowerCase();
-  return lower_case.charAt(0).toUpperCase() + lower_case.slice(1);
-};
-
 App.Router.map(function() {
   this.resource('dashboard');
   this.resource('issue');
@@ -99,6 +89,38 @@ Ember.OmimAdapter = Ember.Object.extend({
       })();
       return record.load(id, data);
     });
+  }
+});
+
+App.CommentBoxComponent = Ember.Component.extend({
+  classNames: ['comment-box__wrapper'],
+  type: null,
+  body: null,
+  title: 'Comment',
+  selectedTag: null,
+  tagPrompt: 'Tag comment',
+  tags: [],
+  hasTags: (function() {
+    return this.get('tags.length') > 0;
+  }).property('tags'),
+  actions: {
+    clear: function() {
+      return this.setProperties({
+        body: null,
+        selectedTag: null
+      });
+    },
+    submit: function() {
+      this.sendAction('submit', {
+        type: this.get('type'),
+        body: this.get('body'),
+        tag: this.get('selectedTag')
+      });
+      return this.setProperties({
+        body: null,
+        selectedTag: null
+      });
+    }
   }
 });
 
@@ -179,21 +201,31 @@ App.AuthController = Ember.Controller.extend({
 App.FamilyIndexController = Ember.Controller.extend({
   needs: ['family', 'application'],
   userBinding: 'controllers.application.user',
-  familyBinding: "controllers.family",
+  familyBinding: 'controllers.family',
+  hasGeneModels: (function() {
+    return this.get('family.samples.1.inheritanceModels.length') > 0;
+  }).property('family.samples.1.inheritanceModels'),
+  isShowingRawPedigree: false,
   actions: {
     toggleProperty: function(target) {
-      return this.toggleProperty(target);
+      this.toggleProperty(target);
+      return null;
     },
-    postComment: function() {
-      var newComment;
+    postComment: function(comment) {
+      var newComment,
+        _this = this;
       newComment = App.FamilyComment.create({
         family: this.get('family.id'),
-        userComment: this.get('commentBody'),
-        logColumn: 'IEM',
-        positionInColumn: this.get('selectedCommentCategory'),
+        userComment: comment.body,
+        logColumn: comment.type,
+        positionInColumn: comment.tag,
         email: this.get('user.email')
       });
-      return newComment.save();
+      return newComment.save().done(function(data) {
+        return _this.get('comments').pushObject(newComment);
+      }).fail(function(error) {
+        return console.log(error);
+      });
     },
     deleteComment: function(commentModel) {
       commentModel.destroy();
@@ -229,7 +261,6 @@ App.FamilyIndexController = Ember.Controller.extend({
     }
     return comments;
   }).property('comments.isLoaded', 'comments'),
-  selectedCommentCategory: null,
   commentCategories: [
     {
       label: 'Finding',
@@ -330,15 +361,20 @@ App.VariantController = Ember.ObjectController.extend({
       this.get('model').unhide();
       return null;
     },
-    postComment: function() {
-      var newComment;
+    postComment: function(comment) {
+      var newComment,
+        _this = this;
       newComment = App.VariantComment.create({
         variantid: this.get('id'),
-        rating: this.get('selectedCommentCategory'),
-        userComment: this.get('commentBody'),
+        rating: comment.tag,
+        userComment: comment.body,
         email: this.get('user.email')
       });
-      return newComment.save();
+      return newComment.save().done(function(data) {
+        return _this.get('comments').pushObject(newComment);
+      }).fail(function(error) {
+        return console.log(error);
+      });
     },
     deleteComment: function(commentModel) {
       return commentModel.destroy();
@@ -384,8 +420,7 @@ App.VariantController = Ember.ObjectController.extend({
       record_id: this.get('id')
     });
   }).property('id'),
-  selectedCommentCategory: null,
-  commentCategories: [
+  variantPriorities: [
     {
       label: 'Top',
       id: 'TOP'
@@ -633,12 +668,20 @@ Ember.CommentAdapter = Ember.Object.extend({
       type: 'POST',
       url: "" + (this.get('host')) + "/" + klass_id + "/comments",
       data: record.toJSON(),
-      dataType: 'json',
-      success: function(data) {
-        console.log(data);
-        record.setProperties(data);
-        return record.didCreateRecord();
+      dataType: 'json'
+    }).done(function(data) {
+      var key, value, _ref;
+      _ref = data[0];
+      for (key in _ref) {
+        value = _ref[key];
+        if (key === 'created_date') {
+          value = moment(value);
+        }
+        record.set(key.camelize(), value);
       }
+      return record.didCreateRecord();
+    }).fail(function(error) {
+      return console.log(error);
     });
   },
   deleteRecord: function(record) {
@@ -1044,16 +1087,30 @@ App.Variant = Ember.Model.extend({
   id: attr(),
   rankScore: attr(),
   rating: attr(),
+  GTCallFilter: attr(),
   chr: attr(),
   startBp: attr(),
   stopBp: attr(),
+  isSingleBase: (function() {
+    return this.get('startBp') === this.get('stopBp');
+  }).property('startBp', 'stopBp'),
   refNt: attr(),
   altNt: attr(),
   hgncSymbol: attr(),
   hgncSynonyms: attr(),
+  hgncSynonymsString: (function() {
+    if (this.get('hgncSynonyms')) {
+      return this.get('hgncSynonyms').split(';').slice(0, -1).join(', ');
+    }
+  }).property('hgncSynonyms'),
   hgncApprovedName: attr(),
   hgncTranscriptId: attr(),
   ensemblGeneid: attr(),
+  ensemblGeneIdString: (function() {
+    if (this.get('ensemblGeneid')) {
+      return this.get('ensemblGeneid').split(';').slice(0, -1).join(', ');
+    }
+  }).property('ensemblGeneid'),
   siftWholeExome: attr(),
   polyphenDivHuman: attr(),
   gerpWholeExome: attr(),
@@ -1061,6 +1118,11 @@ App.Variant = Ember.Model.extend({
   thousandG: attr(),
   dbsnpId: attr(),
   dbsnp: attr(),
+  dbsnpFlag: (function() {
+    if (this.get('dbsnp')) {
+      return this.get('dbsnp').replace('snp137', '');
+    }
+  }).property('dbsnp'),
   dbsnp129: attr(),
   dbsnp132: attr(),
   esp6500: attr(),
@@ -1068,6 +1130,7 @@ App.Variant = Ember.Model.extend({
   lrtWholeExome: attr(),
   phastConstElements: attr(),
   gerpElement: attr(),
+  polyphenVarHuman: attr(),
   hgmd: attr(ReplaceNull),
   omimGeneDesc: attr(),
   diseaseGroup: attr(),
@@ -1099,8 +1162,16 @@ App.Variant = Ember.Model.extend({
     return "" + (this.get('chr')) + ": " + (this.get('startBp')) + "-" + (this.get('stopBp'));
   }).property('chr', 'startBp', 'stopBp'),
   geneModels: (function() {
-    if (this.get('geneModel')) {
-      return this.get('geneModel').split(';').slice(0, -1);
+    var delimiter, modelString, sliceEnd;
+    modelString = this.get('geneModel');
+    if (modelString) {
+      delimiter = ':';
+      sliceEnd = 1;
+      if (modelString.indexOf(';') === !-1) {
+        delimiter = ';';
+        sliceEnd = -1;
+      }
+      return this.get('geneModel').split(delimiter).slice(0, sliceEnd);
     } else {
       return [];
     }

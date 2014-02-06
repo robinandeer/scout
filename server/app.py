@@ -39,8 +39,8 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 # Setup SSL: http://flask.pocoo.org/snippets/111/
 ctx = SSL.Context(SSL.SSLv23_METHOD)
-ctx.use_privatekey_file('/Users/robinandeer/Downloads/recertifikat/myserver.key')
-ctx.use_certificate_file('/Users/robinandeer/Downloads/recertifikat/server.crt')
+ctx.use_privatekey_file('~/Downloads/recertifikat/myserver.key')
+ctx.use_certificate_file('~/Downloads/recertifikat/server.crt')
 
 # https://github.com/kennethreitz/flask-sslify
 # Force SSL. Redirect all incoming requests to HTTPS.
@@ -355,13 +355,12 @@ def sanger_order():
   # Send an email with Sanger sequencing order
   # TODO: should also send to the person submitting the order
   # current_user.email
-  msg = Message('Hello',
+  msg = Message('Sanger sequencing of ' + request.form['hgnc_symbol'],
     sender = gmail_keys.username,
     recipients = ['robin.andeer@gmail.com']
   )
 
   body = {
-    'hgnc': request.form['hgnc_symbol'],
     'family_id': request.form['family_id'],
     'variant_link': request.form['variant_link'],
     'db': request.form['database'],
@@ -371,7 +370,7 @@ def sanger_order():
     'name': current_user.name
   }
 
-  msg.body = """Subject: Sanger sequencing of {hgnc}\n
+  msg.body = """\n
     Family {family_id}: {variant_link} \n
     HGNC symbol: {hgnc}\n
     Database: {db}\n
