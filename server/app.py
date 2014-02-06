@@ -64,18 +64,18 @@ mail = Mail(app)
 # https://code.google.com/apis/console
 google = oauth.remote_app('google',
   # Prepend to all (non-absolute) request URLs
-  base_url             = 'https://www.google.com/accounts/',
-  authorize_url        = 'https://accounts.google.com/o/oauth2/auth',
-  request_token_url    = None,
-  request_token_params = {
+  base_url='https://www.google.com/accounts/',
+  authorize_url='https://accounts.google.com/o/oauth2/auth',
+  request_token_url=None,
+  request_token_params={
     'scope': 'https://www.googleapis.com/auth/userinfo.email',
     'response_type': 'code'
   },
-  access_token_url     = 'https://accounts.google.com/o/oauth2/token',
-  access_token_method  = 'POST',
-  access_token_params  = {'grant_type': 'authorization_code'},
-  consumer_key         = google_keys.client_id,
-  consumer_secret      = google_keys.client_secret
+  access_token_url='https://accounts.google.com/o/oauth2/token',
+  access_token_method='POST',
+  access_token_params={'grant_type': 'authorization_code'},
+  consumer_key=google_keys.client_id,
+  consumer_secret=google_keys.client_secret
 )
 
 # Setup SQLAlchemy
@@ -86,6 +86,7 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -152,6 +153,7 @@ def get_google_token():
     flash('Not able to get user tokens.')
     return None
 
+
 @app.route('/')
 def index():
   if current_user.is_authenticated():
@@ -160,6 +162,7 @@ def index():
 
   else:
     return render_template('login.html')
+
 
 @app.route('/login')
 def login():
@@ -170,6 +173,7 @@ def login():
   session['next'] = next_url
 
   return google.authorize(callback=url_for('google_callback', _external=True))
+
 
 @app.route(REDIRECT_URI)
 @google.authorized_handler
@@ -191,9 +195,9 @@ def google_callback(resp):
       if user is None:
         # Create a new user
         user = User(
-          google_id    = user_info['id'],
-          email        = user_info['email'],
-          access_token = resp['access_token']
+          google_id=user_info['id'],
+          email=user_info['email'],
+          access_token=resp['access_token']
         )
 
         db.session.add(user)
@@ -215,6 +219,7 @@ def google_callback(resp):
 
   next_url = request.args.get('next') or url_for('index')
   return redirect(next_url)
+
 
 @app.route('/logout')
 def logout():
@@ -238,12 +243,13 @@ def user():
   # Return json object for the logged in user
   return jsonify(**user)
 
+
 # Route incoming API calls to the Tornado backend and sends JSON response
 @app.route('/api/v1/<path:path>', methods=['GET', 'POST', 'DELETE'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'DELETE'])
 def api(path):
   # Route incoming request to Tornado
-  cookie = {'institute': 'cmms'} # current_user.institute
+  cookie = {'institute': 'cmms'}  # current_user.institute
 
   url = 'http://clinical-db.scilifelab.se:8082/{path}?{query}'\
         .format(path=path, query=request.query_string)
@@ -268,6 +274,7 @@ def api(path):
   # Send JSON response
   return Response(r.text, mimetype=mimetype), r.status_code, dict(r.headers)
 
+
 # Route incoming API calls to the Tornado backend and sends JSON response
 @app.route('/api/static/<bam_file>', methods=['GET'])
 @crossdomain(origin='*', methods=['GET'])
@@ -281,7 +288,7 @@ def api_static(bam_file):
 
   # Route request to Tornado
   url = 'http://clinical-db:8082/static/' + bam_file
-  cookie = {'institute': 'cmms'} # current_user.institute
+  cookie = {'institute': 'cmms'}  # current_user.institute
 
   if request.method == 'GET':
 
@@ -317,6 +324,7 @@ def issues():
 
   return jsonify(issues=issues)
 
+
 @app.route('/issues/<issue_id>', methods=['GET'])
 @crossdomain(origin='*', methods=['GET'])
 def issue(issue_id):
@@ -332,6 +340,7 @@ def issue(issue_id):
 
   return jsonify(**json)
 
+
 @app.route('/issues/new', methods=['POST'])
 @crossdomain(origin='*', methods=['POST'])
 def create_issue():
@@ -346,6 +355,7 @@ def create_issue():
   return jsonify(id=issue.id, body=issue.body, title=issue.title,
                  html=issue.body_html, url=issue.html_url)
 
+
 # +--------------------------------------------------------------------+
 # |  Sanger Sequencing Order Mail
 # +--------------------------------------------------------------------+
@@ -356,8 +366,8 @@ def sanger_order():
   # TODO: should also send to the person submitting the order
   # current_user.email
   msg = Message('Sanger sequencing of ' + request.form['hgnc_symbol'],
-    sender = gmail_keys.username,
-    recipients = ['robin.andeer@gmail.com']
+    sender=gmail_keys.username,
+    recipients=['robin.andeer@gmail.com']
   )
 
   body = {
