@@ -28,6 +28,12 @@ App.Variant = Ember.Model.extend
   ).property 'hgncSynonyms'
   hgncApprovedName: attr()
   hgncTranscriptId: attr()
+  variantFunctions: (->
+    if @get('hgncTranscriptId')
+      return @get("hgncTranscriptId").split(',').slice(0,-1)
+    else
+      return []
+  ).property 'hgncTranscriptId'
   ensemblGeneid: attr()
   ensemblGeneIdString: (->
     if @get('ensemblGeneid')
@@ -97,7 +103,7 @@ App.Variant = Ember.Model.extend
     if modelString
       delimiter = ':'
       sliceEnd = 1
-      if modelString.indexOf(';') is not -1
+      unless modelString.indexOf(';') is -1
         delimiter = ';'
         sliceEnd = -1
       return @get('geneModel').split(delimiter).slice(0, sliceEnd)

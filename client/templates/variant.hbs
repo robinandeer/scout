@@ -133,32 +133,52 @@
     </div>
 
     <div class="box annotations">
-      <table class="predict annotate-table">
-        <tr>
-          <td class="predict__main predict__part">
-            <a {{bind-attr href=omimLink}} class="link" target="_blank">
-              <div class="logo--omim">OMIM</div>
-            </a>
-          </td>
-          <td class="predict__part">
-            {{#each syn in omim.SYNDROMS}}
-              <div>{{syn}}</div>
-            {{/each}}
-          </td>
-        </tr>
-        <tr>
-          <td class="predict__main predict__part">
-            <a href="http://www.hgmd.cf.ac.uk/ac/index.php" class="link" target="_blank">
-              <img src="/static/img/hgmd-logo.svg">
-            </a>
-          </td>
-          <td class="predict__part">{{hgmd}}</td>
-        </tr>
-        <tr>
-          <td class="predict__main predict__part">Disease group</td>
-          <td class="predict__part">{{diseaseGroup}}</td>
-        </tr>
-      </table>
+      <div class="panel__wrapper">
+        <div class="panel">
+          <div class="panel__body">
+            <table class="predict annotate-table">
+              <tr>
+                <td class="predict__main predict__part">
+                  <a {{bind-attr href=omimLink}} class="link" target="_blank">
+                    <div class="logo--omim">OMIM</div>
+                  </a>
+                </td>
+                <td class="predict__part">
+                  {{#each syn in omim.SYNDROMS}}
+                    <div>{{syn}}</div>
+                  {{/each}}
+                </td>
+              </tr>
+              <tr>
+                <td class="predict__main predict__part">
+                  <a href="http://www.hgmd.cf.ac.uk/ac/index.php" class="link" target="_blank">
+                    <img src="/static/img/hgmd-logo.svg">
+                  </a>
+                </td>
+                <td class="predict__part">{{hgmd}}</td>
+              </tr>
+              <tr>
+                <td class="predict__main predict__part">Disease group</td>
+                <td class="predict__part">{{diseaseGroup}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel__body">
+            <div class="list--vertical">
+              <div class="divider">Variant function</div>
+              {{#each item in variantFunctions}}
+              <div class="list__item">
+                <div class="list__column--slim">{{item}}</div>
+              </div>
+              {{else}}
+                <div class="center-center no-comments"><small>No functions annotated.</small></div>
+              {{/each}}
+            </div>{{! END list--vertical }}
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="box gt-call">

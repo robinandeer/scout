@@ -65,14 +65,14 @@ App.VariantController = Ember.ObjectController.extend
     # TODO: Fix database check!
     return Ember.Object.create
       family_id: App.family
-      variant_link: "https://clinical-db.scilifelab.se/#{@get('currentPath')}"
+      variant_link: document.URL
       database: 'IEM'
       hgnc_symbol: @get 'hgncSymbol'
       chr_pos: @get 'chromPosString'
       amino_change: @get 'hgncTranscriptId'
       gt_call: @get 'gtString'
   ).property('App.Family', 'hgncSymbol', 'chromPosString', 'hgncTranscriptId',
-             'gtString', 'currentPath')
+             'gtString')
 
   hasCompounds: (->
     return @get('gt.compounds.length') > 1

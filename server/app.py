@@ -39,8 +39,8 @@ app.config['SECRET_KEY'] = SECRET_KEY
 
 # Setup SSL: http://flask.pocoo.org/snippets/111/
 ctx = SSL.Context(SSL.SSLv23_METHOD)
-ctx.use_privatekey_file('~/Downloads/recertifikat/myserver.key')
-ctx.use_certificate_file('~/Downloads/recertifikat/server.crt')
+ctx.use_privatekey_file('/Users/robinandeer/Downloads/recertifikat/myserver.key')
+ctx.use_certificate_file('/Users/robinandeer/Downloads/recertifikat/server.crt')
 
 # https://github.com/kennethreitz/flask-sslify
 # Force SSL. Redirect all incoming requests to HTTPS.
