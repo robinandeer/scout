@@ -10,24 +10,26 @@ from flask import (Flask, request, redirect, url_for, session, flash,
 from flask_oauth import OAuth
 from flask.ext.login import (LoginManager, login_user, logout_user,
                              current_user, login_required)
-from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.mail import Mail, Message
 from OpenSSL import SSL
 from flask_sslify import SSLify
+from flask.ext.mongoengine import MongoEngine
 
+from datetime import datetime
 import re
 import requests
 import arrow
 import json
+from bson import ObjectId
 
 from github import IssueTracker
 from cors import crossdomain
-from secrets import google_keys, gmail_keys, github_keys, SECRET_KEY
+from secrets import (google_keys, gmail_keys, github_keys, SECRET_KEY,
+                     mongo_auth)
 
 # ----------------------------------------------------------------------
 #  Configuration
 # ----------------------------------------------------------------------
-DATABASE_URI = 'sqlite:///db.sqlite'
 DEBUG = True
 # One of the Redirect URIs from Google APIs console
 REDIRECT_URI = '/authorized'
@@ -47,9 +49,6 @@ ctx.use_certificate_file('/Users/robinandeer/Downloads/recertifikat/server.crt')
 # Only takes effect when DEBUG=False
 sslify = SSLify(app)
 
-# Setup OAuth
-oauth = OAuth()
-
 # Setup Flask Mail (using Gmail)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
@@ -58,6 +57,9 @@ app.config['MAIL_USERNAME'] = gmail_keys.username
 app.config['MAIL_PASSWORD'] = gmail_keys.password
 
 mail = Mail(app)
+
+# Setup OAuth
+oauth = OAuth()
 
 # Use Google as remote application
 # You must configure 3 values from Google APIs console
@@ -68,7 +70,7 @@ google = oauth.remote_app('google',
   authorize_url='https://accounts.google.com/o/oauth2/auth',
   request_token_url=None,
   request_token_params={
-    'scope': 'https://www.googleapis.com/auth/userinfo.email',
+    'scope': "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
     'response_type': 'code'
   },
   access_token_url='https://accounts.google.com/o/oauth2/token',
@@ -78,9 +80,16 @@ google = oauth.remote_app('google',
   consumer_secret=google_keys.client_secret
 )
 
-# Setup SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
-db = SQLAlchemy(app)
+# Setup MongoEngine
+# MongoDB
+app.config['MONGODB_SETTINGS'] = {
+  'USERNAME': mongo_auth.username,
+  'PASSWORD': mongo_auth.password,
+  'HOST': mongo_auth.host,
+  'PORT': mongo_auth.port,
+  'DB': mongo_auth.db,
+}
+db = MongoEngine(app)
 
 # Setup LoginManager
 login_manager = LoginManager()
@@ -90,39 +99,27 @@ login_manager.login_view = 'login'
 
 @login_manager.user_loader
 def load_user(user_id):
-  user = User.query.get(user_id)
-  flash(user.email + ' logged in!')
+  user = User.objects.get(id=ObjectId(user_id))
   return user
 
 # Setup GitHub IssueTracker
 it = IssueTracker(github_keys.username, github_keys.password)
 
 
-# ----------------------------------------------------------------------
-#  Flask-SQLAlchemy Models
-# ----------------------------------------------------------------------
-class User(db.Model):
-  """docstring for User"""
-  id = db.Column(db.Integer, primary_key=True)
-  google_id = db.Column(db.String)
-  name = db.Column(db.String)
-  email = db.Column(db.String)
-  institute = db.Column(db.String)
-  access_token = db.Column(db.String)
-  created_at = db.Column(db.DateTime, default=arrow.now().datetime)
-  active = db.Column(db.Boolean, default=True)
-
-  def to_dict(self):
-    return {
-      'id': self.id,
-      'google_id': self.google_id,
-      'name': self.name,
-      'email': self.email,
-      'institute': self.institute
-    }
-
-  def __repr__(self):
-    return "<User (name='{name}')>".format(name=self.name)
+# +--------------------------------------------------------------------+
+# |  Flask-MongoEngine Models
+# +--------------------------------------------------------------------+
+class User(db.Document):
+  given_name = db.StringField()
+  family_name = db.StringField()
+  name = db.StringField()
+  locale = db.StringField()
+  email = db.EmailField(required=True, unique=True)
+  created_at = db.DateTimeField(default=datetime.now())
+  google_id = db.StringField()
+  name = db.StringField()
+  institutes = db.ListField()
+  access_token = db.StringField()
 
   def is_active(self):
     return True
@@ -135,9 +132,73 @@ class User(db.Model):
 
   def get_id(self):
     try:
-      return unicode(self.id)
+      return str(self.id)
     except AttributeError:
       raise NotImplementedError('No `id` attribute - override `get_id`')
+
+
+class Comment(db.Document):
+  user = db.ReferenceField(User)
+  email = db.StringField(required=True)
+  # 'variantid' or 'family'
+  parent_id = db.StringField(required=True, unique_with='email')
+  body = db.StringField()
+  created_at = db.DateTimeField(default=datetime.now())
+  # 'column' or 'rating'
+  category = db.StringField()
+  # 'position_in_column'
+  type = db.StringField()
+
+
+class Sample(db.EmbeddedDocument):
+  sample_id = db.StringField(required=True, unique=True)
+  father = db.ReferenceField('self')
+  mother = db.ReferenceField('self')
+  sex = db.StringField()
+  phenotype = db.StringField()
+  internal_id = db.StringField(unique=True)
+  tissue_origin = db.StringField()
+  isolation_kit = db.StringField()
+  isolation_date = db.DateTimeField()
+  isolation_personnel = db.StringField()
+  physician = db.StringField()
+  inheritance_models = db.ListField()
+  phenotype_terms = db.ListField()
+  seq_id = db.StringField()
+  sequencing_provider_id = db.StringField(unique=True)
+  capture_kit = db.StringField()
+  capture_date = db.DateTimeField()
+  capture_personnel = db.StringField()
+  clustering_date = db.DateTimeField()
+  sequencing_kit = db.StringField()
+  clinical_db = db.StringField()
+
+
+class Pedigree(db.Document):
+  family_id = db.StringField()
+  samples = db.ListField(db.EmbeddedDocumentField(Sample))
+
+
+# +--------------------------------------------------------------------+
+# |  Utility functions
+# +--------------------------------------------------------------------+
+class MongoDocumentEncoder(json.JSONEncoder):
+  def default(self, o):
+    if isinstance(o, datetime):
+      # Return a string like "2 hours ago"
+      return arrow.get(o).format('YYYY-MM-DD HH:mm:ss ZZ')
+
+    elif isinstance(o, ObjectId):
+      return str(o)
+
+    return json.JSONEncoder(self, o)
+
+
+def jsonify_mongo(*args, **kwargs):
+  payload = json.dumps(dict(*args, **kwargs), cls=MongoDocumentEncoder,
+                       separators=(',', ':'), ensure_ascii=False)
+
+  return Response(payload, mimetype='application/json; charset=utf-8')
 
 
 # ----------------------------------------------------------------------
@@ -146,7 +207,7 @@ class User(db.Model):
 # Return a tuple of Google tokens, if they exist
 @google.tokengetter
 def get_google_token():
-  """This is ised by the API to look for aith token and secret."""
+  """This is ised by the API to look for auth token and secret."""
   if current_user.is_authenticated():
     return (current_user.access_token, '')
   else:
@@ -157,7 +218,7 @@ def get_google_token():
 @app.route('/')
 def index():
   if current_user.is_authenticated():
-    #return render_template('index.html')
+    # Serve the Ember.js app
     return app.send_static_file('index.html')
 
   else:
@@ -184,38 +245,48 @@ def google_callback(resp):
 
   else:
     # Get more user info with the access token
-    r = requests.get('https://www.googleapis.com/oauth2/v1/userinfo',
+    r = requests.get('https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
       headers={'Authorization': 'OAuth ' + resp['access_token']})
 
     if r.ok:
       user_info = r.json()
 
       # Now let's store the user in the datastore
-      user = User.query.filter_by(email=user_info['email']).first()
+      user = User.objects(email=user_info['email']).first()
       if user is None:
+
+        # Let's finally check if the user should have access
+        url = 'http://clinical-db.scilifelab.se:8082/checkEmail/'\
+              + user_info['email']
+        r2 = requests.get(url)
+        validation = r2.json()
+
+        if 'Error' in validation:
+          return jsonify(**validation), 403
+
         # Create a new user
         user = User(
           google_id=user_info['id'],
           email=user_info['email'],
-          access_token=resp['access_token']
-        )
-
-        db.session.add(user)
-        db.session.commit()
+          access_token=resp['access_token'],
+          given_name=user_info['given_name'],
+          family_name=user_info['family_name'],
+          name=user_info['name'],
+          locale=user_info['locale'],
+          institutes=validation['institute'].split(',')
+        ).save()
 
         login_user(user)
-        flash('You created a new account: ' + user_info['email'])
 
       else:
         # In any case we update the authentication token in the db
         # In case the user temporarily revoked access we will have new tokens
         user.access_token = resp['access_token']
 
-        db.session.commit()
+        user.save()
         login_user(user)
-        flash('You were signed in as: ' + user_info['email'])
 
-      session['user_id'] = user.id
+      session['user_id'] = str(user.id)
 
   next_url = request.args.get('next') or url_for('index')
   return redirect(next_url)
@@ -224,7 +295,6 @@ def google_callback(resp):
 @app.route('/logout')
 def logout():
   logout_user()
-  flash('You were signed out.')
   return redirect(request.referrer or url_for('index'))
 
 
@@ -236,12 +306,14 @@ def logout():
 @crossdomain(origin='*', methods=['GET'])
 def user():
   try:
-    user = current_user.to_dict()
+    user = current_user.to_mongo().to_dict()
   except AttributeError:
+    # return jsonify(error="You are not logged in."), 403
+    print('\nFAKING A USER!')
     user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
 
   # Return json object for the logged in user
-  return jsonify(**user)
+  return jsonify_mongo(**user)
 
 
 # Route incoming API calls to the Tornado backend and sends JSON response
@@ -249,7 +321,11 @@ def user():
 @crossdomain(origin='*', methods=['GET', 'POST', 'DELETE'])
 def api(path):
   # Route incoming request to Tornado
-  cookie = {'institute': 'cmms'}  # current_user.institute
+  try:
+    cookie = {'institute': ','.join(current_user.institutes)}
+  except AttributeError, e:
+    #return jsonify(error='You are not logged in!'), 403
+    cookie = {'institute': 'CMMS'}
 
   url = 'http://clinical-db.scilifelab.se:8082/{path}?{query}'\
         .format(path=path, query=request.query_string)
@@ -288,7 +364,7 @@ def api_static(bam_file):
 
   # Route request to Tornado
   url = 'http://clinical-db:8082/static/' + bam_file
-  cookie = {'institute': 'cmms'}  # current_user.institute
+  cookie = {'institute': ','.join(current_user.institutes)}
 
   if request.method == 'GET':
 
@@ -348,7 +424,7 @@ def create_issue():
   body = """{body}
 
   submitted by **{author}**.
-  """.format(body=request.form['body'], author='Anna Wedell')  # TEMP
+  """.format(body=request.form['body'], author=current_user.name)
 
   issue = it.create(request.form['title'], body)
 

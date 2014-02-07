@@ -404,14 +404,14 @@ App.VariantController = Ember.ObjectController.extend({
   sangerData: (function() {
     return Ember.Object.create({
       family_id: App.family,
-      variant_link: "https://clinical-db.scilifelab.se/" + (this.get('currentPath')),
+      variant_link: document.URL,
       database: 'IEM',
       hgnc_symbol: this.get('hgncSymbol'),
       chr_pos: this.get('chromPosString'),
       amino_change: this.get('hgncTranscriptId'),
       gt_call: this.get('gtString')
     });
-  }).property('App.Family', 'hgncSymbol', 'chromPosString', 'hgncTranscriptId', 'gtString', 'currentPath'),
+  }).property('App.Family', 'hgncSymbol', 'chromPosString', 'hgncTranscriptId', 'gtString'),
   hasCompounds: (function() {
     return this.get('gt.compounds.length') > 1;
   }).property('gt.compounds'),
@@ -1105,6 +1105,13 @@ App.Variant = Ember.Model.extend({
   }).property('hgncSynonyms'),
   hgncApprovedName: attr(),
   hgncTranscriptId: attr(),
+  variantFunctions: (function() {
+    if (this.get('hgncTranscriptId')) {
+      return this.get("hgncTranscriptId").split(',').slice(0, -1);
+    } else {
+      return [];
+    }
+  }).property('hgncTranscriptId'),
   ensemblGeneid: attr(),
   ensemblGeneIdString: (function() {
     if (this.get('ensemblGeneid')) {
@@ -1167,7 +1174,7 @@ App.Variant = Ember.Model.extend({
     if (modelString) {
       delimiter = ':';
       sliceEnd = 1;
-      if (modelString.indexOf(';') === !-1) {
+      if (modelString.indexOf(';') !== -1) {
         delimiter = ';';
         sliceEnd = -1;
       }
