@@ -49,7 +49,7 @@ node_modules
 docs/_build
 
 # Secrets
-server/secrets.py
+scout/secrets.py
 
 # Bower
 client/static/js/vendor
@@ -59,6 +59,6 @@ client/static/js/vendor
 client/styles/vendor/*
 
 # Static files in Flask
-server/static/styles/*
-server/static/js/*
-server/static/img/*
+scout/static/styles/*
+scout/static/js/*
+scout/static/img/*
