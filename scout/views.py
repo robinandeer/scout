@@ -163,9 +163,9 @@ def api(path):
 
 
 # Route incoming API calls to the Tornado backend and sends JSON response
-@app.route('/api/v1/static/<bam_file>', methods=['GET'])
+@app.route('/api/v1/static/<file_path>', methods=['GET'])
 @crossdomain(origin='*', methods=['GET'])
-def api_static(bam_file):
+def api_static(file_path):
   # Check if GET 206
   range_header = request.headers.get('Range', None)
   if range_header:
@@ -174,7 +174,7 @@ def api_static(bam_file):
     headers = {}
 
   # Route request to Tornado
-  url = 'http://clinical-db.scilifelab.se:8082/static/' + bam_file
+  url = 'http://clinical-db.scilifelab.se:8082/static/' + file_path
   cookie = {'institute': ','.join(current_user.institutes)}
 
   if request.method == 'GET':
@@ -197,50 +197,49 @@ def api_static(bam_file):
   return new_resp
 
 
-@app.route('/issues', methods=['GET'])
-@crossdomain(origin='*', methods=['GET'])
-def issues():
-  issues = [{
-    'id': issue.number,
-    'title': issue.title,
-    'body': issue.body,
-    'html': issue.body_html,
-    'created_at': issue.created_at.date().isoformat(),
-    'url': issue.html_url
-  } for issue in it.find()]
+@app.route('/issues/<issue_id>', methods=['GET', 'POST', 'DELETE'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'DELETE'])
+def issues(issue_id):
 
-  return jsonify(issues=issues)
+  if request.method == 'POST':
+    # Submits an issue to Scout repo at GitHub
+    body = """{body}
 
+    submitted by **{author}**.
+    """.format(body=request.form['body'], author=current_user.name)
 
-@app.route('/issues/<issue_id>', methods=['GET'])
-@crossdomain(origin='*', methods=['GET'])
-def issue(issue_id):
-  issue = it.find(issue_id)
-  json = {
-    'id': issue.number,
-    'title': issue.title,
-    'body': issue.body,
-    'html': issue.body_html,
-    'created_at': issue.created_at.date().isoformat(),
-    'url': issue.html_url
-  }
+    issue = it.create(request.form['title'], body)
 
-  return jsonify(**json)
+    return jsonify(id=issue.id, body=issue.body, title=issue.title,
+                   html=issue.body_html, url=issue.html_url)
 
+  elif request.method == 'GET':
 
-@app.route('/issues/new', methods=['POST'])
-@crossdomain(origin='*', methods=['POST'])
-def create_issue():
-  # Submits an issue to Scout repo at GitHub
-  body = """{body}
+    if issue_id:
+      issue = it.find(issue_id)
+      json = {
+        'id': issue.number,
+        'title': issue.title,
+        'body': issue.body,
+        'html': issue.body_html,
+        'created_at': issue.created_at.date().isoformat(),
+        'url': issue.html_url
+      }
 
-  submitted by **{author}**.
-  """.format(body=request.form['body'], author=current_user.name)
+      return jsonify(**json)
 
-  issue = it.create(request.form['title'], body)
+    else:
+      # Get all issues
+      issues = [{
+        'id': issue.number,
+        'title': issue.title,
+        'body': issue.body,
+        'html': issue.body_html,
+        'created_at': issue.created_at.date().isoformat(),
+        'url': issue.html_url
+      } for issue in it.find()]
 
-  return jsonify(id=issue.id, body=issue.body, title=issue.title,
-                 html=issue.body_html, url=issue.html_url)
+      return jsonify(issues=issues)
 
 
 # +--------------------------------------------------------------------+
