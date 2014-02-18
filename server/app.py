@@ -352,7 +352,7 @@ def api(path):
 
 
 # Route incoming API calls to the Tornado backend and sends JSON response
-@app.route('/api/static/<bam_file>', methods=['GET'])
+@app.route('/api/v1/static/<bam_file>', methods=['GET'])
 @crossdomain(origin='*', methods=['GET'])
 def api_static(bam_file):
   # Check if GET 206
@@ -363,7 +363,7 @@ def api_static(bam_file):
     headers = {}
 
   # Route request to Tornado
-  url = 'http://clinical-db:8082/static/' + bam_file
+  url = 'http://clinical-db.scilifelab.se:8082/static/' + bam_file
   cookie = {'institute': ','.join(current_user.institutes)}
 
   if request.method == 'GET':

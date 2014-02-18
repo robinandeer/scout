@@ -77,7 +77,7 @@ App.Variant = Ember.Model.extend
   expressionType: attr()
   geneModel: attr(ReplaceNull)
   variantCount: attr()
-  database: attr()
+  clinicalDbGeneAnnotation: attr()
   genomicSuperDups: attr()
 
   isInOtherFamilies: (->
