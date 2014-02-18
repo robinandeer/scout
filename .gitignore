@@ -57,3 +57,8 @@ client/static/js/vendor
 # SASS
 .sass-cache
 client/styles/vendor/*
+
+# Static files in Flask
+server/static/styles/*
+server/static/js/*
+server/static/img/*
