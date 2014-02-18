@@ -163,7 +163,7 @@ def api(path):
 
 
 # Route incoming API calls to the Tornado backend and sends JSON response
-@app.route('/api/v1/static/<file_path>', methods=['GET'])
+@app.route('/remote/static/<file_path>', methods=['GET'])
 @crossdomain(origin='*', methods=['GET'])
 def api_static(file_path):
   # Check if GET 206

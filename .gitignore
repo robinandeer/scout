@@ -39,6 +39,7 @@ nosetests.xml
 .tmp
 DEV
 node_modules
+dev-server
 
 *.py[cod]
 
