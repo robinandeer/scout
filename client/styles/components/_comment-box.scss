@@ -30,7 +30,7 @@ $comment-box-color: #fff;
 }
 
 %comment-box__overlay {
-  font-size: 12px;
+  font-size: 1.2rem;
   background-color: #f9f9f9;
 }
 
@@ -87,6 +87,8 @@ $comment-box-color: #fff;
 %comment-box__body,
 .comment-box__body {
   padding: 5px 10px 7px;
+  font-size: 1.3rem;
+  line-height: 2rem;
 }
 
 .comment-box__body--input {
@@ -132,7 +134,6 @@ $comment-box-color: #fff;
   border: 2px solid $flat-gray-1;
   border-radius: 50px;
   text-align: center;
-  font-size: 14px;
   color: $flat-gray-2;
   padding: 0 10px;
 }

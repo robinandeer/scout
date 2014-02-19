@@ -18,7 +18,7 @@
   border: 1px solid darken($flat-gray-1, 10%);
   border-bottom-width: 2px;
   border-radius: 3px;
-  min-height: 40px;
+  padding: $base-padding;
 
   &:hover {
     box-shadow: 0 0 3px darken($flat-gray-1, 0%);

@@ -1,8 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from github3 import GitHub
+
 
 class IssueTracker(GitHub):
   """docstring for GitHub"""
-  def __init__(self, username, password, remote="robinandeer", repo="scout"):
+  def __init__(self, username, password, remote='robinandeer', repo='scout'):
 
     super(IssueTracker, self).__init__(username, password)
 
