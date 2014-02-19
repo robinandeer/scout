@@ -197,10 +197,10 @@ def api_static(file_path):
   return new_resp
 
 
-@app.route('/issues/<issue_id>', methods=['GET', 'POST', 'DELETE'])
-@crossdomain(origin='*', methods=['GET', 'POST', 'DELETE'])
-def issues(issue_id):
-
+@app.route('/issues', methods=['GET', 'POST'])
+@app.route('/issues/<issue_id>', methods=['GET', 'PUT', 'DELETE'])
+@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def issues(issue_id=None):
   if request.method == 'POST':
     # Submits an issue to Scout repo at GitHub
     body = """{body}
