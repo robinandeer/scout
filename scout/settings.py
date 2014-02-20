@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from secrets import gmail_keys, mongo_auth, SECRET_KEY, google_keys
-
-# Enable debug mode
-DEBUG = True
+from secrets import gmail_keys, mongo_auth, SECRET_KEY, google_keys, DEBUG
 
 # One of the Redirect URIs from Google APIs console
 REDIRECT_URI = '/authorized'

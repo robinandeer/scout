@@ -122,5 +122,5 @@ App.VariantController = Ember.ObjectController.extend
   ).property 'omim.OMIM_ID'
 
   igvLink: (->
-    return "http://localhost:5000/api/v1/variants/#{@get('id')}/igv.xml"
+    return "https://clinical-db.scilifelab.se:8081/api/v1/variants/#{@get('id')}/igv.xml"
   ).property 'id'
