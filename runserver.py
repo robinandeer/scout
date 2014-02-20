@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from scout import app
 from scout.settings import DEBUG
+from scout.core import ctx
 
 
 if __name__ == '__main__':
