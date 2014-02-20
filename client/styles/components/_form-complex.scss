@@ -5,11 +5,33 @@
     font-size: 13px;
     color: $flat-gray-2;
   }
+}
 
-  input,
-  textarea {
+h5 {
+  margin-bottom: 15px;
+}
+
+.form--stacked {
+  > div {
     width: 100%;
     margin-bottom: 15px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  input, textarea {
+    width: 100%;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    color: $flat-gray-2;
+  }
+  textarea {
+    min-height: 100px;
   }
 }
 
@@ -20,11 +42,9 @@
 
 .form__text-input,
 %form__text-input {
-  padding: 10px;
   border: 1px solid darken($flat-gray-1, 10%);
   border-bottom-width: 2px;
   border-radius: 3px;
-  margin-right: 5px;
   outline: none;
 
   &:focus {

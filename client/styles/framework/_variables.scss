@@ -12,10 +12,9 @@ $header-font-family: $base-font-family;
 // |  Sizes
 // +-------------------------------------------------------------------+
 $base-font-size: 62.5%;
-$base-line-height: 150%;
+$base-line-height: $base-font-size * 1.5;
 $base-border-radius: em(3);
-$base-padding: 5px;
-$base-margin: 5px;
+$base-padding: 15px;
 
 // +-------------------------------------------------------------------+
 // |  Colors
@@ -38,7 +37,7 @@ $base-link-color: $base-accent-color;
 $hover-link-color: darken($base-accent-color, 15%);
 
 // Border color
-$base-border-color: $light-gray;
+$base-border-color: $dark-gray;
 
 // Flash Colors
 $error-color: #ff0000;

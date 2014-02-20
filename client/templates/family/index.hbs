@@ -1,95 +1,92 @@
-<div class="panel family">
+<div class="panel header-footer__wrapper--overlay family-panel">
 
-  <div class="panel__overlay--header family-header">
-
-    <div class="list--vertical">
-      <div class="list__item">
-        <div class="list__column fixed center-text">
-          <div class="family-id">Family {{family.id}}</div>
-        </div>
-        <div class="list__column fixed center-text">
-          Last update: {{fromNow family.analyzedDate}}
-        </div>
-        <div class="list__column fixed">
-          <div class="btn-group">
-            <div class="btn">
-              <div class="btn__body">
-                {{#link-to "variants" family}}Variants{{/link-to}}
-              </div>
-            </div>
-
-            <div {{action "toggleProperty" "isShowingRawPedigree"}} class="btn">
-              <div class="btn__body">
-                {{#unless isShowingRawPedigree}}
-                Show raw pedigree
-                {{else}}
-                Hide raw pedigree
-                {{/unless}}
-              </div>
-            </div>
-          </div>{{! END btn-group }}
-        </div>{{! END list__column }}
-      </div>
+  <div class="header--overlay column__wrapper family-header">
+    <div class="column center-center">
+      <span class="family-id">Family {{family.id}}</span>
     </div>
-  </div>
+    <div class="column center-center medium">
+      Last update: {{fromNow family.analyzedDate}}
+    </div>
+    <div class="column center-center medium">
+      <div class="btn-group">
+        <div class="btn">
+          <div class="btn__body regular--stretched">
+            {{#link-to "variants" family}}Variants{{/link-to}}
+          </div>
+        </div>
 
-  <div class="panel__body family-body">
+        <div {{action "toggleProperty" "isShowingRawPedigree"}} class="btn">
+          <div class="btn__body regular--stretched">
+            {{#unless isShowingRawPedigree}}
+            Show raw pedigree
+            {{else}}
+            Hide raw pedigree
+            {{/unless}}
+          </div>
+        </div>
+      </div>{{! END btn-group }}
+    </div>{{! END column }}
+  </div>{{! END header--overlay }}
 
+  <div class="header-footer__body family-body">
     {{#if isShowingRawPedigree}}
-    <div class="box raw-pedigree">
+    <div class="raw-pedigree">
       {{{family.pedigree}}}
     </div>
 
     {{else}}
-    <div class="box family">
-      <table class="predict gt-call-table">
-
-        {{#each sample in family.samples}}
+    <div class="bar--center family-table regular-width mb">
+      <table class="table small">
+        <tbody>
+          {{#each sample in family.samples}}
           <tr>
-            <td class="predict__main predict__part">{{sample.id}}</td>
-            <td class="predict__part affected">
-              {{!<img src="/img/icon-boy.svg" class="family-member-icon">}}
-              <div class="family-member">{{sample.gender}} {{sample.type}}</div>
+            <td class="regular--stretched">{{sample.id}}</td>
+            <td class="regular--stretched">
+              <div class="family-member">
+                {{sample.type}}
+                {{#if sample.isChild}}({{sample.gender}}){{/if}}
+              </div>
             </td>
-            <td class="predict__part">{{sample.captureKit}}</td>
+            <td class="regular--stretched">{{sample.captureKit}}</td>
           </tr>
-        {{/each}}
+          {{/each}}
+        </tbody>
       </table>
     </div>{{! END box, family }}
 
     {{#if hasGeneModels}}
-    <div class="box">
-      <table class="predict">
-        <tr>
-          <td class="predict__main predict__part">Possible gene models</td>
-          {{#each model in family.samples.1.inheritanceModels}}
-            <td class="predict__part">{{model}}</td>
-          {{/each}}
-        </tr>
+    <div class="bar--center mb">
+      <table class="table small regular-width">
+        <tbody>
+          <tr>
+            <th class="regular--stretched">Possible gene models</th>
+            {{#each model in family.samples.1.inheritanceModels}}
+              <td class="regular--stretched">{{model}}</td>
+            {{/each}}
+          </tr>
+        </tbody>
       </table>
     </div>
     {{/if}}
 
-    <div class="box panel__wrapper family-comments">
+    <div class="panel__wrapper regular-width family-comments-panel">
       <div class="panel">
         <div class="header-footer__wrapper">
-          <div class="header">Diagnostic comments</div>
+          <div class="header medium slim">Diagnostic comments</div>
           <div class="header-footer__body">
             <div class="list--vertical">
             {{#each comment in diagnosticComments}}
-              <div class="comment-box__wrapper">
+              <div class="comment-box__wrapper family-comment">
                 <div class="comment-box">
-                  <div class="comment-box__header">
-                    <div class="comment-box__header__body">
-                      <b>{{comment.userName}}</b> commented 3 days ago
-                    </div>
-                    <div {{action "deleteComment" comment}} class="comment-box__header__action">Delete</div>
+                  <div class="comment-box__header bar--space-between slim--stretched small">
+                    <div><b>{{comment.userName}}</b> commented 3 days ago</div>
+                    <div {{action "deleteComment" comment}}>Delete</div>
                   </div>
-                  <div class="comment-box__body">{{comment.userComment}}</div>
+                  <div class="comment-box__body slim medium">{{comment.userComment}}</div>
                 </div>
               </div>
             {{else}}
-              <div class="center-center no-comments">
+              <div class="center-center">
                 <small>No comments added yet.</small>
               </div>
             {{/each}}
@@ -100,23 +97,23 @@
 
       <div class="panel">
         <div class="header-footer__wrapper">
-          <div class="header">Research comments</div>
+          <div class="header medium slim">Research comments</div>
           <div class="header-footer__body">
             <div class="list--vertical">
             {{#each comment in researchComments}}
-              <div class="comment-box__wrapper">
+              <div class="comment-box__wrapper family-comment">
                 <div class="comment-box">
-                  <div class="comment-box__header">
-                    <div class="comment-box__header__body">
+                  <div class="comment-box__header bar--space-between slim--stretched small">
+                    <div>
                       <b>{{comment.userName}}</b> commented 3 days ago
                     </div>
-                    <div {{action "deleteComment" comment}} class="comment-box__header__action">Delete</div>
+                    <div {{action "deleteComment" comment}}>Delete</div>
                   </div>
-                  <div class="comment-box__body">{{comment.userComment}}</div>
+                  <div class="comment-box__body slim medium">{{comment.userComment}}</div>
                 </div>
               </div>
             {{else}}
-              <div class="center-center no-comments">
+              <div class="center-center">
                 <small>No comments added yet.</small>
               </div>
             {{/each}}
@@ -126,24 +123,19 @@
       </div>{{! End panel }}
     </div>{{! End box panel__wrapper }}
 
-    <div class="box panel__wrapper family-submit-comment">
+    <div class="panel__wrapper regular-width family-submit-panel">
 
       <div class="panel">
-        <div class="panel__body">
-          {{comment-box submit="postComment" tags=commentCategories
-                        type="IEM" title="IEM Comment"}}
-        </div>{{! End panel__body }}
+        {{comment-box submit="postComment" tags=commentCategories
+                      type="IEM" title="IEM Comment"}}
       </div>{{! End panel }}
 
       <div class="panel">
-        <div class="panel__body">
-          {{comment-box submit="postComment" tags=commentCategories
-                        type="research" title="Research Comment"}}
-        </div>{{! End panel__body }}
+        {{comment-box submit="postComment" tags=commentCategories
+                      type="research" title="Research Comment"}}
       </div>{{! End panel }}
 
     </div>{{! End box panel__wrapper }}
     {{/if}}
-
-  </div>{{! End panel__body }}
+  </div>
 </div>

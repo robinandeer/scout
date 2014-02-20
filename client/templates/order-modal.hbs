@@ -1,30 +1,30 @@
 {{#modal-dialog action="close"}}
   <h5>Order Sanger sequencing</h5>
 
-  <form class="form--complex">
+  <form class="form--stacked">
     <label for="famil-id">Family</label>
     <div class="form__input-wrapper">
-      {{input valueBinding="family_id" id="famil-id" classNames="text-input"}}
+      {{input valueBinding="family_id" id="famil-id" classNames="text-input slim"}}
     </div>
 
     <label for="hgnc-symbol">HGNC symbol</label>
     <div class="form__input-wrapper">
-      {{input valueBinding="hgnc_symbol" id="hgnc-symbol" classNames="text-input"}}
+      {{input valueBinding="hgnc_symbol" id="hgnc-symbol" classNames="text-input slim"}}
     </div>
 
     <label for="chr-pos">Chromosome position</label>
     <div class="form__input-wrapper">
-      {{input valueBinding="chr_pos" id="chr-pos" classNames="text-input"}}
+      {{input valueBinding="chr_pos" id="chr-pos" classNames="text-input slim"}}
     </div>
 
     <label for="amino-change">Amino acid change</label>
     <div class="form__input-wrapper">
-      {{textarea valueBinding="amino_change" id="amino-change" classNames="text-input"}}
+      {{textarea valueBinding="amino_change" id="amino-change" classNames="text-input slim"}}
     </div>
 
     <label for="gt-call">GT Call</label>
     <div class="form__input-wrapper">
-      {{textarea valueBinding="gt_call" id="gt-call" classNames="text-input"}}
+      {{textarea valueBinding="gt_call" id="gt-call" classNames="text-input slim"}}
     </div>
 
     <div class="btn-group">

@@ -1,46 +1,43 @@
-<div class="panel families">
+<div class="panel header-footer__wrapper--overlay families-panel medium">
 
-  <div class="panel__overlay--header">
-    <div class="panel__overlay__title">Families</div>
+  <div class="header--overlay text-center regular--stretched">
+    <small>Families</small>
     
-    <div class="list--vertical">
-      <div class="list__item">
-        <div class="list__column">Links</div>
-        <div class="list__column right-text">NGS update</div>
-      </div>
+    <div class="bar--space-between families-header-labels">
+      <div>Links</div>
+      <div>NGS update</div>
     </div>
   </div>
-
-  <div class="panel__body">
+  <div class="header-footer__body">
     <div class="list--vertical">
       {{#each family in model}}
       {{#unless family.isHidden}}
-        <div class="list__item">
-          <div class="list__column">
-            <div class="btn-group">
+        <div class="list__item bar--space-between regular--stretched">
+          <div>
+            <div class="btn-group families-links-buttons">
               <div class="btn">
-                {{#link-to "family" family}}
-                  <div class="btn__body">Family {{family.id}}</div>
+                {{#link-to "family" family classNames="btn__body regular--stretched"}}
+                  Family {{family.id}}
                 {{/link-to}}
               </div>
               <div class="btn">
-                {{#link-to "variants" family}}
-                  <div class="btn__body">Variants</div>
+                {{#link-to "variants" family classNames="btn__body regular--stretched"}}
+                  Variants
                 {{/link-to}}
               </div>
               <div {{action "hideFamily" family}} class="btn">
-                <div class="btn__body">Hide</div>
+                <div class="btn__body regular--stretched">Hide</div>
               </div>
             </div>
           </div>
           
-          <div class="list__column right-text">
+          <div>
             {{fromNow family.analyzedDate}}
           </div>
         </div>
       {{/unless}}
       {{/each}}
-    </div>
+    </div>{{! END header-footer__body }}
   </div>
 
 </div>

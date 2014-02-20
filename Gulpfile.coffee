@@ -19,7 +19,7 @@ serverPort = 8080
 # Gulp can either setup development or produce as distribution
 isDist = gutil.env._[0] is 'dist'
 if isDist
-  ROOT = 'server'
+  ROOT = 'scout'
   gutil.log 'Running Gulp in', gutil.colors.cyan('production'), 'mode'
 else
   ROOT = 'dev-server'

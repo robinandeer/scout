@@ -18,7 +18,6 @@
   border: 1px solid darken($flat-gray-1, 10%);
   border-bottom-width: 2px;
   border-radius: 3px;
-  padding: $base-padding;
 
   &:hover {
     box-shadow: 0 0 3px darken($flat-gray-1, 0%);
@@ -28,14 +27,14 @@
     border-bottom-width: 1px;
     box-shadow: none;
   }
-}
+} 
 
 .btn__body {
   // Cut long button titles short with ellipsis: '...'.
   @include dotdotdot;
   width: 100%;
   text-align: center;
-  padding: 0 15px;
+  padding: 2px $base-padding;
   // Shouldn't be nessesary but seems to be anyways (Chrome)
   cursor: pointer;
 }

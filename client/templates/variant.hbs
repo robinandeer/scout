@@ -1,130 +1,130 @@
-<div class="panel variant">
+<div class="panel header-footer__wrapper--overlay variant-panel small">
 
-  <div class="panel__overlay--header variant-header">
-    <div class="list--vertical">
-      <div class="list__item">
-        <div class="list__column--small fixed center-text">
-          <div class="rank-score">{{rankScore}}</div>
-        </div>
-        <div {{action "toggleProperty" "isShowingFullGeneName"}} class="list__column fixed">
-          {{#if isShowingFullGeneName}}
-            {{capitalize hgncApprovedName}}
+  <div class="header--overlay column__wrapper bar variant-header">
+    <div class="column--small slim center-center large">{{rankScore}}</div>
+
+    <div {{action "toggleProperty" "isShowingFullGeneName"}} class="column slim bar--vertical">
+      <div>
+        {{#if isShowingFullGeneName}}
+          {{capitalize hgncApprovedName}}
+        {{else}}
+          {{hgncSymbol}} <small>{{hgncSynonymsString}}</small>
+        {{/if}}
+      </div>
+      <div><small>{{ensemblGeneIdString}}</small></div>
+    </div>
+
+    <div class="column slim bar--vertical">
+      <div>
+        Chr {{chrom}} | {{startBp}}
+        {{#unless isSingleBase}} - {{stopBp}}{{/unless}} |
+        {{refNt}} &rarr; {{altNt}}
+      </div>
+      <div>
+        <small>
+          {{capitalize geneAnnotation}} |
+          {{#if functionalAnnotation}}
+            {{capitalize functionalAnnotation}}
           {{else}}
-            {{hgncSymbol}} <small>{{hgncSynonymsString}}</small>
+            No functional annotation
           {{/if}}
-          <br>
-          <small>{{ensemblGeneIdString}}</small>
-        </div>
-        <div class="list__column fixed">
-          Chr {{chrom}} | {{startBp}}
-          {{#unless isSingleBase}} - {{stopBp}}{{/unless}} |
-          {{refNt}} &rarr; {{altNt}}
-
-          <br>
-
-          <small>
-            {{capitalize geneAnnotation}} |
-            {{#if functionalAnnotation}}
-              {{capitalize functionalAnnotation}}
-            {{else}}
-              No functional annotation
-            {{/if}}
-          </small>
-        </div>
-        <div class="list__column fixed">
-          <div class="btn-group">
-            <div {{action 'openOrderModal' sangerData}} class="btn">
-              <div class="btn__body">Order Sanger</div>
-            </div>
-
-            <div class="btn">
-              <div class="btn__body">{{#link-to 'variants' currentFamily}}All variants{{/link-to}}</div>
-            </div>
-
-            {{#unless isHidden}}
-            <div {{action "hideInList"}} class="btn">
-              <div class="btn__body">Hide</div>
-            </div>
-            {{else}}
-            <div {{action "unhideInList"}} class="btn">
-              <div class="btn__body">Unhide</div>
-            </div>
-            {{/unless}}
-          </div>
-          
-        </div>
+        </small>
       </div>
     </div>
-  </div>
 
-  <div class="panel__body">
-    <div class="box predictions">
-      <table class="predict">
-        <tr class="predict__top">
-          <td class="predict__main predict__part">Severity</td>
-          <td {{bind-attr class=":predict__part siftWholeExome::undef"}}>
-            <div class="predict__number">{{fallback siftWholeExome}}</div>
-            <div class="predict__text">Avsift</div>
-          </td>
+    <div class="column slim center-center">
+      <div class="btn-group medium">
+        <div {{action 'openOrderModal' sangerData}} class="btn">
+          <div class="btn__body regular--stretched">Order Sanger</div>
+        </div>
 
-          <td {{bind-attr class=":predict__part polyphenDivHuman::undef"}}>
-            <div class="predict__number">{{fallback polyphenDivHuman}}</div>
-            <div class="predict__text">PolyPhen Div</div>
-          </td>
+        <div class="btn">
+          <div class="btn__body regular--stretched">{{#link-to 'variants' currentFamily}}All variants{{/link-to}}</div>
+        </div>
 
-          <td {{bind-attr class=":predict__part polyphenVarHuman::undef"}}>
-            <div class="predict__number">{{fallback polyphenVarHuman}}</div>
-            <div class="predict__text">PolyPhen Var</div>
-          </td>
+        {{#unless isHidden}}
+        <div {{action "hideInList"}} class="btn">
+          <div class="btn__body regular--stretched">Hide</div>
+        </div>
+        {{else}}
+        <div {{action "unhideInList"}} class="btn">
+          <div class="btn__body regular--stretched">Unhide</div>
+        </div>
+        {{/unless}}
+      </div>
+    </div>{{! END column }}
+  </div>{{! END header--overlay }}
 
-          <td {{bind-attr class=":predict__part mutationTaster::undef"}}>
-            <div class="predict__number">{{fallback mutationTaster}}</div>
-            <div class="predict__text">Mutation taster</div>
-          </td>
+  <div class="header-footer__body variant__body">
+    <div class="regular-width predictions">
+      <table class="table">
+        <tbody>
+          <tr>
+            <th>Severity</th>
+            <td {{bind-attr class="siftWholeExome::undef"}}>
+              <div class="predict__number">{{fallback siftWholeExome}}</div>
+              <div class="predict__text">Avsift</div>
+            </td>
 
-          <td {{bind-attr class=":predict__part gerpWholeExome::undef"}}>
-            <div class="predict__number">{{fallback gerpWholeExome}}</div>
-            <div class="predict__text">GERP exome</div>
-          </td>
+            <td {{bind-attr class="polyphenDivHuman::undef"}}>
+              <div class="predict__number">{{fallback polyphenDivHuman}}</div>
+              <div class="predict__text">PolyPhen Div</div>
+            </td>
 
-        </tr>
+            <td {{bind-attr class="polyphenVarHuman::undef"}}>
+              <div class="predict__number">{{fallback polyphenVarHuman}}</div>
+              <div class="predict__text">PolyPhen Var</div>
+            </td>
+
+            <td {{bind-attr class="mutationTaster::undef"}}>
+              <div class="predict__number">{{fallback mutationTaster}}</div>
+              <div class="predict__text">Mutation taster</div>
+            </td>
+
+            <td {{bind-attr class="gerpWholeExome::undef"}}>
+              <div class="predict__number">{{fallback gerpWholeExome}}</div>
+              <div class="predict__text">GERP exome</div>
+            </td>
+
+          </tr>
+        </tbody>
 
         <tr>
-          <td class="predict__main predict__part">Frequency</td>
-          <td {{bind-attr class=":predict__part thousandG::undef"}}>
+          <th>Frequency</th>
+          <td {{bind-attr class="thousandG::undef"}}>
             <div class="predict__number">{{fallback thousandG}}</div>
             <div class="predict__text">1000 Genomes</div>
           </td>
 
-          <td {{bind-attr class=":predict__part esp6500::undef"}}>
+          <td {{bind-attr class="esp6500::undef"}}>
             <div class="predict__number">{{fallback esp6500}}</div>
             <div class="predict__text">ESP 6500</div>
           </td>
 
-          <td {{bind-attr class=":predict__part dbsnp129::undef"}}>
+          <td {{bind-attr class="dbsnp129::undef"}}>
             <div class="predict__number">{{fallback dbsnp129}}</div>
             <div class="predict__text">dbSNP 129</div>
           </td>
 
-          <td {{bind-attr class=":predict__part dbsnp::undef"}}>
+          <td {{bind-attr class="dbsnp::undef"}}>
             <div class="predict__number">{{dbsnpFlag}}</div>
             <div class="predict__text">dbSNP 137</div>
           </td>
         </tr>
 
         <tr class="conservation-row">
-          <td class="predict__main predict__part">Conservation</td>
-          <td {{bind-attr class=":predict__part phylopWholeExome::undef"}}>
+          <th>Conservation</th>
+          <td {{bind-attr class="phylopWholeExome::undef"}}>
             <div class="predict__number">{{fallback phylopWholeExome}}</div>
             <div class="predict__text">WE PhyloP</div>
           </td>
 
-          <td {{bind-attr class=":predict__part gerpElement::undef"}}>
+          <td {{bind-attr class="gerpElement::undef"}}>
             <div class="predict__number">{{fallback gerpElement}}</div>
             <div class="predict__text">GERP++ element</div>
           </td>
 
-          <td {{bind-attr class=":predict__part lrtWholeExome::undef"}}>
+          <td {{bind-attr class="lrtWholeExome::undef"}}>
             <div class="predict__number">{{fallback lrtWholeExome}}</div>
             <div class="predict__text">WE LRT</div>
           </td>
@@ -132,81 +132,79 @@
       </table>
     </div>
 
-    <div class="box annotations">
+    <div class="regular-width annotations">
       <div class="panel__wrapper">
         <div class="panel">
           <div class="panel__body">
-            <table class="predict annotate-table">
+            <table class="table annotate-table">
               <tr>
-                <td class="predict__main predict__part">
-                  <a {{bind-attr href=omimLink}} class="link" target="_blank">
+                <th class="regular--stretched">
+                  <a {{bind-attr href=omimLink}} target="_blank">
                     <div class="logo--omim">OMIM</div>
                   </a>
-                </td>
-                <td class="predict__part">
+                </th>
+                <td class="slim">
                   {{#each syn in omim.SYNDROMS}}
                     <div>{{syn}}</div>
                   {{/each}}
                 </td>
               </tr>
               <tr>
-                <td class="predict__main predict__part">
-                  <a href="http://www.hgmd.cf.ac.uk/ac/index.php" class="link" target="_blank">
+                <th class="regular--stretched">
+                  <a href="http://www.hgmd.cf.ac.uk/ac/index.php" target="_blank">
                     <img src="/static/img/hgmd-logo.svg">
                   </a>
-                </td>
-                <td class="predict__part">{{hgmd}}</td>
+                </th>
+                <td class="slim">{{hgmd}}</td>
               </tr>
               <tr>
-                <td class="predict__main predict__part">Disease group</td>
-                <td class="predict__part">{{diseaseGroup}}</td>
+                <th class="regular--stretched">Disease group</th>
+                <td class="slim">{{diseaseGroup}}</td>
               </tr>
             </table>
           </div>
         </div>
         <div class="panel">
-          <div class="panel__body">
-            <div class="list--vertical">
-              <div class="divider">Variant function</div>
-              {{#each item in variantFunctions}}
-              <div class="list__item">
-                <div class="list__column--slim">{{item}}</div>
-              </div>
-              {{else}}
-                <div class="center-center no-comments"><small>No functions annotated.</small></div>
-              {{/each}}
-            </div>{{! END list--vertical }}
-          </div>
+          <div class="list--vertical">
+            <div class="list__divider slim small">Variant function</div>
+            {{#each item in variantFunctions}}
+            <div class="list__item">
+              <div class="column--slim slim">{{item}}</div>
+            </div>
+            {{else}}
+              <div class="center-center"><small>No functions annotated.</small></div>
+            {{/each}}
+          </div>{{! END list--vertical }}
         </div>
       </div>
     </div>
 
-    <div class="box gt-call">
-      <table class="predict gt-call-table">
+    <div class="regular-width gt-call">
+      <table class="table">
         <thead>
           <tr>
-            <th class="predict__part">IDN</th>
-            <th class="predict__part">GT</th>
-            <th class="predict__part">AD</th>
-            <th class="predict__part">PL</th>
-            <th class="predict__part">GQ</th>
+            <th class="slim">IDN</th>
+            <th class="slim">GT</th>
+            <th class="slim">AD</th>
+            <th class="slim">PL</th>
+            <th class="slim">GQ</th>
           </tr>
         </thead>
         <tbody>
         {{#each call in gt.gtCalls}}
           <tr>
-            <td class="predict__main predict__part">{{call.idn}}</td>
-            <td class="predict__part">{{call.gt}}</td>
-            <td class="predict__part">{{call.ad}}</td>
-            <td class="predict__part">{{call.pl}}</td>
-            <td class="predict__part">{{call.gq}}</td>
+            <td class="slim text-center">{{call.idn}}</td>
+            <td class="slim text-center">{{call.gt}}</td>
+            <td class="slim text-center">{{call.ad}}</td>
+            <td class="slim">{{call.pl}}</td>
+            <td class="slim text-right">{{call.gq}}</td>
           </tr>
         {{/each}}
 
         <tr>
-          <td class="predict__main predict__part">Inheritance models</td>
+          <th class="slim">Inheritance models</th>
           {{#each model in geneModels}}
-            <td class="predict__part">{{model}}</td>
+            <td class="slim">{{model}}</td>
           {{/each}}
         </tr>
         </tbody>
@@ -215,12 +213,12 @@
     </div>
 
     {{#if hasCompounds}}
-    <div class="box compounds">
+    <div class="regular-width compounds">
       {{render "gt-call" this}}
     </div>
     {{/if}}
 
-    <div class="box list--horizontal external-links">
+    <div class="bar--space-around regular-width external-links">
       <a {{bind-attr href=ensemblLink}} class="link" target="_blank">
         <div class="link__icon"><img src="/static/img/ensembl-logo-gray.svg"></div>
         <div class="link__text">Ensembl</div>
@@ -257,13 +255,11 @@
       </a>
     </div>
 
-    <div class="box variant-comments">
-      <div class="panel__wrapper family-comments">
-        <div class="panel">
-          <div class="panel__overlay--header">
-            <div class="panel__overlay__title">Comments</div>
-          </div>
-          <div class="panel__body">
+    <div class="regular-width family-comments-panel">
+      <div class="panel__wrapper">
+        <div class="panel header-footer__wrapper">
+          <div class="header slim medium">Comments</div>
+          <div class="header-footer__body">
             {{#each comment in comments}}
             <div class="comment-box__wrapper">
               <div class="comment-box">
@@ -277,24 +273,21 @@
               </div>
             </div>
             {{else}}
-            <div class="center-center no-comments"><small>No comments added yet.</small></div>
+            <div class="center-center"><small>No comments added yet.</small></div>
             {{/each}}
           </div>{{! END panel__body }}
         </div>{{! END panel }}
 
-        <div class="panel">
-          <div class="panel__overlay--header">
-            <div class="panel__overlay__title">Submit new comment</div>
-          </div>
-          <div class="panel__body">
+        <div class="panel header-footer__wrapper">
+          <div class="header slim medium">Submit new comment</div>
+          <div class="header-footer__body">
             {{comment-box submit="postComment" tags=variantPriorities
                           title="Variant comment" tagPrompt="Set priority"}}
           </div>
         </div>{{! END panel }}
       </div>{{! END panel__wrapper }}
     </div>{{! END box }}
-
-  </div>
+  </div>{{! END header-footer__body }}
 
   {{outlet modal}}
 </div>

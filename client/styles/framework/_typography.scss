@@ -3,7 +3,6 @@ html {
   color: $base-font-color;
   font-family: $base-font-family;
   font-size: $base-font-size;
-  line-height: $base-line-height;
   //@include font-smoothing(antialiased);
 }
 
@@ -11,7 +10,6 @@ h1, h2, h3, h4, h5, h6 {
   text-rendering: optimizeLegibility; // Fix character spacing for headings
   margin: 0;
   line-height: 1.25em;
-  font-weight: 200;
 }
 
 h1 {
@@ -41,7 +39,7 @@ h6 {
 // Greyed out and smaller than parent
 // - works well as a subtitle
 small {
-  color: $medium-gray;
+  color: $dark-gray;
 }
 
 // Add margin to the bottom only
@@ -140,4 +138,17 @@ pre {
   // Required
   max-height: 350px;
   overflow-y: auto;
+}
+
+// Alignment
+.text-right {
+  text-align: right;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
 }

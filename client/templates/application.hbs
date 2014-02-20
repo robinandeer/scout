@@ -4,24 +4,22 @@
   <div class="panel--menu">
     <div class="panel__menu--footer">{{user.email}}</div>
 
-    <div class="panel__body">
-      {{#link-to 'index' classNames='menu__item'}}
-        <div class="menu__item__icon"><img src="/static/img/icon_8199.svg"></div>
-        <div class="menu__item__label">Families</div>
-      {{/link-to}}
-      {{#link-to 'settings' classNames='menu__item'}}
-        <div class="menu__item__icon"><img src="/static/img/icon_19741.svg"></div>
-        <div class="menu__item__label">Settings</div>
-      {{/link-to}}
-      {{#link-to 'issue' classNames='menu__item'}}
-        <div class="menu__item__icon"><img src="/static/img/icon_4240.svg"></div>
-        <div class="menu__item__label">Issue</div>
-      {{/link-to}}
-      <a href="/logout" class="menu__item">
-        <div class="menu__item__icon"><img src="/static/img/icon_4930.svg"></div>
-        <div class="menu__item__label">Logout</div>
-      </a>
-    </div>
+    {{#link-to 'index' classNames='menu__item'}}
+      <div class="menu__item__icon"><img src="/static/img/icon_8199.svg"></div>
+      <div class="menu__item__label">Families</div>
+    {{/link-to}}
+    {{#link-to 'settings' classNames='menu__item'}}
+      <div class="menu__item__icon"><img src="/static/img/icon_19741.svg"></div>
+      <div class="menu__item__label">Settings</div>
+    {{/link-to}}
+    {{#link-to 'issue' classNames='menu__item'}}
+      <div class="menu__item__icon"><img src="/static/img/icon_4240.svg"></div>
+      <div class="menu__item__label">Issue</div>
+    {{/link-to}}
+    <a href="/logout" class="menu__item">
+      <div class="menu__item__icon"><img src="/static/img/icon_4930.svg"></div>
+      <div class="menu__item__label">Logout</div>
+    </a>
   </div>
 
   {{outlet}}

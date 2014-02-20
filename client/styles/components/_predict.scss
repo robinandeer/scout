@@ -1,43 +1,20 @@
-.predict {
+.table,
+table {
   width: 100%;
 
   border-collapse: collapse;
   table-layout: fixed;
-}
 
-.predict__part {
-  border: 1px solid $flat-gray-1;
-  padding: 1ex;
-}
+  th {
+    border: 1px solid $flat-gray-1;
+    vertical-align: middle;
 
-.predict__main {
-  width: 170px;
+    background-color: lighten($flat-gray-1, 5%);
+    font-weight: bold;
+    text-align: center;
+  }
 
-  border: 1px solid $flat-gray-1;
-  vertical-align: middle;
-
-  background-color: lighten($flat-gray-1, 5%);
-  font-weight: bold;
-  text-align: center;
-}
-
-.predict__number {
-  font-size: 20px;
-}
-
-.predict__text {
-  color: $flat-gray-3;
-  font-size: 14px;
-}
-
-.filter--pass {
-  background-color: rgba($flat-green-1, .05);
-}
-
-.filter--fail {
-  background-color: rgba($flat-red-1, .05);
-}
-
-.filter--blue {
-  background-color: rgba($flat-blue-1, .05);
+  td {
+    border: 1px solid $flat-gray-1;
+  }
 }

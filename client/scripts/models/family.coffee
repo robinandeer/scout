@@ -19,6 +19,9 @@ App.Sample = Ember.Object.extend
     # Check if the second position in the ID is 'A'
     return @get('id').endsWith('A')
   ).property('id')
+  isChild: (->
+    return @get('type') is 'child'
+  ).property('type')
 
 App.Family = Ember.Model.extend
   id: attr()

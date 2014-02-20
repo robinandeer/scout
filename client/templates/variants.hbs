@@ -1,245 +1,219 @@
-<div {{bind-attr class="variantLoaded:panel--sidebar:panel :variants :v-panel__wrapper"}}>
+<div {{bind-attr class="variantLoaded:panel--sidebar:panel :panel__wrapper--vertical :variants-panel"}}>
 
   {{#if isShowingModal}}
-  <div class="v-panel filter-panel">
-    <div class="panel__wrapper">
-      {{! Static filters}}
-      <div class="panel">
-        <div class="panel__overlay--footer filter-footer">
-          <div class="btn-group">
-            <div class="btn" {{action 'filter'}}>
-              <div class="btn__body">Filter</div>
-            </div>
-            <div class="btn" {{action 'clinicalFilter'}}>
-              <div class="btn__body">Clinical filter</div>
-            </div>
-            <div class="btn" {{action 'clearFilter'}}>
-              <div class="btn__body">Clear</div>
-            </div>
+  <div class="panel--vertical panel__wrapper small filter-panel">
+    {{! Static filters}}
+    <div class="panel header-footer__wrapper--overlay">
+      <div class="footer--overlay regular--stretched medium filter-footer">
+        <div class="btn-group">
+          <div class="btn" {{action 'filter'}}>
+            <div class="btn__body">Filter</div>
+          </div>
+          <div class="btn" {{action 'clinicalFilter'}}>
+            <div class="btn__body">Clinical filter</div>
+          </div>
+          <div class="btn" {{action 'clearFilter'}}>
+            <div class="btn__body">Clear</div>
           </div>
         </div>
+      </div>
 
-        <div class="panel__body">
-          <div class="list--vertical">
-            <div class="divider">Frequency cutoffs</div>
-            <div class="list__item">
-              <div class="list__column">
-                {{view Ember.RadioButton name="relation" selectionBinding="relation" value="LESSER"}} Lesser
-              </div>
+      <div class="header-footer__body">
+        <div class="list--vertical">
+          <div class="list__divider regular--stretched medium">Frequency cutoffs</div>
 
-              <div class="list__column">
-                {{view Ember.RadioButton name="relation" selectionBinding="relation" value="GREATER"}} Greater
-              </div>
+          <div class="list__item regular--stretched">
+            <div>
+              {{view Ember.RadioButton name="relation" selectionBinding="relation" value="LESSER"}} Lesser
             </div>
 
-            <div class="list__item">
-              <div class="list__column space-between">
-                <label for="genomes">1000 Genomes</label>
-                {{input id="genomes" type="text" valueBinding="thousand_g" placeholder='0.1' classNames="text-input"}}
-              </div>
-            </div>
-
-            <div class="list__item">
-              <div class="list__column space-between">
-                <label for="dbSNP129">dbSNP 129</label>
-                {{input id="dbSNP129" type="text" valueBinding="dbsnp129" placeholder='0.1' classNames="text-input"}}
-              </div>
-            </div>
-
-            <div class="list__item">
-              <div class="list__column space-between">
-                <label for="dbSNP132">dbSNP 132</label>
-                {{input id="dbSNP132" type="text" valueBinding="dbsnp132" placeholder='0.1' classNames="text-input"}}
-              </div>
-            </div>
-
-            <div class="list__item">
-              <div class="list__column space-between">
-                <label for="esp6500">esp6500</label>
-                {{input id="esp6500" type="text" valueBinding="esp6500" placeholder='0.1' classNames="text-input"}}
-              </div>
-            </div>
-
-            <div class="divider">Database and gene search</div>
-            <div class="list__item">
-              {{#each db in filter.databases}}
-              <div class="list__column">
-                {{view Ember.RadioButton name="database" selectionBinding="database" value=db}} {{db}}
-              </div>
-              {{/each}}
-            </div>
-
-            <div class="list__item">
-              <div class="list__column space-between">
-                <label for="gene-name">Gene name</label>
-                {{input id="gene-name" type="text" valueBinding="gene_name" placeholder='ADK' classNames="text-input"}}
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div> {{! END static filters }}
-
-      {{! Multiple dynamic filter panels}}
-      {{#each group in filterGroups}}
-        <div class="panel">
-          <div class="panel__body">
-            <div class="list--vertical">
-              <div class="divider">{{group.name}}</div>
-
-              {{#each filter in group.filters}}
-                <div class="list__item">
-                  <div class="list__column">
-                    {{input type="checkbox" checkedBinding="filter.property" classNames="toggle-slider__input"}}
-                    {{filter.name}}
-                  </div>
-                </div>
-              {{/each}}
-
+            <div>
+              {{view Ember.RadioButton name="relation" selectionBinding="relation" value="GREATER"}} Greater
             </div>
           </div>
+
+          <div class="list__item regular--stretched">
+            <label for="genomes">1000 Genomes</label>
+            {{input id="genomes" type="text" valueBinding="thousand_g" placeholder='0.1' classNames="text-input slim"}}
+          </div>
+
+          <div class="list__item regular--stretched">
+            <label for="dbSNP129">dbSNP 129</label>
+            {{input id="dbSNP129" type="text" valueBinding="dbsnp129" placeholder='0.1' classNames="text-input slim"}}
+          </div>
+
+          <div class="list__item regular--stretched">
+            <label for="dbSNP132">dbSNP 132</label>
+            {{input id="dbSNP132" type="text" valueBinding="dbsnp132" placeholder='0.1' classNames="text-input slim"}}
+          </div>
+
+          <div class="list__item regular--stretched">
+            <label for="esp6500">esp6500</label>
+            {{input id="esp6500" type="text" valueBinding="esp6500" placeholder='0.1' classNames="text-input slim"}}
+          </div>
+
+          <div class="list__divider regular--stretched medium">Database and gene search</div>
+          <div class="list__item regular--stretched">
+            {{#each db in filter.databases}}
+            {{view Ember.RadioButton name="database" selectionBinding="database" value=db}} {{db}}
+            {{/each}}
+          </div>
+
+          <div class="list__item regular--stretched">
+            <label for="gene-name">Gene name</label>
+            {{input id="gene-name" type="text" valueBinding="gene_name" placeholder='ADK' classNames="text-input slim"}}
+          </div>
+        </div>{{! END list--vertical }}
+
+      </div>{{! END header-footer__body }}
+    </div>{{! END panel }}
+
+    {{! Multiple dynamic filter panels}}
+    {{#each group in filterGroups}}
+    <div class="panel header-footer__wrapper">
+      <div class="header slim medium">{{group.name}}</div>
+      <div class="header-footer__body">
+        <div class="list--vertical">
+          {{#each filter in group.filters}}
+          <div class="list__item regular--stretched">
+            {{input type="checkbox" checkedBinding="filter.property" classNames="toggle-slider__input"}}
+            {{filter.name}}
+          </div>
+          {{/each}}
         </div>
-      {{/each}}
-    </div>
+      </div>{{! END header-footer__body }}
+    </div>{{! END panel }}
+    {{/each}}
   </div>
   {{/if}}
 
-  <div class="panel__overlay--header v-panel">
-
-    <div class="list--vertical">
-      <div class="list__item">
+  <div class="panel--vertical header-footer__wrapper--overlay">
+    <div class="header--overlay">
+      <div class="bar--space-between regular--stretched medium">
         {{#if variantLoaded}}
-
-        <span class="panel__overlay__title">
-          Variants <small>| {{database}}</small>
-        </span>
+        <div>Variants <small>| {{database}}</small></div>
 
         {{else}}
 
-        <div class="list__column--slim">
-          {{#link-to "index" classNames="btn"}}
-            <div class="btn__body">Families</div>
-          {{/link-to}}
-        </div>
+        {{#link-to "index" classNames="btn"}}
+          <div class="btn__body">Families</div>
+        {{/link-to}}
 
-        <div class="list__column--slim">
-          Variants <small>| {{database}}</small>
-        </div>
+        <div>Variants <small>| {{database}}</small></div>
 
-        <div class="list__column--slim">
-          <div {{action "toggleProperty" "isShowingModal"}} class="btn">
-            <div class="btn__body">
-              {{#if isShowingModal}}Close{{else}}Open{{/if}} filter
-            </div>
+        <div {{action "toggleProperty" "isShowingModal"}} class="btn">
+          <div class="btn__body">
+            {{#if isShowingModal}}Close{{else}}Open{{/if}} filter
           </div>
         </div>
 
         {{/if}}
-        
       </div>
+      <hr class="just-line">
 
-      <div class="list__item">
-        <div class="list__column--small fixed">Rank score</div>
-        <div class="list__column--small fixed">Gene</div>
+      <div class="column__wrapper small">
+        <div class="column--small slim">Rank score</div>
+        <div class="column--small slim">Gene</div>
         {{#unless variantLoaded}}
-        <div class="list__column--small fixed">1000 Genomes</div>
-        <div class="list__column--small fixed">PolyPhen</div>
-        <div class="list__column--small fixed">Gene annotation</div>
-        <div class="list__column fixed">Functional annotation</div>
-        <div class="list__column fixed">Inheritance models</div>
-        <div class="list__column fixed">Disease group</div>
-        <div class="list__column--small fixed">HGMD</div>
-        <div class="list__column--small fixed">Hide</div>
+        <div class="column--small slim">1000 Genomes</div>
+        <div class="column--small slim">PolyPhen</div>
+        <div class="column--small slim">Gene annotation</div>
+        <div class="column slim">Functional annotation</div>
+        <div class="column slim">Inheritance models</div>
+        <div class="column slim">Disease group</div>
+        <div class="column--mini slim">HGMD</div>
+        <div class="column--mini slim">Hide</div>
         {{/unless}}
       </div>
-    </div>
+    </div>{{! END header--overlay }}
+
+    <div class="header-footer__body small">
+      <div class="list--vertical variants-list">
+        {{#each variant in model}}
+        {{#unless variant.isHidden}}
+        <div class="list__item column__wrapper">
+
+          {{#link-to "variant" variant classNames="column--small text-center slim medium rank-score-column"}}
+            {{variant.rankScore}}
+
+            {{#if variant.rating}}
+            <div {{bind-attr class=":notification--bubble variant.rating"}}>
+              {{variant.rating}}
+            </div>
+            {{/if}}
+          {{/link-to}}
+          <div class="column--small slim">
+            {{variant.hgncSymbol}}
+          </div>
+
+          {{#unless variantLoaded}}
+          <div {{bind-attr class=":column--small :slim variant.isInOtherFamilies:bar--space-between variant.thousandG::undef"}}>
+            {{#if variant.isInOtherFamilies}}
+            <div class="notification">
+              {{variant.otherFamiliesCount}}
+            </div>
+            {{/if}}
+            <div class="text-right">{{fallback variant.thousandG}}</div>
+          </div>
+
+          <div {{bind-attr class=":column--small :slim :text-right variant.polyphenDivHuman::undef"}}>
+            {{fallback variant.polyphenDivHuman}}
+          </div>
+
+          <div class="column--small slim">{{variant.geneAnnotation}}</div>
+
+          <div {{bind-attr class=":column :slim variant.functionalAnnotation::undef"}}>
+            {{#if variant.functionalAnnotation}}
+              {{variant.functionalAnnotation}}
+            {{else}}
+              Nada
+            {{/if}}
+          </div>
+
+          <div {{bind-attr class=":column :slim :scrollable variant.geneModel::undef"}}>
+            {{#if variant.geneModels}}
+              {{pop-over title=variant.geneModelString variant=variant show="showPopOver" hide="hidePopOver"}}
+            {{else}}
+              Nada
+            {{/if}}
+          </div>
+
+          <div {{bind-attr class=":column :slim :scrollable variant.diseaseGroup::undef"}}>
+            {{#if variant.diseaseGroup}}
+              {{variant.diseaseGroup}}
+            {{else}}
+              Nada
+            {{/if}}
+          </div>
+
+          <div {{bind-attr class=":column--mini :slim variant.hgmd::undef"}}>
+            {{#if variant.hgmd}}
+              {{variant.hgmd}}
+            {{else}}
+              Nada
+            {{/if}}
+          </div>
+
+          <div class="column--mini slim">
+            <div class="btn hide-variant-btn">
+              <div {{action "hideVariant" variant}} class="btn__body">Hide</div>
+            </div>
+          </div>
+          
+          {{/unless}}
+
+        </div>{{! END list__item }}
+        {{/unless}}
+        {{/each}}
+
+        {{#if isShowingGtCall}}
+        <div class="fixed-tooltip regular small">
+          {{render "gt-call" hoveredVariant}}
+        </div>
+        {{/if}}
+      </div>{{! END list--vertical }}
+    </div>{{! END header-footer__body }}
   </div>
-
-  <div class="panel__body v-panel">
-    <div class="list--vertical">
-      {{#each variant in model}}
-      {{#unless variant.isHidden}}
-      <div class="list__item">
-
-        {{#link-to "variant" variant classNames="list__column--small fixed rank-score-column"}}
-          {{variant.rankScore}}
-
-          {{#if variant.rating}}
-          <div {{bind-attr class=":notification--bubble variant.rating"}}>
-            {{variant.rating}}
-          </div>
-          {{/if}}
-        {{/link-to}}
-        <div class="list__column--small fixed">
-          <div class="hgnc-symbol">{{variant.hgncSymbol}}</div>
-        </div>
-
-        {{#unless variantLoaded}}
-        <div {{bind-attr class=":list__column--small :fixed variant.thousandG::undef"}}>
-          <div class="float-left">{{fallback variant.thousandG}}</div>
-
-          {{#if variant.isInOtherFamilies}}
-          <div class="notification float-right">{{variant.otherFamiliesCount}}</div>
-          {{/if}}
-        </div>
-
-        <div {{bind-attr class=":list__column--small :fixed variant.polyphenDivHuman::undef"}}>
-          {{fallback variant.polyphenDivHuman}}
-        </div>
-
-        <div class="list__column--small fixed">{{variant.geneAnnotation}}</div>
-
-        <div {{bind-attr class=":list__column :fixed variant.functionalAnnotation::undef"}}>
-          {{#if variant.functionalAnnotation}}
-            {{variant.functionalAnnotation}}
-          {{else}}
-            Nada
-          {{/if}}
-        </div>
-
-        <div {{bind-attr class=":list__column :fixed :scrollable variant.geneModel::undef"}}>
-          {{#if variant.geneModels}}
-            {{pop-over title=variant.geneModelString variant=variant show="showPopOver" hide="hidePopOver"}}
-          {{else}}
-            Nada
-          {{/if}}
-        </div>
-
-        <div {{bind-attr class=":list__column :fixed :scrollable variant.diseaseGroup::undef"}}>
-          {{#if variant.diseaseGroup}}
-            {{variant.diseaseGroup}}
-          {{else}}
-            Nada
-          {{/if}}
-        </div>
-
-        <div {{bind-attr class=":list__column--small :fixed variant.hgmd::undef"}}>
-          {{#if variant.hgmd}}
-            {{variant.hgmd}}
-          {{else}}
-            Nada
-          {{/if}}
-        </div>
-
-        <div class="list__column--small fixed hide-variant">
-          <div class="btn">
-            <div {{action "hideVariant" variant}} class="btn__body">Hide</div>
-          </div>
-        </div>
-        
-        {{/unless}}
-
-      </div>{{! END list__item }}
-      {{/unless}}
-      {{/each}}
-
-      {{#if isShowingGtCall}}
-      <div class="fixed-tooltip">
-        {{render "gt-call" hoveredVariant}}
-      </div>
-      {{/if}}
-    </div>{{! END list--vertical }}
-  </div>{{! END panel__body }}
 </div>
 
 {{outlet}}

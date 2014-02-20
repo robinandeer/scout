@@ -1,5 +1,5 @@
 App.CommentBoxComponent = Ember.Component.extend
-  classNames: ['comment-box__wrapper']
+  classNames: ['comment-box__wrapper', 'family-comment']
   # This can be used to distingish between multiple comments
   # on the same controller.
   type: null

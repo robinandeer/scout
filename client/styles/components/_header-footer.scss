@@ -1,6 +1,8 @@
 // +-------------------------------------------------------------------+
 // |  Panel Headers & Footers
 // +-------------------------------------------------------------------+
+$overlay-approximate-height: 50px;
+
 .header-footer__wrapper {
   @include display(flex);
   @include flex-direction(column);
@@ -46,7 +48,6 @@
   z-index: 9999;  // Make sure it floats above everything else
 
   // Defaults
-  min-height: $overlay-approximate-height;
   background-color: rgba(#fff, .95);
 }
 
