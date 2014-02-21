@@ -139,6 +139,10 @@ App.Variant = Ember.Model.extend
     return calls.join('\n')
   ).property 'gt.gtCalls.@each.idn', 'gt.gtCalls.@each.gt'
 
+  uniqueId: (->
+    "#{@get('chr')}-#{@get('startBp')}-#{@get('stopBp')}-#{@get('alt_nt')}"
+  ).property 'chr', 'startBp', 'stopBp', 'alt_nt'
+
   hide: ->
     # Do this first block to trigger property changes
     # that otherwise only happens in localStorage

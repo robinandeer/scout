@@ -297,6 +297,15 @@ textarea {
   min-height: 200px;
 }
 
+// Menu
+.panel__menu--footer {
+  position: absolute;
+  bottom: 100px;
+  left: -47px;
+  color: rgba(#fff, 0.7);
+  @include transform(rotate(-90deg));
+}
+
 // Families
 .families-panel {
   > .header-footer__body {

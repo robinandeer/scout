@@ -22,23 +22,26 @@ App.VariantController = Ember.ObjectController.extend
 
     postComment: (comment) ->
       newComment = App.VariantComment.create
-        variantid: @get('id')
-        rating: comment.tag
-        userComment: comment.body
-        email: @get('user.email')
+        context: 'variant'
+        parentId: @get 'uniqueId'
+        email: @get 'user.email'
+        body: comment.body
+        category: comment.type
+        type: comment.tag
+        createdAt: moment()
 
-      newComment.save().done((data) =>
-        @get('comments').pushObject(newComment)
-      ).fail (error) ->
-        console.log error
+      newComment.save().then((newObject) =>
+        @get('comments').pushObject(newObject)
+      )
 
     deleteComment: (commentModel) ->
       # Delete the record from the server
       commentModel.destroy()
+      commentModel.deleteRecord()
 
   adjacentVariant: (direction) ->
     # Get variants controller
-    variantsCtrl = @get("controllers.variants")
+    variantsCtrl = @get 'controllers.variants'
     indexOf = variantsCtrl.indexOf(@get('model'))
 
     if direction is 'next'
@@ -62,24 +65,25 @@ App.VariantController = Ember.ObjectController.extend
     return model
 
   sangerData: (->
-    # TODO: Fix database check!
     return Ember.Object.create
       family_id: App.family
       variant_link: document.URL
-      database: 'IEM'
+      database: @get 'controllers.variants.database'
       hgnc_symbol: @get 'hgncSymbol'
       chr_pos: @get 'chromPosString'
       amino_change: @get 'hgncTranscriptId'
       gt_call: @get 'gtString'
   ).property('App.Family', 'hgncSymbol', 'chromPosString', 'hgncTranscriptId',
-             'gtString')
+             'gtString', 'controllers.variants.database')
 
   hasCompounds: (->
     return @get('gt.compounds.length') > 1
   ).property 'gt.compounds'
 
   comments: (->
-    return App.VariantComment.find({ record_id: @get('id') })
+    return App.VariantComment.find
+      context: 'variant'
+      parent_id: @get 'uniqueId'
   ).property 'id'
 
   variantPriorities: [
