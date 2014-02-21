@@ -4,7 +4,7 @@
     <div class="column--small slim center-center large">{{rankScore}}</div>
 
     <div {{action "toggleProperty" "isShowingFullGeneName"}} class="column slim bar--vertical">
-      <div>
+      <div class="dotdotdot">
         {{#if isShowingFullGeneName}}
           {{capitalize hgncApprovedName}}
         {{else}}

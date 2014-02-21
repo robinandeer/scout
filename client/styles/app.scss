@@ -57,12 +57,20 @@
   margin-bottom: 15px;
 }
 
+.mt {
+  margin-top: 15px;
+}
+
 .mr {
   margin-right: 15px;
 }
 
 .no-border {
   border: 0;
+}
+
+.dotdotdot {
+  @include dotdotdot;
 }
 
 .small,
