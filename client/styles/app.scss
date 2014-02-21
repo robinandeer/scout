@@ -57,6 +57,14 @@
   margin-bottom: 15px;
 }
 
+.mr {
+  margin-right: 15px;
+}
+
+.no-border {
+  border: 0;
+}
+
 .small,
 %small {
   font-size: 12px;
@@ -125,6 +133,10 @@
 .scrollable {
   text-overflow: clip;
   overflow-x: auto !important;
+}
+
+.full-width {
+  width: 100%;
 }
 
 .center-center,
@@ -424,7 +436,7 @@ $family-header-height: 50px;
 .notification,
 %notification {
   line-height: 1;
-  background: lighten($flat-red-1, 20%);
+  background: darken($dark-gray, 10%);
   color: #fff;
   border-radius: 25px;
   min-width: 22px;

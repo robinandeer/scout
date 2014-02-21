@@ -36,13 +36,15 @@ class Comment(db.Document):
   user = db.ReferenceField(User)
   email = db.StringField(required=True)
   # 'variantid' or 'family'
-  parent_id = db.StringField(required=True, unique_with='email')
+  parent_id = db.StringField(required=True)
   body = db.StringField()
   created_at = db.DateTimeField(default=datetime.now())
   # 'column' or 'rating'
   category = db.StringField()
   # 'position_in_column'
   type = db.StringField()
+  # 'family' or 'variant'
+  context = db.StringField()
 
 
 class Sample(db.EmbeddedDocument):

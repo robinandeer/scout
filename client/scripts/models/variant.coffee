@@ -172,7 +172,7 @@ App.Variant = Ember.Model.extend
 App.Variant.camelizeKeys = yes
 
 App.VariantAdapter = Ember.Object.extend
-  host: 'http://localhost:5000/api/v1'
+  host: 'http://localhost:8081/api/v1'
 
   buildQueryString: (queryParams) ->
     queryString = '?'

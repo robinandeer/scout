@@ -9,7 +9,7 @@ App.Issue = Ember.Model.extend
 App.Issue.camelizeKeys = yes
 
 Ember.IssueAdapter = Ember.Object.extend
-  host: 'http://localhost:5000/issues'
+  host: 'http://localhost:8081/issues'
 
   find: (record, id) ->
     $.getJSON("#{@get('host')}/#{id}").then (data) ->

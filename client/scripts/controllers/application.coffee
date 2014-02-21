@@ -3,7 +3,7 @@ App.ApplicationController = Ember.Controller.extend
 
   user: null
   init: ->
-    $.getJSON 'http://localhost:5000/user', (data) =>
+    $.getJSON 'http://localhost:8081/v1/user', (data) =>
       @set 'user', Em.Object.create(data)
 
   actions:

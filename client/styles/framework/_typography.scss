@@ -39,7 +39,7 @@ h6 {
 // Greyed out and smaller than parent
 // - works well as a subtitle
 small {
-  color: $dark-gray;
+  color: darken($dark-gray, 15%);
 }
 
 // Add margin to the bottom only

@@ -61,29 +61,29 @@
         <tbody>
           <tr>
             <th>Severity</th>
-            <td {{bind-attr class="siftWholeExome::undef"}}>
+            <td {{bind-attr class="siftWholeExome::undef :slim :slim"}}>
               <div class="predict__number">{{fallback siftWholeExome}}</div>
-              <div class="predict__text">Avsift</div>
+              <div class="predict__text"><small>Avsift</small></div>
             </td>
 
-            <td {{bind-attr class="polyphenDivHuman::undef"}}>
+            <td {{bind-attr class="polyphenDivHuman::undef :slim"}}>
               <div class="predict__number">{{fallback polyphenDivHuman}}</div>
-              <div class="predict__text">PolyPhen Div</div>
+              <div class="predict__text"><small>PolyPhen Div</small></div>
             </td>
 
-            <td {{bind-attr class="polyphenVarHuman::undef"}}>
+            <td {{bind-attr class="polyphenVarHuman::undef :slim"}}>
               <div class="predict__number">{{fallback polyphenVarHuman}}</div>
-              <div class="predict__text">PolyPhen Var</div>
+              <div class="predict__text"><small>PolyPhen Var</small></div>
             </td>
 
-            <td {{bind-attr class="mutationTaster::undef"}}>
+            <td {{bind-attr class="mutationTaster::undef :slim"}}>
               <div class="predict__number">{{fallback mutationTaster}}</div>
-              <div class="predict__text">Mutation taster</div>
+              <div class="predict__text"><small>Mutation taster</small></div>
             </td>
 
-            <td {{bind-attr class="gerpWholeExome::undef"}}>
+            <td {{bind-attr class="gerpWholeExome::undef :slim"}}>
               <div class="predict__number">{{fallback gerpWholeExome}}</div>
-              <div class="predict__text">GERP exome</div>
+              <div class="predict__text"><small>GERP exome</small></div>
             </td>
 
           </tr>
@@ -91,42 +91,42 @@
 
         <tr>
           <th>Frequency</th>
-          <td {{bind-attr class="thousandG::undef"}}>
+          <td {{bind-attr class="thousandG::undef :slim"}}>
             <div class="predict__number">{{fallback thousandG}}</div>
-            <div class="predict__text">1000 Genomes</div>
+            <div class="predict__text"><small>1000 Genomes</small></div>
           </td>
 
-          <td {{bind-attr class="esp6500::undef"}}>
+          <td {{bind-attr class="esp6500::undef :slim"}}>
             <div class="predict__number">{{fallback esp6500}}</div>
-            <div class="predict__text">ESP 6500</div>
+            <div class="predict__text"><small>ESP 6500</small></div>
           </td>
 
-          <td {{bind-attr class="dbsnp129::undef"}}>
+          <td {{bind-attr class="dbsnp129::undef :slim"}}>
             <div class="predict__number">{{fallback dbsnp129}}</div>
-            <div class="predict__text">dbSNP 129</div>
+            <div class="predict__text"><small>dbSNP 129</small></div>
           </td>
 
-          <td {{bind-attr class="dbsnp::undef"}}>
+          <td {{bind-attr class="dbsnp::undef :slim"}}>
             <div class="predict__number">{{dbsnpFlag}}</div>
-            <div class="predict__text">dbSNP 137</div>
+            <div class="predict__text"><small>dbSNP 137</small></div>
           </td>
         </tr>
 
         <tr class="conservation-row">
           <th>Conservation</th>
-          <td {{bind-attr class="phylopWholeExome::undef"}}>
+          <td {{bind-attr class="phylopWholeExome::undef :slim"}}>
             <div class="predict__number">{{fallback phylopWholeExome}}</div>
-            <div class="predict__text">WE PhyloP</div>
+            <div class="predict__text"><small>WE PhyloP</small></div>
           </td>
 
-          <td {{bind-attr class="gerpElement::undef"}}>
+          <td {{bind-attr class="gerpElement::undef :slim"}}>
             <div class="predict__number">{{fallback gerpElement}}</div>
-            <div class="predict__text">GERP++ element</div>
+            <div class="predict__text"><small>GERP++ element</small></div>
           </td>
 
-          <td {{bind-attr class="lrtWholeExome::undef"}}>
+          <td {{bind-attr class="lrtWholeExome::undef :slim"}}>
             <div class="predict__number">{{fallback lrtWholeExome}}</div>
-            <div class="predict__text">WE LRT</div>
+            <div class="predict__text"><small>WE LRT</small></div>
           </td>
         </tr>
       </table>
@@ -134,7 +134,7 @@
 
     <div class="regular-width annotations">
       <div class="panel__wrapper">
-        <div class="panel">
+        <div class="panel no-border mr">
           <div class="panel__body">
             <table class="table annotate-table">
               <tr>
@@ -164,52 +164,71 @@
             </table>
           </div>
         </div>
-        <div class="panel">
-          <div class="list--vertical">
-            <div class="list__divider slim small">Variant function</div>
-            {{#each item in variantFunctions}}
-            <div class="list__item">
-              <div class="column--slim slim">{{item}}</div>
-            </div>
-            {{else}}
-              <div class="center-center"><small>No functions annotated.</small></div>
-            {{/each}}
-          </div>{{! END list--vertical }}
+
+        <div class="panel--sidebar">
+          <table class="table">
+            <thead>
+              <tr><th class="slim">Predicted protein change</th></tr>
+            </thead>
+            <tbody>
+              {{#each item in variantFunctions}}
+              <tr>
+                <td class="slim">{{item}}</td>
+              </tr>
+              {{else}}
+              <tr>
+                <td class="slim"><small>No functions annotated.</small></td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
 
     <div class="regular-width gt-call">
-      <table class="table">
-        <thead>
-          <tr>
-            <th class="slim">IDN</th>
-            <th class="slim">GT</th>
-            <th class="slim">AD</th>
-            <th class="slim">PL</th>
-            <th class="slim">GQ</th>
-          </tr>
-        </thead>
-        <tbody>
-        {{#each call in gt.gtCalls}}
-          <tr>
-            <td class="slim text-center">{{call.idn}}</td>
-            <td class="slim text-center">{{call.gt}}</td>
-            <td class="slim text-center">{{call.ad}}</td>
-            <td class="slim">{{call.pl}}</td>
-            <td class="slim text-right">{{call.gq}}</td>
-          </tr>
-        {{/each}}
-
-        <tr>
-          <th class="slim">Inheritance models</th>
-          {{#each model in geneModels}}
-            <td class="slim">{{model}}</td>
-          {{/each}}
-        </tr>
-        </tbody>
-      </table>
-
+      <div class="panel__wrapper">
+        <div class="panel no-border mr">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="slim--stretched">IDN</th>
+                <th class="slim--stretched">GT</th>
+                <th class="slim--stretched">AD</th>
+                <th class="slim--stretched">PL</th>
+                <th class="slim--stretched">GQ</th>
+              </tr>
+            </thead>
+            <tbody>
+            {{#each call in gt.gtCalls}}
+              <tr>
+                <td class="slim text-center">{{call.idn}}</td>
+                <td class="slim text-center">{{call.gt}}</td>
+                <td class="slim text-center">{{call.ad}}</td>
+                <td class="slim">{{call.pl}}</td>
+                <td class="slim text-right">{{call.gq}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        </div>{{! END panel }}
+        <div class="panel--sidebar">
+          <table class="table">
+            <thead>
+              <tr>
+                <th class="slim">Inheritance models</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each model in geneModels}}
+              <tr>
+                <td class="slim">{{model}}</td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
+      </div>{{! END panel__wrapper }}
     </div>
 
     {{#if hasCompounds}}
@@ -218,7 +237,7 @@
     </div>
     {{/if}}
 
-    <div class="bar--space-around regular-width external-links">
+    <div class="bar--space-between regular-width external-links">
       <a {{bind-attr href=ensemblLink}} class="link" target="_blank">
         <div class="link__icon"><img src="/static/img/ensembl-logo-gray.svg"></div>
         <div class="link__text">Ensembl</div>

@@ -12,7 +12,7 @@ from cors import crossdomain
 from secrets import gmail_keys
 from scout import app
 from scout.core import it, mail, google, login_manager
-from scout.models import User
+from scout.models import User, Comment
 from scout.settings import REDIRECT_URI
 from scout.utils import jsonify_mongo
 
@@ -113,15 +113,16 @@ def logout():
 # |  REST API
 # +--------------------------------------------------------------------+
 # Get user info object
-@app.route('/user', methods=['GET'])
+@app.route('/v1/user', methods=['GET'])
 @crossdomain(origin='*', methods=['GET'])
 def user():
-  try:
-    user = current_user.to_mongo().to_dict()
-  except AttributeError:
-    return jsonify(error="You are not logged in."), 403
-    # print('\nFAKING A USER!')
-    # user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
+  user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
+  # try:
+  #   user = current_user.to_mongo().to_dict()
+  # except AttributeError:
+  #   # return jsonify(error="You are not logged in."), 403
+  #   print('\nFAKING A USER!')
+  #   user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
 
   # Return json object for the logged in user
   return jsonify_mongo(**user)
@@ -197,6 +198,46 @@ def remote_static(path):
   return new_resp
 
 
+# +--------------------------------------------------------------------+
+# |  Sanger Sequencing Order Mail
+# +--------------------------------------------------------------------+
+@app.route('/v1/comments', methods=['OPTIONS', 'POST', 'GET'])
+@app.route('/v1/comments/<comment_id>', methods=['OPTIONS', 'GET', 'PUT',
+                                                 'DELETE'])
+@crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
+def comments(comment_id=None):
+  # Get a specific comment if requested
+  if comment_id:
+    comment = Comment.objects.get(id=ObjectId(comment_id))
+
+  if request.method == 'POST':
+    # Create a new comment
+    comment = Comment(**request.json).save()
+
+  elif request.method == 'GET':
+    if comment_id is None:
+      # Get all comments for a given family/variant
+      context = request.args.get('context')
+      parent_id = request.args.get('parent_id')
+      comments = Comment.objects(context=context, parent_id=parent_id)
+      raw_comments = [c.to_mongo().to_dict() for c in comments]
+      return jsonify_mongo(comments=raw_comments)
+
+  elif request.method == 'PUT':
+    # Update a specific comment
+    Comment.objects(id=comment_id).update_one(**request.json)
+    comment.reload()
+
+  elif request.method == 'DELETE':
+    # Delete a specific comment
+    comment.delete()
+
+  return jsonify_mongo(comment.to_mongo().to_dict())
+
+
+# +--------------------------------------------------------------------+
+# |  GitHub Issues
+# +--------------------------------------------------------------------+
 @app.route('/issues', methods=['GET', 'POST'])
 @app.route('/issues/<issue_id>', methods=['GET', 'PUT', 'DELETE'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'])

@@ -15,16 +15,17 @@ App.FamilyIndexController = Ember.Controller.extend
 
     postComment: (comment) ->
       newComment = App.FamilyComment.create
-        family: @get('family.id')
-        userComment: comment.body
-        logColumn: comment.type
-        positionInColumn: comment.tag
+        context: 'family'
+        parentId: @get('family.id')
         email: @get('user.email')
+        body: comment.body
+        category: comment.type
+        type: comment.tag
+        createdAt: moment()
 
-      newComment.save().done((data) =>
-        @get('comments').pushObject(newComment)
-      ).fail (error) ->
-        console.log error
+      newComment.save().then((newObject) =>
+        @get('comments').pushObject(newObject)
+      )
 
     deleteComment: (commentModel) ->
       # Delete the record from the server
@@ -32,7 +33,9 @@ App.FamilyIndexController = Ember.Controller.extend
       commentModel.deleteRecord()
 
   comments: (->
-    return App.FamilyComment.find({ record_id: @get("family.id") })
+    return App.FamilyComment.find
+      context: 'family'
+      parent_id: @get("family.id")
   ).property 'family.id'
 
   diagnosticComments: (->
@@ -43,7 +46,7 @@ App.FamilyIndexController = Ember.Controller.extend
           comments.pushObject(comment)
     
     return comments
-  ).property 'comments.isLoaded', 'comments'
+  ).property 'comments.isLoaded', 'comments.length'
 
   researchComments: (->
     comments = Em.A()
@@ -53,7 +56,7 @@ App.FamilyIndexController = Ember.Controller.extend
           comments.pushObject(comment)
     
     return comments
-  ).property 'comments.isLoaded', 'comments'
+  ).property 'comments.isLoaded', 'comments.length'
 
   commentCategories: [
     { label: 'Finding', id: 'finding' },

@@ -3,7 +3,7 @@ App.GTCall = Ember.Model.extend
   compounds: attr()
 
 Ember.GTCallAdapter = Ember.Object.extend
-  host: 'http://localhost:5000/api/v1'
+  host: 'http://localhost:8081/api/v1'
 
   find: (record, id) ->
     $.getJSON("#{@get('host')}/variants/#{id}/gtcall").then (data) ->

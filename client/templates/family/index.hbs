@@ -76,15 +76,17 @@
           <div class="header-footer__body">
             <div class="list--vertical">
             {{#each comment in diagnosticComments}}
+              {{#unless comment.isDestroyed}}
               <div class="comment-box__wrapper family-comment">
                 <div class="comment-box">
                   <div class="comment-box__header bar--space-between slim--stretched small">
-                    <div><b>{{comment.userName}}</b> commented 3 days ago</div>
+                    <div><b>{{comment.email}}</b> {{fromNow comment.createdAt}}</div>
                     <div {{action "deleteComment" comment}}>Delete</div>
                   </div>
-                  <div class="comment-box__body slim medium">{{comment.userComment}}</div>
+                  <div class="comment-box__body slim medium">{{comment.body}}</div>
                 </div>
               </div>
+              {{/unless}}
             {{else}}
               <div class="center-center">
                 <small>No comments added yet.</small>
@@ -105,11 +107,11 @@
                 <div class="comment-box">
                   <div class="comment-box__header bar--space-between slim--stretched small">
                     <div>
-                      <b>{{comment.userName}}</b> commented 3 days ago
+                      <b>{{comment.email}}</b> {{fromNow comment.createdAt}}
                     </div>
                     <div {{action "deleteComment" comment}}>Delete</div>
                   </div>
-                  <div class="comment-box__body slim medium">{{comment.userComment}}</div>
+                  <div class="comment-box__body slim medium">{{comment.body}}</div>
                 </div>
               </div>
             {{else}}

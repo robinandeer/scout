@@ -1,102 +1,55 @@
 MomentDate =
   deserialize: (raw_date) ->
-    return moment raw_date, "YYYY-MM-DD"
+    return moment raw_date
 
   serialize: (date) ->
-    return date.format "YYYY-MM-DD"
+    return date.toJSON()
 
-Ember.CommentAdapter = Ember.Object.extend
-  host: ''
+Ember.NewRESTAdapter = Ember.RESTAdapter.extend
+  buildURL: (klass, id) ->
+    urlRoot = Ember.get(klass, 'url')
+    if !urlRoot
+      throw new Error('Ember.RESTAdapter requires a `url` property to be specified');
 
-  findQuery: (klass, records, params) ->
-    url = "#{@get('host')}/#{params.record_id}/comments"
+    if !Ember.isEmpty(id)
+      return "#{urlRoot}/#{id}"
+    else
+      return urlRoot
 
-    $.getJSON url, (data) ->
-      for record, i in data
-        record['id'] = record['pk']
-
-      records.load(klass, data)
-
-  createRecord: (record) ->
-    klass = record.constructor
-    klass_id = record.get(Em.get(klass, 'klassIdField'))
-
-    # This is called when saving a new record
-    # Make the POST call to the server
-    $.ajax({
-      type: 'POST'
-      url: "#{@get('host')}/#{klass_id}/comments"
-      data: record.toJSON()
-      dataType: 'json'
-    }).done((data) ->
-      # Make nessesary updates to the client record
-      for key, value of data[0]
-        if key is 'created_date'
-          value = moment(value)
-        record.set key.camelize(), value
-
-      # Tell the world
-      record.didCreateRecord()
-    ).fail((error) ->
-      console.log error
-    )
-
-  deleteRecord: (record) ->
-    klass = record.constructor
-    klass_id = record.get(Em.get(klass, 'klassIdField'))
-
-    $.ajax
-      url: "#{@get('host')}/#{klass_id}/comments/#{record.get('id')}"
-      type: 'DELETE'
-      dataType: 'json'
-      success: (data) ->
-        record.didDeleteRecord()
-      error: (error) ->
-        throw new Error(error)
-
-App.FamilyComment = Ember.Model.extend
-  id: Em.attr()
-  family: Em.attr()
-  userComment: Em.attr()
-  createdDate: Em.attr(MomentDate)
-  logColumn: Em.attr()
-  positionInColumn: Em.attr()
-  userName: Em.attr()
+App.Comment = Ember.Model.extend
+  _id: Em.attr()
+  context: Em.attr()
+  parentId: Em.attr()
   email: Em.attr()
+  createdAt: Em.attr(MomentDate)
+  body: Em.attr()
+  category: Em.attr()
+  type: Em.attr()
 
   firstLetter: (->
     return @get('userName')[0].capitalize()
   ).property('userName')
 
+
+App.FamilyComment = App.Comment.extend
   isDiagnostic: (->
-    return @get('logColumn') in ['IEM', 'EP']
-  ).property('logColumn')
+    return @get('category') in ['IEM', 'EP']
+  ).property('category')
 
   isResearch: (->
-    return @get('logColumn') is 'research'
-  ).property('logColumn')
+    return @get('category') is 'research'
+  ).property('category')
 
 App.FamilyComment.camelizeKeys = yes
-App.FamilyComment.klassIdField = 'family'
+App.FamilyComment.primaryKey = '_id'
+App.FamilyComment.collectionKey = 'comments'
+App.FamilyComment.url = 'http://localhost:8081/v1/comments'
 
-App.FamilyComment.adapter = Ember.CommentAdapter.create
-  host: "http://localhost:5000/api/v1/families"
+App.FamilyComment.adapter = Ember.NewRESTAdapter.create()
 
-App.VariantComment = Ember.Model.extend
-  id: Em.attr()
-  rating: Em.attr()
-  createdDate: Em.attr(MomentDate)
-  userName: Em.attr()
-  userComment: Em.attr()
-  variantid: Em.attr()
-  email: Em.attr()
-
-  firstLetter: (->
-    return @get('userName')[0].capitalize()
-  ).property('userName')
-
+App.VariantComment = App.Comment.extend()
 App.VariantComment.camelizeKeys = yes
-App.VariantComment.klassIdField = 'variantid'
-
-App.VariantComment.adapter = Ember.CommentAdapter.create
-  host: "http://localhost:5000/api/v1/variants"
+App.VariantComment.primaryKey = '_id'
+App.VariantComment.collectionKey = 'comments'
+App.VariantComment.url = 'http://localhost:8081/v1/comments'
+App.VariantComment.adapter = Ember.NewRESTAdapter.create()
