@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th class="slim--stretched">Rank score</th>
-      {{#each idn in gt.compounds.1.idns}}
+      {{#each idn in compounds.1.idns}}
       <th class="slim--stretched">{{idn}}</th>
       {{/each}}
       <th class="slim--stretched">Gene annotation</th>
@@ -11,7 +11,8 @@
     </tr>
   </thead>
 
-  {{#each compound in gt.compounds}}
+  <tbody>
+  {{#each compound in compounds}}
     <tr>
     <td class="text-center">
       {{#link-to "variant" compound.vpk}}
@@ -28,4 +29,5 @@
     <td class="slim">{{compound.gene_model}}</td>
     </tr>
   {{/each}}
+  </tbody>
 </table>

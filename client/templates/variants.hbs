@@ -55,7 +55,7 @@
           <div class="list__divider regular--stretched medium">Database and gene search</div>
           <div class="list__item regular--stretched">
             {{#each db in filter.databases}}
-            {{view Ember.RadioButton name="database" selectionBinding="database" value=db}} {{db}}
+            <div>{{view Ember.RadioButton name="database" selectionBinding="database" value=db}} {{db}}</div>
             {{/each}}
           </div>
 
@@ -174,7 +174,7 @@
 
           <div {{bind-attr class=":column :slim :scrollable variant.geneModel::undef"}}>
             {{#if variant.geneModels}}
-              {{pop-over title=variant.geneModelString variant=variant show="showPopOver" hide="hidePopOver"}}
+              {{pop-over title=variant.geneModelString variant_id=variant.id show="showPopOver" hide="hidePopOver"}}
             {{else}}
               Nada
             {{/if}}
@@ -210,7 +210,7 @@
 
         {{#if isShowingGtCall}}
         <div class="fixed-tooltip regular small">
-          {{render "gt-call" hoveredVariant}}
+          {{render "gt-call" gt}}
         </div>
         {{/if}}
       </div>{{! END list--vertical }}

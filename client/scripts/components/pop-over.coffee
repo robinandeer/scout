@@ -1,6 +1,6 @@
 App.PopOverComponent = Ember.Component.extend
   classNames: ['pop-over']
-  variant: null
+  variant_id: null
   title: null
   show: null
   hide: null
@@ -8,7 +8,7 @@ App.PopOverComponent = Ember.Component.extend
   isLocked: no
 
   mouseEnter: ->
-    @sendAction 'show', @get('variant')
+    @sendAction 'show', @get('variant_id')
 
   mouseLeave: ->
     if not @get('isLocked')

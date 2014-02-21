@@ -5,19 +5,21 @@ App.GTCall = Ember.Model.extend
 Ember.GTCallAdapter = Ember.Object.extend
   host: 'http://localhost:8081/api/v1'
 
-  find: (record, id) ->
-    $.getJSON("#{@get('host')}/variants/#{id}/gtcall").then (data) ->
-
-      compounds = []
+  find: (record, _id) ->
+    params = _id.split(',')
+    id = params[0]
+    database = params[1]
+    url = "#{@get('host')}/variants/#{id}/gtcall?database=#{database}"
+    $.getJSON(url).then (data) ->
+      compounds = Em.A()
       for compound in data.COMPOUNDS
         unless compound.vpk is id
-          compounds.push(App.Compound.create(compound))
+          compounds.pushObject(App.Compound.create(compound))
 
-      objects = {
+      objects =
         gtCalls: (App.Call.create(call) for call in data.GT)
         # Only show the first 10 compounds
         compounds: compounds.slice(0,10)
-      }
 
       record.load(id, objects)
 
@@ -86,7 +88,7 @@ App.Compound = Ember.Object.extend
   ).property('gt')
 
   geneModels: (->
-    return @get('gene_model').split(';')
+    return @get('gene_model').split(':')
   ).property('gene_model')
 
   idns: (->

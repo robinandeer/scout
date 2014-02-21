@@ -126,18 +126,6 @@ App.Variant = Ember.Model.extend
     return Math.round(sum/2 * 100)
   ).property 'lrtWholeExome', 'phylopWholeExome'
 
-  gt: (->
-    return App.GTCall.find @get('id')
-  ).property 'id'
-
-  gtString: (->
-    calls = []
-    for call in @get('gt.gtCalls')
-      calls.push "#{call.get('idn')}: #{call.get('gt')}"
-
-    return calls.join('\n')
-  ).property 'gt.gtCalls.@each.idn', 'gt.gtCalls.@each.gt'
-
   uniqueId: (->
     "#{@get('chr')}-#{@get('startBp')}-#{@get('stopBp')}-#{@get('alt_nt')}"
   ).property 'chr', 'startBp', 'stopBp', 'alt_nt'

@@ -1,6 +1,6 @@
 App.Filter = Ember.Model.extend
   id: attr()
-  database: attr()
+  clinical_db_gene_annotation: attr()
   functional_annotations: attr()
   gene_annotations: attr()
   inheritence_models: attr()
@@ -17,14 +17,14 @@ App.Filter = Ember.Model.extend
   ]
 
   databases: (->
-    if @get('database')
-      dbs = @get('database').split(',')
+    if @get('clinical_db_gene_annotation')
+      dbs = @get('clinical_db_gene_annotation').split(',')
     else
       dbs = []
 
     dbs.push('research')
     return dbs
-  ).property 'database'
+  ).property 'clinical_db_gene_annotation'
 
 Ember.FilterAdapter = Ember.Object.extend
   host: 'http://localhost:8081/api/v1'

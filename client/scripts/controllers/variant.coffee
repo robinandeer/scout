@@ -64,6 +64,19 @@ App.VariantController = Ember.ObjectController.extend
 
     return model
 
+  gt: (->
+    database = @get 'controllers.variants.database'
+    return App.GTCall.find "#{@get('id')},#{database}"
+  ).property 'id', 'controllers.variants.database'
+
+  gtString: (->
+    calls = []
+    for call in @get('gt.gtCalls')
+      calls.push "#{call.get('idn')}: #{call.get('gt')}"
+
+    return calls.join('\n')
+  ).property 'gt.gtCalls.@each.idn', 'gt.gtCalls.@each.gt'
+
   sangerData: (->
     return Ember.Object.create
       family_id: App.family

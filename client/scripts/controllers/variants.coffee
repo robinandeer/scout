@@ -69,8 +69,8 @@ App.VariantsController = Ember.ArrayController.extend
   database: 'IEM'
 
   actions:
-    showPopOver: (variant) ->
-      @set 'hoveredVariant', variant
+    showPopOver: (variant_id) ->
+      @set 'hoveredVariantId', variant_id
       @set 'isShowingGtCall', yes
 
     hidePopOver: ->
@@ -116,10 +116,14 @@ App.VariantsController = Ember.ArrayController.extend
       variant.hide()
 
   # +------------------------------------------------------------------+
-  # |  
+  # |  Compound list pop-over
   # +------------------------------------------------------------------+
-  hoveredVariant: null
+  hoveredVariantId: null
   isShowingGtCall: no
+
+  gt: (->
+    return App.GTCall.find "#{@get('hoveredVariantId')},#{@get('database')}"
+  ).property 'database', 'hoveredVariantId'
 
   modalObserver: (->
     if @get('variantLoaded')
@@ -127,7 +131,7 @@ App.VariantsController = Ember.ArrayController.extend
   ).observes('variantLoaded')
 
   # +------------------------------------------------------------------+
-  # |  
+  # |  Route checker
   # +------------------------------------------------------------------+
   variantLoaded: (->
     if @get('currentPath').match(/variants.variant/)
