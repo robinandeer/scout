@@ -77,7 +77,7 @@ gulp.task 'coffee', ->
       .pipe(coffee(options))
       .pipe(concat('app.js'))
       .pipe(gulpif(false, uglify()))
-      .pipe(gulpif(isDist, replace('http://localhost:5000', '')))
+      .pipe(gulpif(isDist, replace('http://localhost:8081', '')))
       .pipe(gulp.dest("#{ROOT}/static/js/"))
       .pipe(refresh(lrServer))
 
