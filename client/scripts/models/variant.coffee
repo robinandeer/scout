@@ -8,7 +8,6 @@ ReplaceNull =
 App.Variant = Ember.Model.extend
   id: attr()
   rankScore: attr()
-  rating: attr()
   GTCallFilter: attr()
 
   chr: attr()
@@ -102,11 +101,11 @@ App.Variant = Ember.Model.extend
     modelString = @get('geneModel')
     if modelString
       delimiter = ':'
-      sliceEnd = 1
-      unless modelString.indexOf(';') is -1
+      sliceEnd = 10
+      if ';' in modelString
         delimiter = ';'
         sliceEnd = -1
-      return @get('geneModel').split(delimiter).slice(0, sliceEnd)
+      return modelString.split(delimiter).slice(0, sliceEnd)
     else
       return []
   ).property('geneModel')

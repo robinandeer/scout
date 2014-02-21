@@ -12,10 +12,9 @@ MomentDate =
 App.Family = Ember.Model.extend
   id: attr()
   updateDate: attr(MomentDate)
-  pedigree: attr()
   database: attr()
   samples: attr()
-  
+
   hide: ->
     # Do this first block to trigger property changes
     # that otherwise only happens in localStorage
@@ -53,11 +52,7 @@ App.FamilyAdapter = Ember.Object.extend
 
   find: (record, id) ->
     $.getJSON("#{@get('host')}/families/#{id}").then (data) ->
-      family = data[0].family[0]
-      family.database = family.iem
-      family.id = family.family
-      family.samples = data[1].samples
-      record.load(id, family)
+      record.load(id, data)
 
   findAll: (klass, records) ->
     $.getJSON("#{@get('host')}/families").then (data) ->

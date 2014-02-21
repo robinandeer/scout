@@ -323,11 +323,7 @@ textarea {
 
 .families-links-buttons {
   > .btn {
-    width: 120px;
-
-    &:last-of-type {
-      width: 80px;
-    }
+    min-width: 120px;
   }
 }
 
