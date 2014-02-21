@@ -11,7 +11,7 @@
           <div class="regular medium column--small">{{fromNow issue.createdAt}}</div>
         </div>{{! END list__item }}
         {{else}}
-        <div class="center-center"><small>No open issues.</small></div>
+        <div class="center-center mt"><small>No open issues.</small></div>
         {{/each}}
       </div>
     </div>
@@ -24,21 +24,21 @@
   {{#if newIssue.isNew}}
 
     {{#if newIssue.isSaving}}
-    <div class="issue-sending">Sending issue...</div>
+    <div class="center-center issue-sending large">Sending issue...</div>
 
     {{else}}
-    <form class="form--stacked" {{action 'confirmIssue' on='submit'}}>
-      <p class="p--title large">Submit a new issue</p>
-      {{input value=newIssue.title type="text" placeholder="Title" classNames="text-input slim medium mb"}}
-      {{textarea value=newIssue.body placeholder="Describe your problem/request" classNames="text-input slim medium mb"}}
+    <form class="form--stacked medium">
+      <p class="p--title">Submit a new issue</p>
+      {{input value=newIssue.title type="text" placeholder="Title" classNames="text-input slim mb"}}
+      {{textarea value=newIssue.body placeholder="Describe your problem/request" classNames="text-input slim mb"}}
 
       {{#unless isConfirmingIssue}}
-        <div type="submit" class="btn">
-          <div class="btn__body fit large">Submit</div>
+        <div {{action 'confirmIssue'}} class="btn">
+          <div class="btn__body slim large">Submit</div>
         </div>
       {{else}}
-        <div {{action 'createIssue'}} class="btn">
-          <div class="btn__body fit large">Are you sure?</div>
+        <div {{action "createIssue"}} class="btn">
+          <div class="btn__body slim large">Are you sure?</div>
         </div>
       {{/unless}}
     </form>
@@ -47,16 +47,16 @@
   {{else}}
 
     {{! The new issue was successfully created }}
-    <div class="issue-form">
-      <h4>Your issue</h4>
-      <p>Click the title to provide additional information and upload a screenshot.</p>
-      <a {{bind-attr href="message.html_url"}} class="issue-title">
-        {{message.title}}
+    <div class="issue-form medium regular-width">
+      <p class="p--title">Your submitted issue</p>
+      <p><small>Click the title to provide additional information and upload screenshots.</small></p>
+      <a {{bind-attr href="newIssue.url"}} class="issue-title large">
+        {{newIssue.title}}
       </a>
-      <div class="issue-body-wrapper">{{{message.html}}}</div>
+      <div class="issue-body-wrapper">{{{newIssue.html}}}</div>
 
       <div {{action "reset"}} class="btn">
-        <div class="btn__body">New issue</div>
+        <div class="btn__body slim large">New issue</div>
       </div>
     </div>    
 

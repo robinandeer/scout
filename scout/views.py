@@ -99,7 +99,7 @@ def authorized(resp):
 
   session['user_id'] = str(user.id)
 
-  return redirect(request.referrer or url_for('index'))
+  return redirect(url_for('index'))
 
 
 @app.route('/logout')
@@ -116,13 +116,12 @@ def logout():
 @app.route('/v1/user', methods=['GET'])
 @crossdomain(origin='*', methods=['GET'])
 def user():
-  user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
-  # try:
-  #   user = current_user.to_mongo().to_dict()
-  # except AttributeError:
-  #   # return jsonify(error="You are not logged in."), 403
-  #   print('\nFAKING A USER!')
-  #   user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
+  try:
+    user = current_user.to_mongo().to_dict()
+  except AttributeError:
+    return jsonify(error="You are not logged in."), 403
+    # print('\nFAKING A USER!')
+    # user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
 
   # Return json object for the logged in user
   return jsonify_mongo(**user)
@@ -238,18 +237,18 @@ def comments(comment_id=None):
 # +--------------------------------------------------------------------+
 # |  GitHub Issues
 # +--------------------------------------------------------------------+
-@app.route('/issues', methods=['GET', 'POST'])
-@app.route('/issues/<issue_id>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/v1/issues', methods=['GET', 'POST'])
+@app.route('/v1/issues/<issue_id>', methods=['GET', 'PUT', 'DELETE'])
 @crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def issues(issue_id=None):
   if request.method == 'POST':
     # Submits an issue to Scout repo at GitHub
     body = """{body}
 
-    submitted by **{author}**.
-    """.format(body=request.form['body'], author=current_user.name)
+submitted by **{author}**.
+    """.format(body=request.json['body'], author=current_user.name)
 
-    issue = it.create(request.form['title'], body)
+    issue = it.create(request.json['title'], body)
 
     return jsonify(id=issue.id, body=issue.body, title=issue.title,
                    html=issue.body_html, url=issue.html_url)
