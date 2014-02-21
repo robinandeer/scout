@@ -205,6 +205,6 @@ App.VariantAdapter = Ember.Object.extend
       url += queryString
 
     $.getJSON(url).then (data) ->
-      records.load(klass, data.slice(0, 100))
+      records.load(klass, data)
 
 App.Variant.adapter = App.VariantAdapter.create()
