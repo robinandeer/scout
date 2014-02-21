@@ -4,73 +4,17 @@ belongsTo = Ember.belongsTo
 
 MomentDate =
   deserialize: (raw_date) ->
-    return moment raw_date, "YYYY-MM-DD"
+    return moment raw_date
 
   serialize: (date) ->
-    return date.format "YYYY-MM-DD"
-
-App.Sample = Ember.Object.extend
-  id: ''
-  captureKit: ''
-  inheritanceModels: ''
-  type: ''
-  gender: ''
-  affected: (->
-    # Check if the second position in the ID is 'A'
-    return @get('id').endsWith('A')
-  ).property('id')
-  isChild: (->
-    return @get('type') is 'child'
-  ).property('type')
+    return date.toJSON()
 
 App.Family = Ember.Model.extend
   id: attr()
-  analyzedDate: attr(MomentDate)
+  updateDate: attr(MomentDate)
   pedigree: attr()
   database: attr()
-
-  samples: (->
-    samples = Em.A()
-
-    # All rows
-    rows = $(@get("pedigree")).find("tr").slice(1)
-
-    # Loop over everthing but the first row
-    for row in rows
-
-      # This is an array of data values
-      data = $(row).find("td")
-
-      # If we get to additional comment lines, let's quit
-      if $(data[0]).text()[0] is "#"
-        break
-
-      # Determine mother father child
-      if parseInt($(data[2]).text())
-        type = "mother"
-      else if parseInt($(data[3]).text())
-        type = "father"
-      else if parseInt($(data[4]).text())
-        type = "child"
-
-      # Determine gender
-      if parseInt($(data[0]).text().slice(-2,-1)) % 2 == 0
-        gender = "female"
-      else
-        gender = "male"
-
-      sample = App.Sample.create
-        id: $(data[0]).text()
-        captureKit: $(data[data.length-1]).text().split(";").slice(-1)[0]
-        inheritanceModels: $(data[10]).text().split(";")
-        type: type
-        gender: gender
-
-      samples.pushObject(sample)
-
-    return samples
-
-  ).property("pedigree").cacheable()
+  samples: attr()
   
   hide: ->
     # Do this first block to trigger property changes
@@ -109,7 +53,11 @@ App.FamilyAdapter = Ember.Object.extend
 
   find: (record, id) ->
     $.getJSON("#{@get('host')}/families/#{id}").then (data) ->
-      record.load(id, data[0])
+      family = data[0].family[0]
+      family.database = family.iem
+      family.id = family.family
+      family.samples = data[1].samples
+      record.load(id, family)
 
   findAll: (klass, records) ->
     $.getJSON("#{@get('host')}/families").then (data) ->
