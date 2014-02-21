@@ -177,11 +177,13 @@ App.VariantAdapter = Ember.Object.extend
   buildQueryString: (queryParams) ->
     queryString = '?'
     for key, value of queryParams
-      # If there is a value for other than 'true'
-      if value is yes
-        queryString += "#{key}&"
-      else
-        queryString += "#{key}=#{value}&"
+      # If there is a value (other than undefined)
+      if value
+        # If boolean query parameter
+        if value is yes
+          queryString += "#{key}&"
+        else
+          queryString += "#{key}=#{value}&"
 
     # Return the query string after removing trailing '&'
     return queryString.substring(0, queryString.length - 1)

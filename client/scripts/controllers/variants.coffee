@@ -106,6 +106,11 @@ App.VariantsController = Ember.ArrayController.extend
         for filter in group.filters
           filter.set 'property', no
 
+      filters = ['relation', 'thousand_g', 'dbsnp129', 'dbsnp132', 'esp6500',
+                 'gene_name', 'priority']
+      for filter in filters
+        @set filter, null
+
     hideVariant: (variant) ->
       # Add variant to the list of hidden elements (localStorage)
       variant.hide()
