@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import arrow
 from bson import ObjectId
-from datetime import datetime
 from flask import Response
 import json
 
@@ -12,11 +10,7 @@ import json
 # +--------------------------------------------------------------------+
 class MongoDocumentEncoder(json.JSONEncoder):
   def default(self, o):
-    if isinstance(o, datetime):
-      # Return a string like "2 hours ago"
-      return arrow.get(o).format('YYYY-MM-DD HH:mm:ss ZZ')
-
-    elif isinstance(o, ObjectId):
+    if isinstance(o, ObjectId):
       return str(o)
 
     return json.JSONEncoder(self, o)
