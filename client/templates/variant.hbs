@@ -168,7 +168,7 @@
         <div class="panel--sidebar">
           <table class="table">
             <thead>
-              <tr><th class="slim">Predicted protein change</th></tr>
+              <tr><th class="slim--stretched">Predicted protein change</th></tr>
             </thead>
             <tbody>
               {{#each item in variantFunctions}}
@@ -216,7 +216,7 @@
           <table class="table">
             <thead>
               <tr>
-                <th class="slim">Inheritance models</th>
+                <th class="slim--stretched">Inheritance models</th>
               </tr>
             </thead>
             <tbody>
@@ -233,7 +233,7 @@
 
     {{#if hasCompounds}}
     <div class="regular-width compounds">
-      {{render "gt-call" this}}
+      {{render "gt-call" gt}}
     </div>
     {{/if}}
 

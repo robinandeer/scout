@@ -454,7 +454,7 @@ $family-header-height: 50px;
   background-color: rgba(#000, .02);
 }
 
-.column, .column--small, .column--mini, td {
+.column, .column--small, .column--mini, .column--medium, td {
   &.undef {
     color: rgba(#000, 0);
   }

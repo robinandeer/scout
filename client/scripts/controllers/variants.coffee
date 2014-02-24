@@ -125,11 +125,6 @@ App.VariantsController = Ember.ArrayController.extend
     return App.GTCall.find "#{@get('hoveredVariantId')},#{@get('database')}"
   ).property 'database', 'hoveredVariantId'
 
-  modalObserver: (->
-    if @get('variantLoaded')
-      @set 'isShowingGtCall', no
-  ).observes('variantLoaded')
-
   # +------------------------------------------------------------------+
   # |  Route checker
   # +------------------------------------------------------------------+
@@ -139,3 +134,10 @@ App.VariantsController = Ember.ArrayController.extend
     else
       return no
   ).property('currentPath')
+
+  variantLoadedObserver: (->
+    # Auto-close filters/compounds when looking at a single variant
+    if @get('variantLoaded')
+      @set 'isShowingModal', no
+      @set 'isShowingGtCall', no
+  ).observes 'variantLoaded'
