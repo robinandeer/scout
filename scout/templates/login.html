@@ -158,7 +158,7 @@
       browser = res[0],
       version = parseInt(res[1]);
 
-  if (browser == 'IE' && version < 9) {
+  if (browser == 'MSIE' && version < 9) {
     $('.default').addClass('hidden');
     $('.warning-browser').html(navigator.sayswho);
     $('.warning').removeClass('hidden');
