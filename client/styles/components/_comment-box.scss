@@ -3,10 +3,7 @@ $comment-box-color: #fff;
 .comment-box__wrapper {
   @include display(flex);
   width: 100%;
-
-  // Default styles
-  width: 90%;
-  margin-bottom: 20px auto;
+  margin-bottom: 25px;
 
   > div:nth-child(2) {
     margin-left: 25px;

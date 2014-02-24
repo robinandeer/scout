@@ -2,16 +2,16 @@
 
   <div class="header--overlay column__wrapper family-header">
     <div class="column center-center">
-      <span class="family-id">Family {{family.id}}</span>
+      <span class="family-id">Family {{id}}</span>
     </div>
     <div class="column center-center medium">
-      Last update: {{fromNow family.updateDate}}
+      Last update: {{fromNow updateDate}}
     </div>
     <div class="column center-center medium">
       <div class="btn-group">
         <div class="btn">
           <div class="btn__body regular--stretched">
-            {{#link-to "variants" family}}Variants{{/link-to}}
+            {{#link-to "variants" this (query-params database=null)}}Variants{{/link-to}}
           </div>
         </div>
 
@@ -31,7 +31,7 @@
   <div class="header-footer__body family-body">
     {{#if isShowingRawPedigree}}
     <div class="raw-pedigree">
-      {{{family.pedigree}}}
+      {{{pedigree}}}
     </div>
 
     {{else}}
@@ -62,7 +62,7 @@
           </tr>
         </thead>
         <tbody>
-          {{#each sample in family.samples}}
+          {{#each sample in samples}}
           <tr>
             <td class="slim">{{sample.idn}}</td>
             <td class="slim">{{sample.cmmsid}}</td>
@@ -98,7 +98,7 @@
         <tbody>
           <tr>
             <th class="regular--stretched">Possible gene models</th>
-            {{#each model in family.samples.1.inheritanceModels}}
+            {{#each model in samples.1.inheritanceModels}}
               <td class="regular--stretched">{{model}}</td>
             {{/each}}
           </tr>
@@ -107,75 +107,39 @@
     </div>
     {{/if}}
 
-    <div class="panel__wrapper regular-width family-comments-panel">
-      <div class="panel">
-        <div class="header-footer__wrapper">
-          <div class="header medium slim">Diagnostic comments</div>
-          <div class="header-footer__body">
-            <div class="list--vertical">
-            {{#each comment in diagnosticComments}}
-              {{#unless comment.isDestroyed}}
-              <div class="comment-box__wrapper family-comment">
-                <div class="comment-box">
-                  <div class="comment-box__header bar--space-between slim--stretched small">
-                    <div><b>{{comment.email}}</b> {{fromNow comment.createdAt}}</div>
-                    <div {{action "deleteComment" comment}}>Delete</div>
-                  </div>
-                  <div class="comment-box__body slim medium">{{comment.body}}</div>
-                </div>
-              </div>
-              {{/unless}}
-            {{else}}
-              <div class="center-center mt">
-                <small>No comments added yet.</small>
-              </div>
+    <div class="tab__wrapper mb">
+      <div class="tab__bar--top">
+        {{#each db in filter.databases}}
+        {{#link-to (query-params database=db) classNames="tab medium slim"}}
+          {{capitalize db}}
+        {{/link-to}}
+        {{/each}}
+      </div>
+      <div class="tab__body regular">
+        <div class="panel__wrapper">
+          <div class="panel mr">
+            {{#each group in groupedComments}}
+            <div class="list__divider medium slim mb">{{group.id}}</div>
+              {{#each comment in group.comments}}
+              {{comment-box type=db
+                  body=comment.body
+                  username=comment.email
+                  currentUsername=user.email
+              }}
+              {{/each}}
             {{/each}}
-            </div>
           </div>
-        </div>{{! END header-footer__wrapper }}
-      </div>{{! END panel }}
-
-      <div class="panel">
-        <div class="header-footer__wrapper">
-          <div class="header medium slim">Research comments</div>
-          <div class="header-footer__body">
-            <div class="list--vertical">
-            {{#each comment in researchComments}}
-              <div class="comment-box__wrapper family-comment">
-                <div class="comment-box">
-                  <div class="comment-box__header bar--space-between slim--stretched small">
-                    <div>
-                      <b>{{comment.email}}</b> {{fromNow comment.createdAt}}
-                    </div>
-                    <div {{action "deleteComment" comment}}>Delete</div>
-                  </div>
-                  <div class="comment-box__body slim medium">{{comment.body}}</div>
-                </div>
-              </div>
-            {{else}}
-              <div class="center-center mt">
-                <small>No comments added yet.</small>
-              </div>
-            {{/each}}
-            </div>
+          <div class="panel--sidebar">
+            {{comment-box database=database
+                          submit="postComment"
+                          tags=commentCategories
+                          isWriteMode=true
+            }}
           </div>
-        </div>{{! END header-footer__wrapper }}
-      </div>{{! End panel }}
-    </div>{{! End box panel__wrapper }}
+        </div>
+      </div>
+    </div>
 
-    <div class="panel__wrapper regular-width family-submit-panel">
-
-      <div class="panel">
-        {{comment-box submit="postComment" tags=commentCategories
-                      type="IEM" title="IEM Comment"}}
-      </div>{{! End panel }}
-
-      <div class="panel">
-        {{comment-box submit="postComment" tags=commentCategories
-                      type="research" title="Research Comment"}}
-      </div>{{! End panel }}
-
-    </div>{{! End box panel__wrapper }}
     {{/if}}
   </div>
 </div>

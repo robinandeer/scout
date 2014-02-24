@@ -200,7 +200,7 @@ def remote_static(path):
 
 
 # +--------------------------------------------------------------------+
-# |  Sanger Sequencing Order Mail
+# |  Family/Variant Comments CRUD
 # +--------------------------------------------------------------------+
 @app.route('/v1/comments', methods=['OPTIONS', 'POST', 'GET'])
 @app.route('/v1/comments/<comment_id>', methods=['OPTIONS', 'GET', 'PUT',
@@ -220,6 +220,7 @@ def comments(comment_id=None):
       # Get all comments for a given family/variant
       context = request.args.get('context')
       parent_id = request.args.get('parent_id')
+      database = request.args.get('database')
       comments = Comment.objects(context=context, parent_id=parent_id)
       raw_comments = [c.to_mongo().to_dict() for c in comments]
       return jsonify_mongo(comments=raw_comments)
@@ -287,7 +288,7 @@ submitted by **{author}**.
 # +--------------------------------------------------------------------+
 # |  Sanger Sequencing Order Mail
 # +--------------------------------------------------------------------+
-@app.route('/sanger', methods=['POST'])
+@app.route('/v1/sanger', methods=['POST'])
 @crossdomain(origin='*', methods=['POST'])
 def sanger_order():
   # Send an email with Sanger sequencing order

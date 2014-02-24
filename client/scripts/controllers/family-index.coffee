@@ -1,12 +1,17 @@
-App.FamilyIndexController = Ember.Controller.extend
-  needs: ['family', 'application']
+App.FamilyIndexController = Ember.ObjectController.extend
+  needs: ['application']
+  queryParams: ['database']
 
-  userBinding: 'controllers.application.user'
-  familyBinding: 'controllers.family'
+  database: 'research'
+
   hasGeneModels: (->
-    return @get('family.samples.1.inheritanceModels.length') > 0
-  ).property 'family.samples.1.inheritanceModels'
+    return @get('samples.1.inheritanceModels.length') > 0
+  ).property 'samples.1.inheritanceModels'
   isShowingRawPedigree: no
+
+  filter: (->
+    return App.Filter.find @get('id')
+  ).property 'id'
 
   actions:
     toggleProperty: (target) ->
@@ -16,7 +21,7 @@ App.FamilyIndexController = Ember.Controller.extend
     postComment: (comment) ->
       newComment = App.FamilyComment.create
         context: 'family'
-        parentId: @get('family.id')
+        parentId: @get('id')
         email: @get('user.email')
         body: comment.body
         category: comment.type
@@ -35,28 +40,31 @@ App.FamilyIndexController = Ember.Controller.extend
   comments: (->
     return App.FamilyComment.find
       context: 'family'
-      parent_id: @get("family.id")
-  ).property 'family.id'
+      parent_id: @get('id')
+      database: @get('database')
+  ).property 'id', 'database'
 
-  diagnosticComments: (->
-    comments = Em.A()
-    if @get('comments.isLoaded')
-      @get('comments').forEach (comment) ->
-        if comment.get('isDiagnostic')
-          comments.pushObject(comment)
-    
-    return comments
-  ).property 'comments.isLoaded', 'comments.length'
+  groupedComments: (->
+    groups =
+      finding: []
+      action: []
+      conclusion: []
 
-  researchComments: (->
-    comments = Em.A()
-    if @get('comments.isLoaded')
-      @get('comments').forEach (comment) ->
-        if comment.get('isResearch')
-          comments.pushObject(comment)
-    
-    return comments
-  ).property 'comments.isLoaded', 'comments.length'
+    @get('comments').forEach (comment) ->
+      groups[comment.get('type')].push(comment)
+
+    return [
+      id: 'Findings'
+      comments: groups.finding
+    ,
+      id: 'Actions'
+      comments: groups.action
+    ,
+      id: 'Conclusions'
+      comments: groups.conclusion
+    ]
+
+  ).property 'comments.isLoaded'
 
   commentCategories: [
     { label: 'Finding', id: 'finding' },

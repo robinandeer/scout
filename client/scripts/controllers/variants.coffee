@@ -31,7 +31,11 @@ App.VariantsController = Ember.ArrayController.extend
                 'gene_annotations_ncRNA_splicing',
                 'gene_annotations_ncRNA_UTR3', 'gene_annotations_ncRNA_UTR5',
                 'gene_annotations_splicing', 'gene_annotations_upstream',
-                'gene_annotations_UTR3', 'gene_annotations_UTR5']
+                'gene_annotations_UTR3', 'gene_annotations_UTR5', 'offset']
+
+  offsetObserver: (->
+    @get('target').send 'filtersWhereUpdated'
+  ).observes 'offset'
 
   filterObj: Ember.Object.extend
     id: null
@@ -66,7 +70,7 @@ App.VariantsController = Ember.ArrayController.extend
              'filter.groups.@each.filter.@each')
 
   # This is needed for the route's initial model hook
-  database: 'IEM'
+  database: 'iem'
 
   actions:
     showPopOver: (variant_id) ->

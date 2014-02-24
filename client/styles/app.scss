@@ -48,6 +48,7 @@
 @import 'components/comment-box';
 @import 'components/predict';
 @import 'components/form-complex';
+@import 'components/tab';
 
 // +-------------------------------------------------------------------+
 // |  Utility classes
@@ -360,12 +361,6 @@ $family-header-height: 50px;
 }
 
 .family-comments-panel {
-  height: 350px;
-}
-
-.family-submit-panel {
-  height: 220px;
-
   textarea {
     min-height: 150px;
   }

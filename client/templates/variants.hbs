@@ -61,7 +61,7 @@
 
           <div class="list__item regular--stretched">
             <label for="gene-name">Gene name</label>
-            {{input id="gene-name" type="text" valueBinding="gene_name" placeholder='ADK' classNames="text-input slim"}}
+            {{input id="gene-name" type="text" valueBinding="gene_name" placeholder='e.g. ADK' classNames="text-input slim"}}
           </div>
         </div>{{! END list--vertical }}
 
@@ -215,9 +215,9 @@
         {{/if}}
       </div>{{! END list--vertical }}
       <div class="regular">
-        <div {{action "loadMore"}} class="btn">
+        {{#link-to (query-params offset=100) classNames="btn"}}
           <div class="btn__body regular--stretched large">Load more variants</div>
-        </div>
+        {{/link-to}}
       </div>
     </div>{{! END header-footer__body }}
   </div>

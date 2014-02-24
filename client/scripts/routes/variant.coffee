@@ -18,6 +18,6 @@ App.VariantRoute = Ember.Route.extend
       payload = orderModel.getProperties('family_id', 'hgnc_symbol', 'chr_pos'
         'database', 'amino_change', 'gt_call', 'variant_link')
 
-      $.post 'http://localhost:5000/sanger', payload, (data) ->
+      $.post 'http://localhost:8081/v1/sanger', payload, (data) ->
         @send 'closeOrderModal'
         console.log data

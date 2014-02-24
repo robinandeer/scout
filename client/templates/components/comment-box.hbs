@@ -1,15 +1,38 @@
 <div class="comment-box">
-  {{textarea valueBinding="body" classNames="comment-box__body--input medium regular" placeholder="Write your words here..."}}
-  <div class="comment-box__footer">
-    <div class="comment-box__footer__body small slim">{{title}}</div>
+  {{#if isWriteMode}}
+
+  {{textarea valueBinding="body" classNames="comment-box__body--input medium regular" placeholder=bodyPrompt}}
+  <form {{action "submit" on="submit"}} class="comment-box__footer bar--space-between small">
     {{#if hasTags}}
-    {{view Ember.Select
-           content=tags
-           value=selectedTag
-           optionValuePath="content.id"
-           optionLabelPath="content.label"
-           prompt=tagPrompt}}
+    <div class="slim--stretched">
+      {{view Ember.Select
+             content=tags
+             value=selectedTag
+             optionValuePath="content.id"
+             optionLabelPath="content.label"
+             prompt=tagPrompt}}
+    </div>
     {{/if}}
-    <div {{action 'submit'}} class="comment-box__submit regular--stretched small">Submit</div>
+    <button type="submit" class="comment-box__submit regular--stretched small">{{submitPrompt}}</button>
+  </form>
+
+  {{else}}
+
+  <div class="comment-box__header bar--space-between slim--stretched small">
+    <div>
+      <b>{{username}}</b>
+      {{#if createdAt}}commented {{fromNow createdAt}}{{/if}}
+    </div>
+    {{#if hasFullAccess}}
+    <div {{action "edit"}} class="btn">
+      <div class="btn__body">Edit</div>
+    </div>
+    <div {{action "delete"}} class="btn">
+      <div class="btn__body">Delete</div>
+    </div>
+    {{/if}}
   </div>
+  <div class="comment-box__body slim medium">{{body}}</div>
+
+  {{/if}}
 </div>
