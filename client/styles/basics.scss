@@ -4,7 +4,11 @@
    -------------------------------------------------------- */
 
 // Include padding & border in the size of elements
-* { box-sizing: border-box; }
+*,
+*:before,
+*:after {
+  @include box-sizing(border-box);
+}
 
 /* ========================================================
     Minimal clearfix

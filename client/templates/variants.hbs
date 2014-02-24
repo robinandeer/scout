@@ -120,7 +120,7 @@
         <div class="column--small slim">1000 Genomes</div>
         <div class="column--small slim">PolyPhen</div>
         <div class="column--small slim">Gene annotation</div>
-        <div class="column slim">Functional annotation</div>
+        <div class="column--medium slim">Functional annotation</div>
         <div class="column slim">Inheritance models</div>
         <div class="column slim">Disease group</div>
         <div class="column--mini slim">HGMD</div>
@@ -164,7 +164,7 @@
 
           <div class="column--small slim">{{variant.geneAnnotation}}</div>
 
-          <div {{bind-attr class=":column :slim variant.functionalAnnotation::undef"}}>
+          <div {{bind-attr class=":column--medium :slim variant.functionalAnnotation::undef"}}>
             {{#if variant.functionalAnnotation}}
               {{variant.functionalAnnotation}}
             {{else}}
@@ -172,9 +172,9 @@
             {{/if}}
           </div>
 
-          <div {{bind-attr class=":column :slim :scrollable variant.geneModel::undef"}}>
+          <div {{bind-attr class=":column :scrollable variant.geneModel::undef :inheritance-model-cell"}}>
             {{#if variant.geneModels}}
-              {{pop-over title=variant.geneModelString variant_id=variant.id show="showPopOver" hide="hidePopOver"}}
+              {{pop-over title=variant.geneModels variant_id=variant.id show="showPopOver" hide="hidePopOver"}}
             {{else}}
               Nada
             {{/if}}

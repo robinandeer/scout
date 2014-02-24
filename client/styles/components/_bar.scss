@@ -3,6 +3,7 @@
 .bar--start {
   @include display(flex);
   @include align-items(center);
+  overflow-x: auto;
 }
 
 .bar--vertical {

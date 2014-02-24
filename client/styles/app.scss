@@ -429,6 +429,23 @@ $family-header-height: 50px;
   }
 }
 
+.inheritance-model-cell {
+  padding-left: 10px;
+}
+
+.cell {
+  float: left;
+  border-right: 1px solid $dark-gray;
+  min-width: 50px;
+
+  &:first-of-type {
+    padding-left: 0;
+  }
+  &:last-of-type {
+    border-right: 0;
+  }
+}
+
 .pop-over {
   cursor: help;
 }
