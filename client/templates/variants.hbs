@@ -1,20 +1,20 @@
 <div {{bind-attr class="variantLoaded:panel--sidebar:panel :panel__wrapper--vertical :variants-panel"}}>
 
   {{#if isShowingModal}}
-  <div class="panel--vertical panel__wrapper small filter-panel">
+  <form {{action "filter" on="submit"}} class="panel--vertical panel__wrapper small filter-panel">
     {{! Static filters}}
     <div class="panel header-footer__wrapper--overlay">
       <div class="footer--overlay regular--stretched medium filter-footer">
         <div class="btn-group">
-          <div class="btn" {{action 'filter'}}>
+          <button type="submit" class="btn">
             <div class="btn__body">Filter</div>
-          </div>
-          <div class="btn" {{action 'clinicalFilter'}}>
+          </button>
+          <button class="btn" {{action 'clinicalFilter'}}>
             <div class="btn__body">Clinical filter</div>
-          </div>
-          <div class="btn" {{action 'clearFilter'}}>
+          </button>
+          <button class="btn" {{action 'clearFilter'}}>
             <div class="btn__body">Clear</div>
-          </div>
+          </button>
         </div>
       </div>
 
@@ -84,7 +84,7 @@
       </div>{{! END header-footer__body }}
     </div>{{! END panel }}
     {{/each}}
-  </div>
+  </form>
   {{/if}}
 
   <div class="panel--vertical header-footer__wrapper--overlay">
