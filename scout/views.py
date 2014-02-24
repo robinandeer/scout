@@ -13,7 +13,7 @@ from secrets import gmail_keys
 from scout import app
 from scout.core import it, mail, google, login_manager
 from scout.models import User, Comment
-from scout.settings import REDIRECT_URI
+from scout.settings import REDIRECT_URI, DEBUG
 from scout.utils import jsonify_mongo
 
 
@@ -119,9 +119,11 @@ def user():
   try:
     user = current_user.to_mongo().to_dict()
   except AttributeError:
-    return jsonify(error="You are not logged in."), 403
-    # print('\nFAKING A USER!')
-    # user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
+    if DEBUG:
+      print('\nFAKING A USER!')
+      user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
+    else:
+      return jsonify(error="You are not logged in."), 403
 
   # Return json object for the logged in user
   return jsonify_mongo(**user)
