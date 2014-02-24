@@ -305,6 +305,14 @@ textarea {
   min-height: 200px;
 }
 
+.panel {
+  overflow-x: hidden;
+}
+
+.variant-panel {
+  border-left: 1px solid $dark-gray;
+}
+
 // Menu
 .panel__menu--footer {
   position: absolute;
@@ -395,7 +403,7 @@ $family-header-height: 50px;
 
     > .header-footer__wrapper--overlay {
       > .header-footer__body {
-        padding-top: 58px;
+        padding-top: 57px;
       }
     }
   }
@@ -404,6 +412,8 @@ $family-header-height: 50px;
 .variants-list {
   line-height: 20px;
   border-bottom: 1px solid $dark-gray;
+  // Correction
+  overflow-x: hidden;
 }
 
 .rank-score-column {
@@ -499,6 +509,12 @@ $family-header-height: 50px;
   }
 }
 
+.filter-panel {
+  .panel {
+    border-right: 1px solid $dark-gray;
+  }
+}
+
 // Variant
 .variant-header {
   > div {
@@ -557,4 +573,5 @@ $family-header-height: 50px;
 // Issue
 .issue-sidebar {
   min-width: 400px;
+  border-right: 1px solid $dark-gray;
 }
