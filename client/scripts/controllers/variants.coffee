@@ -33,10 +33,7 @@ App.VariantsController = Ember.ArrayController.extend
                 'gene_annotations_splicing', 'gene_annotations_upstream',
                 'gene_annotations_UTR3', 'gene_annotations_UTR5', 'offset']
 
-  offsetObserver: (->
-    @get('target').send 'filtersWhereUpdated'
-  ).observes 'offset'
-
+  offset: 100
   filterObj: Ember.Object.extend
     id: null
     property: no
@@ -118,6 +115,14 @@ App.VariantsController = Ember.ArrayController.extend
     hideVariant: (variant) ->
       # Add variant to the list of hidden elements (localStorage)
       variant.hide()
+
+    loadMore: ->
+      offset = parseInt(@get('offset') or 0)
+      @set 'offset', offset + 100
+      Ember.run.later(@, =>
+        @get('target').send 'filtersWhereUpdated'
+      , 100)
+      
 
   # +------------------------------------------------------------------+
   # |  Compound list pop-over

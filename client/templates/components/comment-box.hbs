@@ -1,13 +1,13 @@
 <div class="comment-box">
   {{#if isWriteMode}}
 
-  {{textarea valueBinding="body" classNames="comment-box__body--input medium regular" placeholder=bodyPrompt}}
+  {{textarea valueBinding="comment.body" classNames="comment-box__body--input medium regular" placeholder=bodyPrompt}}
   <form {{action "submit" on="submit"}} class="comment-box__footer bar--space-between small">
     {{#if hasTags}}
     <div class="slim--stretched">
       {{view Ember.Select
              content=tags
-             value=selectedTag
+             value=comment.type
              optionValuePath="content.id"
              optionLabelPath="content.label"
              prompt=tagPrompt}}
@@ -21,18 +21,27 @@
   <div class="comment-box__header bar--space-between slim--stretched small">
     <div>
       <b>{{username}}</b>
-      {{#if createdAt}}commented {{fromNow createdAt}}{{/if}}
+      {{#if date}}commented {{fromNow date}}{{/if}}
     </div>
     {{#if hasFullAccess}}
-    <div {{action "edit"}} class="btn">
-      <div class="btn__body">Edit</div>
-    </div>
-    <div {{action "delete"}} class="btn">
-      <div class="btn__body">Delete</div>
-    </div>
+      <div class="btn-group">
+        <div {{action "startEditing"}} class="btn">
+          <div class="btn__body">Edit</div>
+        </div>
+
+        {{#unless isConfirming}}
+          <div {{action "toggleProperty" "isConfirming"}} class="btn">
+            <div class="btn__body">Delete</div>
+          </div>
+          {{else}}
+          <div {{action "remove"}} class="btn">
+            <div class="btn__body">Confirm</div>
+          </div>
+        {{/unless}}
+      </div>
     {{/if}}
   </div>
-  <div class="comment-box__body slim medium">{{body}}</div>
+  <div class="comment-box__body slim medium">{{comment.body}}</div>
 
   {{/if}}
 </div>

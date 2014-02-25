@@ -221,13 +221,18 @@ def comments(comment_id=None):
       context = request.args.get('context')
       parent_id = request.args.get('parent_id')
       database = request.args.get('database')
-      comments = Comment.objects(context=context, parent_id=parent_id)
+      comments = Comment.objects(context=context, parent_id=parent_id,
+                                 category=database)
       raw_comments = [c.to_mongo().to_dict() for c in comments]
       return jsonify_mongo(comments=raw_comments)
 
   elif request.method == 'PUT':
     # Update a specific comment
-    Comment.objects(id=comment_id).update_one(**request.json)
+    data = {}
+    for key in ['body', 'type']:
+      data['set__{}'.format(key)] = request.json[key]
+
+    Comment.objects(id=comment_id).update_one(**data)
     comment.reload()
 
   elif request.method == 'DELETE':

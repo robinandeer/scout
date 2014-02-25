@@ -8,19 +8,19 @@ App.CommentBoxComponent = Ember.Component.extend
     return @get('username') is @get('currentUsername')
   ).property 'username', 'currentUsername'
 
+  isConfirming: no
+
   # Used when editing a comment
   commentId: null
-  body: null
   bodyPrompt: 'Write your words here...'
   submitPrompt: 'Submit'
-  createdAt: null
+  date: null
 
   # This can be used to distingish between multiple comments
   # on the same controller.
   type: null
 
-  selectedTag: null
-  tagPrompt: 'Tag comment'
+  tag: null
   tags: []
   # Check whether to show the 'Tag comment' select box
   hasTags: (->
@@ -28,20 +28,27 @@ App.CommentBoxComponent = Ember.Component.extend
   ).property 'tags'
 
   isWriteMode: no
-  isZenMode: yes
+  isZenMode: no
+  isEditing: no
 
   actions:
     # Clear the comment fields
     clear: ->
       @setProperties
         body: null
-        selectedTag: null
+        tag: null
 
     submit: ->
-      @sendAction 'submit',
-        username: @get 'username'
-        type: @get 'type'
-        body: @get 'body'
-        tag: @get 'selectedTag'
+      if @get('isEditing')
+        @sendAction 'edit', @get('comment')
+      else
+        @sendAction 'submit', @get('comment')
 
       @send 'clear'
+
+    startEditing: ->
+      @set 'isWriteMode', yes
+      @set 'isEditing', yes
+
+    remove: ->
+      @sendAction 'remove', @get('commentId')

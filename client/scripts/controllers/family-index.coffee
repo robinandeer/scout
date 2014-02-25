@@ -2,6 +2,7 @@ App.FamilyIndexController = Ember.ObjectController.extend
   needs: ['application']
   queryParams: ['database']
 
+  userBinding: 'controllers.application.user'
   database: 'research'
 
   hasGeneModels: (->
@@ -24,7 +25,7 @@ App.FamilyIndexController = Ember.ObjectController.extend
         parentId: @get('id')
         email: @get('user.email')
         body: comment.body
-        category: comment.type
+        category: @get('database')
         type: comment.tag
         createdAt: moment()
 
@@ -32,10 +33,16 @@ App.FamilyIndexController = Ember.ObjectController.extend
         @get('comments').pushObject(newObject)
       )
 
-    deleteComment: (commentModel) ->
+    editComment: (comment) ->
+      @get('comments').removeObject(comment)
+      comment.save().then (updatedComment) =>
+        @get('comments').pushObject(updatedComment)
+
+    deleteComment: (commentId) ->
+      comment = App.FamilyComment.find(commentId)
       # Delete the record from the server
-      commentModel.destroy()
-      commentModel.deleteRecord()
+      @get('comments').removeObject(comment)
+      comment.deleteRecord()
 
   comments: (->
     return App.FamilyComment.find
@@ -51,7 +58,8 @@ App.FamilyIndexController = Ember.ObjectController.extend
       conclusion: []
 
     @get('comments').forEach (comment) ->
-      groups[comment.get('type')].push(comment)
+      if comment.get('type')
+        groups[comment.get('type')].push(comment)
 
     return [
       id: 'Findings'
@@ -64,7 +72,7 @@ App.FamilyIndexController = Ember.ObjectController.extend
       comments: groups.conclusion
     ]
 
-  ).property 'comments.isLoaded'
+  ).property 'comments.isLoaded', 'comments.length'
 
   commentCategories: [
     { label: 'Finding', id: 'finding' },

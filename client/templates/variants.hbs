@@ -63,6 +63,14 @@
             <label for="gene-name">Gene name</label>
             {{input id="gene-name" type="text" valueBinding="gene_name" placeholder='e.g. ADK' classNames="text-input slim"}}
           </div>
+
+          <div class="list__item regular--stretched">
+            <label for="offset">Skip first...</label>
+            {{input id="offset"
+                type="number"
+                valueBinding="offset"
+                classNames="text-input slim"}}
+          </div>
         </div>{{! END list--vertical }}
 
       </div>{{! END header-footer__body }}
@@ -215,9 +223,9 @@
         {{/if}}
       </div>{{! END list--vertical }}
       <div class="regular">
-        {{#link-to (query-params offset=100) classNames="btn"}}
+        <div {{action "loadMore"}} class="btn">
           <div class="btn__body regular--stretched large">Load more variants</div>
-        {{/link-to}}
+        </div>
       </div>
     </div>{{! END header-footer__body }}
   </div>

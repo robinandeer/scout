@@ -121,20 +121,24 @@
             {{#each group in groupedComments}}
             <div class="list__divider medium slim mb">{{group.id}}</div>
               {{#each comment in group.comments}}
-              {{comment-box type=db
-                  body=comment.body
+              {{comment-box
+                  comment=comment
+                  commentId=comment._id
+                  date=comment.createdAt
                   username=comment.email
                   currentUsername=user.email
-              }}
+                  remove="deleteComment"
+                  edit="editComment"
+                  tags=commentCategories}}
               {{/each}}
             {{/each}}
           </div>
           <div class="panel--sidebar">
-            {{comment-box database=database
-                          submit="postComment"
-                          tags=commentCategories
-                          isWriteMode=true
-            }}
+            {{comment-box
+                category=database
+                submit="postComment"
+                tags=commentCategories
+                isWriteMode=true}}
           </div>
         </div>
       </div>
