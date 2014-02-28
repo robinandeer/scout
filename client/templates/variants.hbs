@@ -19,7 +19,7 @@
       </div>
 
       <div class="header-footer__body">
-        <div class="list--vertical">
+        <div class="list--vertical static-filter-panel-body-list">
           <div class="list__divider regular--stretched medium">Frequency cutoffs</div>
 
           <div class="list__item regular--stretched">
@@ -30,6 +30,11 @@
             <div>
               {{view Ember.RadioButton name="relation" selectionBinding="relation" value="GREATER"}} Greater
             </div>
+          </div>
+
+          <div class="list__item regular--stretched">
+            <label for="hbvdb">HBVdb</label>
+            {{input id="hbvdb" type="text" valueBinding="hbvdb" placeholder='0.1' classNames="text-input slim"}}
           </div>
 
           <div class="list__item regular--stretched">
@@ -144,14 +149,12 @@
         {{#unless variant.isHidden}}
         <div class="list__item column__wrapper">
 
-          {{#link-to "variant" variant classNames="column--small text-center slim medium rank-score-column"}}
-            {{variant.rankScore}}
+          {{#link-to "variant" variant classNames="column--small bar--space-around slim medium rank-score-column"}}
+            <div>{{variant.rankScore}}</div>
 
-            {{#if variant.rating}}
-            <div {{bind-attr class=":notification--bubble variant.rating"}}>
-              {{variant.rating}}
+            <div class="notification small">
+              {{variant.individualRankScore}}
             </div>
-            {{/if}}
           {{/link-to}}
           <div class="column--small slim">
             {{variant.hgncSymbol}}
@@ -203,9 +206,9 @@
             {{/if}}
           </div>
 
-          <div {{bind-attr class=":column--mini :slim variant.hgmd::undef"}}>
-            {{#if variant.hgmd}}
-              {{variant.hgmd}}
+          <div {{bind-attr class=":column--mini :slim variant.hgmdVariantType::undef"}}>
+            {{#if variant.hgmdVariantType}}
+              {{variant.hgmdVariantType}}
             {{else}}
               Nada
             {{/if}}

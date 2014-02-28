@@ -9,6 +9,7 @@ App.CommentBoxComponent = Ember.Component.extend
   ).property 'username', 'currentUsername'
 
   isConfirming: no
+  comment: {}
 
   # Used when editing a comment
   commentId: null

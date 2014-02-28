@@ -61,20 +61,20 @@
         <tbody>
           <tr>
             <th>C scores</th>
-            <td {{bind-attr class="unscaledCScore1000g::undef :slim"}}>
-              <div class="predict__number">{{fallback unscaledCScore1000g}}</div>
+            <td {{bind-attr class="unscaledCscoreThousandG::undef :slim"}}>
+              <div class="predict__number">{{fallback unscaledCscoreThousandG}}</div>
               <div class="predict__text"><small>Unscaled 1000G</small></div>
             </td>
-            <td {{bind-attr class="scaledCScore1000g::undef :slim"}}>
-              <div class="predict__number">{{fallback scaledCScore1000g}}</div>
+            <td {{bind-attr class="scaledCscoreThousandG::undef :slim"}}>
+              <div class="predict__number">{{fallback scaledCscoreThousandG}}</div>
               <div class="predict__text"><small>Scaled 1000G</small></div>
             </td>
-            <td {{bind-attr class="unscaledCScoreSnv::undef :slim"}}>
-              <div class="predict__number">{{fallback unscaledCScoreSnv}}</div>
+            <td {{bind-attr class="unscaledCscoreSnv::undef :slim"}}>
+              <div class="predict__number">{{fallback unscaledCscoreSnv}}</div>
               <div class="predict__text"><small>Unscaled SNV</small></div>
             </td>
-            <td {{bind-attr class="scaledCScoreSnv::undef :slim"}}>
-              <div class="predict__number">{{fallback scaledCScoreSnv}}</div>
+            <td {{bind-attr class="scaledCscoreSnv::undef :slim"}}>
+              <div class="predict__number">{{fallback scaledCscoreSnv}}</div>
               <div class="predict__text"><small>Scaled SNV</small></div>
             </td>
           </tr>
@@ -110,6 +110,11 @@
 
           <tr>
             <th>Frequency</th>
+            <td {{bind-attr class="hbvdb::undef :slim"}}>
+              <div class="predict__number">{{fallback hbvdb}}</div>
+              <div class="predict__text"><small>HBVdb</small></div>
+            </td>
+
             <td {{bind-attr class="thousandG::undef :slim"}}>
               <div class="predict__number">{{fallback thousandG}}</div>
               <div class="predict__text"><small>1000 Genomes</small></div>
@@ -171,11 +176,18 @@
               </tr>
               <tr>
                 <th class="regular--stretched">
-                  <a href="http://www.hgmd.cf.ac.uk/ac/index.php" target="_blank">
-                    <img src="/static/img/hgmd-logo.svg">
+                  <a {{bind-attr href=hgmdLink}} target="_blank">
+                    <img class="hgmd-logo" src="/static/img/hgmd-logo.svg">
                   </a>
+                  <div class="small">{{hgmdAccession}}</div>
                 </th>
-                <td class="slim">{{hgmd}}</td>
+                <td class="slim">
+                  {{#each link in hgmdVariantPmidLinks}}
+                  <a {{bind-attr href=link.link}} target="_blank">
+                    {{link.id}}
+                  </a>
+                  {{/each}}
+                </td>
               </tr>
               <tr>
                 <th class="regular--stretched">Disease group</th>
@@ -309,39 +321,33 @@
       </a>
     </div>
 
-    <div class="regular-width family-comments-panel">
+    <div class="regular-width variant-comments-panel">
       <div class="panel__wrapper">
-        <div class="panel header-footer__wrapper">
-          <div class="header slim medium">Comments</div>
+        <div class="panel header-footer__wrapper mr">
+          <div class="header slim medium mb">Comments</div>
           <div class="header-footer__body">
             {{#each comment in comments}}
-            <div class="comment-box__wrapper family-comment">
-              <div class="comment-box">
-                <div class="comment-box__header bar--space-between slim--stretched small">
-                  <div>
-                    <b>{{comment.email}}</b> commented {{fromNow comment.createdAt}}
-                  </div>
-                  <div {{action "deleteComment" comment}}>Delete</div>
-                </div>
-                <div class="comment-box__body slim medium">{{comment.body}}</div>
-              </div>
-            </div>
-            {{else}}
-            <div class="center-center"><small>No comments added yet.</small></div>
+            {{comment-box
+                comment=comment
+                commentId=comment._id
+                date=comment.createdAt
+                username=comment.email
+                currentUsername=user.email
+                remove="deleteComment"
+                edit="editComment"
+                tags=variantPriorities}}
             {{/each}}
-          </div>{{! END panel__body }}
-        </div>{{! END panel }}
-
-        <div class="panel header-footer__wrapper">
-          <div class="header slim medium">Submit new comment</div>
-          <div class="header-footer__body">
-            {{comment-box submit="postComment" tags=variantPriorities
-                          title="Variant comment" tagPrompt="Set priority"
-                          isWriteMode=true}}
           </div>
-        </div>{{! END panel }}
-      </div>{{! END panel__wrapper }}
-    </div>{{! END box }}
+        </div>
+        <div class="panel--sidebar">
+          {{comment-box
+              submit="postComment"
+              tags=variantPriorities
+              isWriteMode=true}}
+        </div>
+      </div>
+
+    </div>{{! END variant-comment-panel }}
   </div>{{! END header-footer__body }}
 
   {{outlet modal}}

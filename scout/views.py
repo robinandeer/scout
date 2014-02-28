@@ -24,6 +24,13 @@ from scout.utils import jsonify_mongo
 @login_manager.user_loader
 def load_user(user_id):
   user = User.objects.get(id=ObjectId(user_id))
+  if DEBUG and user is None:
+    print('\nFAKING A USER!')
+    user = {
+      'name': 'Robin Andeer',
+      'email': 'robin.andeer@scilifelab.se',
+      'fake': True
+    }
   return user
 
 
@@ -214,6 +221,8 @@ def comments(comment_id=None):
 
   if request.method == 'POST':
     # Create a new comment
+    d = datetime.strptime(request.json['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ')
+    request.json['created_at'] = d
     comment = Comment(**request.json).save()
 
   elif request.method == 'GET':
@@ -246,9 +255,10 @@ def comments(comment_id=None):
 # +--------------------------------------------------------------------+
 # |  GitHub Issues
 # +--------------------------------------------------------------------+
-@app.route('/v1/issues', methods=['GET', 'POST'])
-@app.route('/v1/issues/<issue_id>', methods=['GET', 'PUT', 'DELETE'])
-@crossdomain(origin='*', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/v1/issues', methods=['OPTIONS', 'GET', 'POST'])
+@app.route('/v1/issues/<issue_id>', methods=['OPTIONS', 'GET', 'PUT',
+                                             'DELETE'])
+@crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
 def issues(issue_id=None):
   if request.method == 'POST':
     # Submits an issue to Scout repo at GitHub

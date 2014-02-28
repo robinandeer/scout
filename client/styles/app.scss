@@ -404,6 +404,10 @@ $family-header-height: 50px;
   }
 }
 
+.static-filter-panel-body-list {
+  padding-bottom: 37px;
+}
+
 .variants-list {
   line-height: 20px;
   border-bottom: 1px solid $dark-gray;
@@ -469,6 +473,7 @@ $family-header-height: 50px;
   text-align: center;
   padding-top: 3px;
   padding-bottom: 3px;
+  width: 20px;
   font-size: 10px;
   line-height: 13px;
 }
@@ -542,6 +547,10 @@ $family-header-height: 50px;
 .variant__body {
   padding-right: 50px;
   padding-left: 50px;
+}
+
+.variant-comments-panel {
+  height: 300px;
 }
 
 .logo--omim {

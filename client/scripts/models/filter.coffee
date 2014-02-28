@@ -24,14 +24,13 @@ Ember.FilterAdapter = Ember.Object.extend
 
       if id
         # I don't want lists of hashes
-        for group in ['functional_annotations', 'gene_annotations',
-                      'inheritence_models']
-          keys = []
-          for filter in data[group]
-            for key, value of filter
-              keys.push("#{group}_#{key}")
+        for type in ['functional_annotations', 'gene_annotations',
+                     'inheritence_models']
+          filters = []
+          for filter in data[type]
+            filters.push("#{type}_#{filter}")
 
-          data[group] = keys
+          data[type] = filters
 
       record.load(id, data)
 

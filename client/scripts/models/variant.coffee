@@ -63,6 +63,19 @@ App.Variant = Ember.Model.extend
   polyphenVarHuman: attr()
 
   hgmd: attr(ReplaceNull)
+  hgmdAccession: attr()
+  hgmdVariantType: attr()
+  hgmdVariantPmid: attr()
+  hgmdVariantPmidLinks: (->
+    # Separated by ';' and trailing ';'
+    links = Em.A()
+    if @get('hgmdVariantPmid')
+      for pmid in @get('hgmdVariantPmid').split(';').slice(0, -1)
+        links.pushObject
+          id: pmid
+          link: "http://www.ncbi.nlm.nih.gov/pubmed/#{pmid}"
+    return links
+  ).property 'hgmdVariantPmid'
   omimGeneDesc: attr()
   diseaseGroup: attr()
 
@@ -95,10 +108,10 @@ App.Variant = Ember.Model.extend
   clinicalDbGeneAnnotation: attr()
   genomicSuperDups: attr()
 
-  unscaledCScore1000g: attr()
-  scaledCScore1000g: attr()
-  unscaledCScoreSnv: attr()
-  scaledCScoreSnv: attr()
+  scaledCscoreThousandG: attr()
+  unscaledCscoreThousandG: attr()
+  unscaledCscoreSnv: attr()
+  scaledCscoreSnv: attr()
 
   isInOtherFamilies: (->
     return @get('variantCount') > 1
@@ -181,8 +194,6 @@ App.Variant = Ember.Model.extend
     return Ember.ls.find('variant', @get('id'))
   ).property('id')
 
-App.Variant.camelizeKeys = yes
-
 App.VariantAdapter = Ember.Object.extend
   host: 'http://localhost:8081/api/v1'
 
@@ -216,4 +227,5 @@ App.VariantAdapter = Ember.Object.extend
     $.getJSON(url).then (data) ->
       records.load(klass, data)
 
+App.Variant.camelizeKeys = yes
 App.Variant.adapter = App.VariantAdapter.create()

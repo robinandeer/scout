@@ -26,18 +26,18 @@ App.VariantController = Ember.ObjectController.extend
         parentId: @get 'uniqueId'
         email: @get 'user.email'
         body: comment.body
-        category: comment.type
-        type: comment.tag
+        type: comment.type
         createdAt: moment()
 
       newComment.save().then((newObject) =>
         @get('comments').pushObject(newObject)
       )
 
-    deleteComment: (commentModel) ->
+    deleteComment: (commentId) ->
+      comment = App.VariantComment.find(commentId)
       # Delete the record from the server
-      commentModel.destroy()
-      commentModel.deleteRecord()
+      @get('comments').removeObject(comment)
+      comment.deleteRecord()
 
   adjacentVariant: (direction) ->
     # Get variants controller
@@ -141,3 +141,7 @@ App.VariantController = Ember.ObjectController.extend
   igvLink: (->
     return "https://clinical-db.scilifelab.se:8081/api/v1/variants/#{@get('id')}/igv.xml"
   ).property 'id'
+
+  hgmdLink: (->
+    return "http://www.hgmd.cf.ac.uk/ac/gene.php?gene=#{@get('hgncSymbol')}&accession=#{@get('hgmdAccession')}"
+  ).property 'hgncSymbol', 'hgmdAccession'

@@ -9,9 +9,9 @@ App.VariantsController = Ember.ArrayController.extend
   # |  Filters and query params
   # +------------------------------------------------------------------+
   # Permanent filters
-  queryParams: ['database', 'relation', 'thousand_g', 'dbsnp129', 'dbsnp132',
-                'esp6500', 'gene_name', 'priority', 'inheritence_models_AR',
-                'inheritence_models_AR_compound',
+  queryParams: ['database', 'relation', 'hbvdb', 'thousand_g', 'dbsnp129',
+                'dbsnp132', 'esp6500', 'gene_name', 'priority',
+                'inheritence_models_AR', 'inheritence_models_AR_compound',
                 'inheritence_models_AR_denovo', 'inheritence_models_Na',
                 'inheritence_models_X', 'inheritence_models_X_denovo',
                 'functional_annotations_-',
@@ -34,6 +34,7 @@ App.VariantsController = Ember.ArrayController.extend
                 'gene_annotations_UTR3', 'gene_annotations_UTR5', 'offset']
 
   offset: 0
+  relation: 'GREATER'
   filterObj: Ember.Object.extend
     id: null
     property: no
@@ -108,7 +109,7 @@ App.VariantsController = Ember.ArrayController.extend
           filter.set 'property', no
 
       filters = ['relation', 'thousand_g', 'dbsnp129', 'dbsnp132', 'esp6500',
-                 'gene_name', 'priority']
+                 'gene_name', 'priority', 'hbvdb']
       for filter in filters
         @set filter, null
 

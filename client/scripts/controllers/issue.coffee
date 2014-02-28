@@ -14,6 +14,7 @@ App.IssueController = Ember.ArrayController.extend
 
       @get('newIssue').save().then (newObject) =>
         @set 'newIssue', newObject
+        @get('model').pushObject(newObject)
 
     reset: ->
       @set 'isWritingMessage', yes
