@@ -7,6 +7,7 @@ ReplaceNull =
 
 App.Variant = Ember.Model.extend
   id: attr()
+  individualRankScore: attr()
   rankScore: attr()
   GTCallFilter: attr()
 
@@ -75,9 +76,29 @@ App.Variant = Ember.Model.extend
   gwasCatalog: attr()
   expressionType: attr()
   geneModel: attr(ReplaceNull)
+  diseaseGeneModel: attr()
+  diseaseGeneModels: (->
+    if @get('diseaseGeneModel')
+      return @get('diseaseGeneModel').split(',')
+    return []
+  ).property 'diseaseGeneModel'
   variantCount: attr()
+  hbvdb: attr()
+  hbvdbHuman: (->
+    freq = @get('hbvdb')
+    if freq
+      if freq > 0.1
+        return 'is-common'
+      return 'is-found'
+    return 'is-not-found'
+  ).property 'hbvdb'
   clinicalDbGeneAnnotation: attr()
   genomicSuperDups: attr()
+
+  unscaledCScore1000g: attr()
+  scaledCScore1000g: attr()
+  unscaledCScoreSnv: attr()
+  scaledCScoreSnv: attr()
 
   isInOtherFamilies: (->
     return @get('variantCount') > 1
@@ -127,8 +148,8 @@ App.Variant = Ember.Model.extend
   ).property 'lrtWholeExome', 'phylopWholeExome'
 
   uniqueId: (->
-    "#{@get('chr')}-#{@get('startBp')}-#{@get('stopBp')}-#{@get('alt_nt')}"
-  ).property 'chr', 'startBp', 'stopBp', 'alt_nt'
+    "#{@get('chr')}-#{@get('startBp')}-#{@get('stopBp')}-#{@get('altNt')}"
+  ).property 'chr', 'startBp', 'stopBp', 'altNt'
 
   hide: ->
     # Do this first block to trigger property changes

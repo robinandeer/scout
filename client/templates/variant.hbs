@@ -60,8 +60,28 @@
       <table class="table">
         <tbody>
           <tr>
+            <th>C scores</th>
+            <td {{bind-attr class="unscaledCScore1000g::undef :slim"}}>
+              <div class="predict__number">{{fallback unscaledCScore1000g}}</div>
+              <div class="predict__text"><small>Unscaled 1000G</small></div>
+            </td>
+            <td {{bind-attr class="scaledCScore1000g::undef :slim"}}>
+              <div class="predict__number">{{fallback scaledCScore1000g}}</div>
+              <div class="predict__text"><small>Scaled 1000G</small></div>
+            </td>
+            <td {{bind-attr class="unscaledCScoreSnv::undef :slim"}}>
+              <div class="predict__number">{{fallback unscaledCScoreSnv}}</div>
+              <div class="predict__text"><small>Unscaled SNV</small></div>
+            </td>
+            <td {{bind-attr class="scaledCScoreSnv::undef :slim"}}>
+              <div class="predict__number">{{fallback scaledCScoreSnv}}</div>
+              <div class="predict__text"><small>Scaled SNV</small></div>
+            </td>
+          </tr>
+
+          <tr>
             <th>Severity</th>
-            <td {{bind-attr class="siftWholeExome::undef :slim :slim"}}>
+            <td {{bind-attr class="siftWholeExome::undef :slim"}}>
               <div class="predict__number">{{fallback siftWholeExome}}</div>
               <div class="predict__text"><small>Avsift</small></div>
             </td>
@@ -87,48 +107,48 @@
             </td>
 
           </tr>
+
+          <tr>
+            <th>Frequency</th>
+            <td {{bind-attr class="thousandG::undef :slim"}}>
+              <div class="predict__number">{{fallback thousandG}}</div>
+              <div class="predict__text"><small>1000 Genomes</small></div>
+            </td>
+
+            <td {{bind-attr class="esp6500::undef :slim"}}>
+              <div class="predict__number">{{fallback esp6500}}</div>
+              <div class="predict__text"><small>ESP 6500</small></div>
+            </td>
+
+            <td {{bind-attr class="dbsnp129::undef :slim"}}>
+              <div class="predict__number">{{fallback dbsnp129}}</div>
+              <div class="predict__text"><small>dbSNP 129</small></div>
+            </td>
+
+            <td {{bind-attr class="dbsnp::undef :slim"}}>
+              <div class="predict__number">{{dbsnpFlag}}</div>
+              <div class="predict__text"><small>dbSNP 137</small></div>
+            </td>
+          </tr>
+
+          <tr class="conservation-row">
+            <th>Conservation</th>
+            <td {{bind-attr class="phylopWholeExome::undef :slim"}}>
+              <div class="predict__number">{{fallback phylopWholeExome}}</div>
+              <div class="predict__text"><small>WE PhyloP</small></div>
+            </td>
+
+            <td {{bind-attr class="gerpElement::undef :slim"}}>
+              <div class="predict__number">{{fallback gerpElement}}</div>
+              <div class="predict__text"><small>GERP++ element</small></div>
+            </td>
+
+            <td {{bind-attr class="lrtWholeExome::undef :slim"}}>
+              <div class="predict__number">{{fallback lrtWholeExome}}</div>
+              <div class="predict__text"><small>WE LRT</small></div>
+            </td>
+          </tr>
         </tbody>
-
-        <tr>
-          <th>Frequency</th>
-          <td {{bind-attr class="thousandG::undef :slim"}}>
-            <div class="predict__number">{{fallback thousandG}}</div>
-            <div class="predict__text"><small>1000 Genomes</small></div>
-          </td>
-
-          <td {{bind-attr class="esp6500::undef :slim"}}>
-            <div class="predict__number">{{fallback esp6500}}</div>
-            <div class="predict__text"><small>ESP 6500</small></div>
-          </td>
-
-          <td {{bind-attr class="dbsnp129::undef :slim"}}>
-            <div class="predict__number">{{fallback dbsnp129}}</div>
-            <div class="predict__text"><small>dbSNP 129</small></div>
-          </td>
-
-          <td {{bind-attr class="dbsnp::undef :slim"}}>
-            <div class="predict__number">{{dbsnpFlag}}</div>
-            <div class="predict__text"><small>dbSNP 137</small></div>
-          </td>
-        </tr>
-
-        <tr class="conservation-row">
-          <th>Conservation</th>
-          <td {{bind-attr class="phylopWholeExome::undef :slim"}}>
-            <div class="predict__number">{{fallback phylopWholeExome}}</div>
-            <div class="predict__text"><small>WE PhyloP</small></div>
-          </td>
-
-          <td {{bind-attr class="gerpElement::undef :slim"}}>
-            <div class="predict__number">{{fallback gerpElement}}</div>
-            <div class="predict__text"><small>GERP++ element</small></div>
-          </td>
-
-          <td {{bind-attr class="lrtWholeExome::undef :slim"}}>
-            <div class="predict__number">{{fallback lrtWholeExome}}</div>
-            <div class="predict__text"><small>WE LRT</small></div>
-          </td>
-        </tr>
       </table>
     </div>
 
@@ -213,6 +233,21 @@
           </table>
         </div>{{! END panel }}
         <div class="panel--sidebar">
+          <table class="table mb">
+            <thead>
+              <tr>
+                <th class="slim--stretched">Disease gene models</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{#each model in diseaseGeneModels}}
+              <tr>
+                <td class="slim">{{model}}</td>
+              </tr>
+              {{/each}}
+            </tbody>
+          </table>
+
           <table class="table">
             <thead>
               <tr>

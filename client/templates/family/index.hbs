@@ -109,7 +109,7 @@
 
     <div class="tab__wrapper mb">
       <div class="tab__bar--top">
-        {{#each db in filter.databases}}
+        {{#each db in filter.clinical_db_gene_annotation}}
         {{#link-to (query-params database=db) classNames="tab medium slim"}}
           {{capitalize db}}
         {{/link-to}}

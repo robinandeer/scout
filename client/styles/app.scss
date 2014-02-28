@@ -466,7 +466,6 @@ $family-header-height: 50px;
   background: darken($dark-gray, 10%);
   color: #fff;
   border-radius: 25px;
-  min-width: 22px;
   text-align: center;
   padding-top: 3px;
   padding-bottom: 3px;
@@ -476,17 +475,15 @@ $family-header-height: 50px;
 
 .notification--bubble {
   @extend %notification;
-  position: absolute;
-  left: 10px;
-  top: 20px;
-  border-radius: 20px;
   background-color: $flat-green-2;
   color: rgba(#000, 0);
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
   box-shadow: 0px 0px 5px $flat-green-1;
+  cursor: pointer;
 
-  &.LOW {
+  &.LOW,
+  &.is-found {
     background-color: darken($flat-yellow-1, 2%);
     box-shadow: 0px 0px 5px $flat-yellow-1;
   }
@@ -496,7 +493,8 @@ $family-header-height: 50px;
     box-shadow: 0px 0px 5px $flat-orange-1;
   }
 
-  &.TOP {
+  &.TOP,
+  &.is-common {
     background-color: $flat-red-2;
     box-shadow: 0px 0px 5px $flat-red-1;
   }

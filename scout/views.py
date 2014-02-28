@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from bson import ObjectId
+from datetime import datetime
 import requests
 
 from flask import request, Response, make_response, jsonify, flash
@@ -12,7 +13,7 @@ from cors import crossdomain
 from secrets import gmail_keys
 from scout import app
 from scout.core import it, mail, google, login_manager
-from scout.models import User, Comment
+from scout.models import User, Comment, Pedigree, Sample
 from scout.settings import REDIRECT_URI, DEBUG
 from scout.utils import jsonify_mongo
 
@@ -327,3 +328,46 @@ def sanger_order():
   mail.send(msg)
 
   return jsonify(**body)
+
+
+# +--------------------------------------------------------------------+
+# |  Pedigree + Sample CRUD
+# +--------------------------------------------------------------------+
+@app.route('/v1/pedigrees', methods=['OPTIONS', 'POST', 'GET'])
+@app.route('/v1/pedigrees/<pedigree_id>', methods=['OPTIONS', 'GET', 'PUT',
+                                                   'DELETE'])
+@crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
+def pedigrees(pedigree_id=None):
+  # Get a specific comment if requested
+  if pedigree_id:
+    pedigree = Pedigree.objects.get(id=ObjectId(pedigree_id))
+
+  if request.method == 'POST':
+    data = request.json
+    data['samples'] = [Sample(**sample) for sample in data['samples']]
+    data['update_date'] = datetime.strptime(data['update_date'],
+                                            '%Y-%m-%dT%H:%M:%S.%fZ')
+
+    # Create a new comment
+    pedigree = Pedigree(**data).save()
+
+  elif request.method == 'GET':
+    if pedigree_id is None:
+      pedigrees = Pedigree.objects()
+      raw_pedigrees = [c.to_mongo().to_dict() for c in pedigrees]
+      return jsonify_mongo(pedigrees=raw_pedigrees)
+
+  elif request.method == 'PUT':
+    # Update a specific comment
+    data = {}
+    for key in ['body', 'type']:
+      data['set__{}'.format(key)] = request.json[key]
+
+    Pedigree.objects(id=pedigree_id).update_one(**data)
+    pedigree.reload()
+
+  elif request.method == 'DELETE':
+    # Delete a specific comment
+    pedigree.delete()
+
+  return jsonify_mongo(pedigree.to_mongo().to_dict())

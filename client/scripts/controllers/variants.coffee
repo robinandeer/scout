@@ -33,7 +33,7 @@ App.VariantsController = Ember.ArrayController.extend
                 'gene_annotations_splicing', 'gene_annotations_upstream',
                 'gene_annotations_UTR3', 'gene_annotations_UTR5', 'offset']
 
-  offset: 100
+  offset: 0
   filterObj: Ember.Object.extend
     id: null
     property: no

@@ -54,7 +54,7 @@
 
           <div class="list__divider regular--stretched medium">Database and gene search</div>
           <div class="list__item regular--stretched">
-            {{#each db in filter.databases}}
+            {{#each db in filter.clinical_db_gene_annotation}}
             <div>{{view Ember.RadioButton name="database" selectionBinding="database" value=db}} {{db}}</div>
             {{/each}}
           </div>
@@ -129,6 +129,7 @@
         <div class="column--small slim">PolyPhen</div>
         <div class="column--small slim">Gene annotation</div>
         <div class="column--medium slim">Functional annotation</div>
+        <div class="column--small slim">Disease gene model</div>
         <div class="column slim">Inheritance models</div>
         <div class="column slim">Disease group</div>
         <div class="column--mini slim">HGMD</div>
@@ -157,11 +158,9 @@
           </div>
 
           {{#unless variantLoaded}}
-          <div {{bind-attr class=":column--small :slim variant.isInOtherFamilies:bar--space-between variant.thousandG::undef"}}>
-            {{#if variant.isInOtherFamilies}}
-            <div class="notification">
-              {{variant.otherFamiliesCount}}
-            </div>
+          <div {{bind-attr class=":column--small :slim variant.hbvdb:bar--space-between variant.thousandG::undef"}}>
+            {{#if variant.hbvdb}}
+            <div {{bind-attr class=":notification--bubble variant.hbvdbHuman" title="variant.hbvdb"}}>&nbsp;</div>
             {{/if}}
             <div class="text-right">{{fallback variant.thousandG}}</div>
           </div>
@@ -175,6 +174,14 @@
           <div {{bind-attr class=":column--medium :slim variant.functionalAnnotation::undef"}}>
             {{#if variant.functionalAnnotation}}
               {{variant.functionalAnnotation}}
+            {{else}}
+              Nada
+            {{/if}}
+          </div>
+
+          <div {{bind-attr class=":column--small :slim variant.diseaseGeneModel::undef"}}>
+            {{#if variant.diseaseGeneModel}}
+              {{variant.diseaseGeneModel}}
             {{else}}
               Nada
             {{/if}}

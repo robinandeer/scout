@@ -8,6 +8,13 @@
       <div>NGS update</div>
     </div>
   </div>
+
+  <div class="footer--overlay regular--stretched">
+    <div class="btn" {{action "openModal" "newFamilyModal"}}>
+      <div class="btn__body slim">Add new family</div>
+    </div>
+  </div>
+
   <div class="header-footer__body">
     <div class="list--vertical">
       {{#each family in model}}
@@ -17,7 +24,7 @@
             <div class="btn-group families-links-buttons">
               <div class="btn">
                 {{#link-to "family" family classNames="btn__body regular--stretched"}}
-                  Family {{family.id}}
+                  Family {{family.family_id}}
                 {{/link-to}}
               </div>
               <div class="btn">
@@ -30,10 +37,8 @@
               </div>
             </div>
           </div>
-          
-          <div>
-            {{fromNow family.updateDate}}
-          </div>
+
+          <div>{{fromNow family.updateDate}}</div>
         </div>
       {{/unless}}
       {{/each}}

@@ -16,16 +16,6 @@ App.Filter = Ember.Model.extend
     name: 'Inheritence models'
   ]
 
-  databases: (->
-    if @get('clinical_db_gene_annotation')
-      dbs = @get('clinical_db_gene_annotation').split(',')
-    else
-      dbs = []
-
-    dbs.push('research')
-    return dbs
-  ).property 'clinical_db_gene_annotation'
-
 Ember.FilterAdapter = Ember.Object.extend
   host: 'http://localhost:8081/api/v1'
 

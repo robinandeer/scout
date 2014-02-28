@@ -1,0 +1,28 @@
+{{#modal-dialog action="close"}}
+  <h4>Add a new family</h4>
+
+  <form {{action "submitForm" on="submit"}} class="form--stacked">
+    <label for="famil-id">ID</label>
+    {{input valueBinding="familyId" id="famil-id" classNames="text-input mb slim"}}
+
+    <label for="databases">Databases (comma separated)</label>
+    {{input valueBinding="database" id="databases" classNames="text-input slim"}}
+    <div class="tag__wrapper bar mb">
+      {{#each db in databases}}
+      <div class="tag mr">
+        <div class="tag__body">{{db}}</div>
+        <div {{action "removeTag" db}} class="tag__delete"></div>
+      </div>
+      {{/each}}
+    </div>
+
+    <div class="btn-group">
+      <button type="submit" class="btn">
+        <div class="btn__body">Submit</div>
+      </button>
+      <button {{action "close"}} class="btn">
+        <div class="btn__body">Cancel</div>
+      </button>
+    </div>
+  </form>
+{{/modal-dialog}}

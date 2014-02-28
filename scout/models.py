@@ -72,5 +72,6 @@ class Sample(db.EmbeddedDocument):
 
 
 class Pedigree(db.Document):
-  family_id = db.StringField()
+  family_id = db.StringField(unique=True)
+  update_date = db.DateTimeField()
   samples = db.ListField(db.EmbeddedDocumentField(Sample))
