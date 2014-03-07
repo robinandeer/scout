@@ -1,0 +1,10 @@
+{{#if isVisible}}
+<div class="bs-popover__arrow"></div>
+<div class="bs-popover__content">
+  {{#if content}}
+    {{content}}
+  {{else}}
+    {{yield}}
+  {{/if}}
+</div>
+{{/if}}

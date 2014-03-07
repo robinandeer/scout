@@ -26,7 +26,7 @@ App.FamilyIndexController = Ember.ObjectController.extend
         email: @get('user.email')
         body: comment.body
         category: @get('database')
-        type: comment.tag
+        type: comment.type
         createdAt: moment()
 
       newComment.save().then((newObject) =>

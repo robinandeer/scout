@@ -144,6 +144,7 @@
     </div>{{! END header--overlay }}
 
     <div class="header-footer__body small">
+      {{#if model}}
       <div class="list--vertical variants-list">
         {{#each variant in model}}
         {{#unless variant.isHidden}}
@@ -161,15 +162,39 @@
           </div>
 
           {{#unless variantLoaded}}
-          <div {{bind-attr class=":column--small :slim variant.hbvdb:bar--space-between variant.thousandG::undef"}}>
+          <div {{bind-attr class=":column--small :slim variant.hbvdb:bar--space-between variant.thousandG::undef :bs-popover__wrapper"}}>
             {{#if variant.hbvdb}}
-            <div {{bind-attr class=":notification--bubble variant.hbvdbHuman" title="variant.hbvdb"}}>&nbsp;</div>
+            <div {{bind-attr class=":notification--bubble variant.hbvdbHuman"}}>&nbsp;</div>
             {{/if}}
             <div class="text-right">{{fallback variant.thousandG}}</div>
+            {{#bs-popover}}
+              <table class="table always-visible-text">
+                <tbody>
+                  {{#each property in variant.frequencies}}
+                  <tr>
+                    <th class="slim">{{property.name}}</th>
+                    <td class="slim">{{property.value}}</td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            {{/bs-popover}}
           </div>
 
-          <div {{bind-attr class=":column--small :slim :text-right variant.polyphenDivHuman::undef"}}>
+          <div {{bind-attr class=":column--small :slim :text-right variant.polyphenDivHuman::undef :bs-popover__wrapper"}}>
             {{fallback variant.polyphenDivHuman}}
+            {{#bs-popover}}
+              <table class="table always-visible-text">
+                <tbody>
+                  {{#each property in variant.severities}}
+                  <tr>
+                    <th class="slim">{{property.name}}</th>
+                    <td class="slim">{{property.value}}</td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            {{/bs-popover}}
           </div>
 
           <div class="column--small slim">{{variant.geneAnnotation}}</div>
@@ -191,10 +216,14 @@
           </div>
 
           <div {{bind-attr class=":column :scrollable variant.geneModel::undef :inheritance-model-cell"}}>
-            {{#if variant.geneModels}}
+            {{#if variant.hasComounds}}
               {{pop-over title=variant.geneModels variant_id=variant.id show="showPopOver" hide="hidePopOver"}}
             {{else}}
-              Nada
+              <div class="bar">
+                {{#each model in variant.geneModels}}
+                <div class="cell regular--stretched">{{model}}</div>
+                {{/each}}
+              </div>
             {{/if}}
           </div>
 
@@ -237,6 +266,11 @@
           <div class="btn__body regular--stretched large">Load more variants</div>
         </div>
       </div>
+      {{else}}
+      <div class="center-center">
+        <img src="/static/img/loader.gif">
+      </div>
+      {{/if}}
     </div>{{! END header-footer__body }}
   </div>
 </div>

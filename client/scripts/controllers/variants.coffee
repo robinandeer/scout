@@ -11,9 +11,10 @@ App.VariantsController = Ember.ArrayController.extend
   # Permanent filters
   queryParams: ['database', 'relation', 'hbvdb', 'thousand_g', 'dbsnp129',
                 'dbsnp132', 'esp6500', 'gene_name', 'priority',
-                'inheritence_models_AR', 'inheritence_models_AR_compound',
+                'inheritence_models_AR_hom', 'inheritence_models_AR_compound',
+                'inheritence_models_AR_hom_denovo',
                 'inheritence_models_AR_denovo', 'inheritence_models_Na',
-                'inheritence_models_X', 'inheritence_models_X_denovo',
+                'inheritence_models_X', 'inheritence_models_X_dn',
                 'functional_annotations_-',
                 'functional_annotations_frameshift deletion',
                 'functional_annotations_frameshift insertion',
@@ -34,7 +35,7 @@ App.VariantsController = Ember.ArrayController.extend
                 'gene_annotations_UTR3', 'gene_annotations_UTR5', 'offset']
 
   offset: 0
-  relation: 'GREATER'
+  relation: 'LESSER'
   filterObj: Ember.Object.extend
     id: null
     property: no
@@ -46,29 +47,31 @@ App.VariantsController = Ember.ArrayController.extend
 
   filterGroups: (->
     groups = Em.A()
-    for group in @get('filter.groups')
+    if @get('filter.groups')
+      for group in @get('filter.groups')
 
-      filters = Em.A()
-      for filter in @get("filter.#{group.id}")
-        filterObj = @get('filterObj').create
-          id: filter
-          property: @get filter  # Initial value sync
-          name: filter.replace("#{group.id}_", "")
-          self: @
+        filters = Em.A()
+        for filter in @get("filter.#{group.id}") or []
+          filterObj = @get('filterObj').create
+            id: filter
+            property: @get filter  # Initial value sync
+            name: filter.replace("#{group.id}_", "")
+            self: @
 
-        filters.pushObject filterObj
+          filters.pushObject filterObj
 
-      groups.pushObject Em.Object.create
-        id: group.id
-        name: group.name
-        filters: filters
+        groups.pushObject Em.Object.create
+          id: group.id
+          name: group.name
+          filters: filters
 
     return groups
-  ).property('filter.groups.@each.id', 'filter.groups.@each.name',
-             'filter.groups.@each.filter.@each')
+  ).property('filter.functional_annotations.@each',
+             'filter.gene_annotations.@each',
+             'filter.inheritence_models.@each')
 
   # This is needed for the route's initial model hook
-  database: 'iem'
+  database: 'IEM'
 
   actions:
     showPopOver: (variant_id) ->
@@ -139,10 +142,14 @@ App.VariantsController = Ember.ArrayController.extend
   # |  Route checker
   # +------------------------------------------------------------------+
   variantLoaded: (->
-    if @get('currentPath').match(/variants.variant/)
-      return yes
+    if @get('currentPath')
+      if @get('currentPath').match(/variants.variant/)
+        return yes
+      else
+        return no
     else
-      return no
+      # Switching betweeen variants
+      return yes
   ).property('currentPath')
 
   variantLoadedObserver: (->

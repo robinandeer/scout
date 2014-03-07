@@ -15,11 +15,4 @@ App.PopOverComponent = Ember.Component.extend
       @sendAction 'hide'
 
   click: ->
-    @set 'isLocked', yes
-
-    Ember.run.later(@, =>
-      $(document).on 'click', =>
-        @toggleProperty 'isLocked'
-        # Remove event handler
-        $(document).off()
-    , 1)
+    @toggleProperty 'isLocked'

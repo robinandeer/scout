@@ -47,31 +47,38 @@ class Comment(db.Document):
   context = db.StringField()
 
 
-class Sample(db.EmbeddedDocument):
+class Process(db.EmbeddedDocument):
+  """Single lab process step (isolation, sequencing, capture)
+  """
+  key = db.StringField(required=True)
+  kit = db.StringField()
+  date = db.DateTimeField()
+  personnel = db.StringField()
+  process_id = db.StringField(unique=True)
+  provider_id = db.StringField(unique=True)
+
+
+class Sample(db.Document):
   sample_id = db.StringField(required=True, unique=True)
+  internal_id = db.StringField(unique=True)
+  sex = db.StringField()
   father = db.ReferenceField('self')
   mother = db.ReferenceField('self')
-  sex = db.StringField()
-  phenotype = db.StringField()
-  internal_id = db.StringField(unique=True)
-  tissue_origin = db.StringField()
-  isolation_kit = db.StringField()
-  isolation_date = db.DateTimeField()
-  isolation_personnel = db.StringField()
-  physician = db.StringField()
-  inheritance_models = db.ListField()
-  phenotype_terms = db.ListField()
-  seq_id = db.StringField()
-  sequencing_provider_id = db.StringField(unique=True)
-  capture_kit = db.StringField()
-  capture_date = db.DateTimeField()
-  capture_personnel = db.StringField()
-  clustering_date = db.DateTimeField()
-  sequencing_kit = db.StringField()
+  physicians = db.ListField(db.StringField(), default=list)
   clinical_db = db.StringField()
+  inheritance_models = db.ListField(db.StringField(), default=list)
+  phenotype = db.StringField()
+  phenotype_terms = db.ListField(db.StringField(), default=list)
+
+  tissue_origin = db.StringField()
+  isolation = db.ListField(db.EmbeddedDocumentField(Process), default=list)
+  capture = db.ListField(db.EmbeddedDocumentField(Process), default=list)
+  clustering = db.ListField(db.EmbeddedDocumentField(Process), default=list)
+  sequencing = db.ListField(db.EmbeddedDocumentField(Process), default=list)
 
 
 class Pedigree(db.Document):
   family_id = db.StringField(unique=True)
   update_date = db.DateTimeField()
-  samples = db.ListField(db.EmbeddedDocumentField(Sample))
+  samples = db.ListField(db.ReferenceField(Sample), default=list)
+  database = db.StringField()

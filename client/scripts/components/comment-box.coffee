@@ -39,15 +39,28 @@ App.CommentBoxComponent = Ember.Component.extend
         body: null
         tag: null
 
+    # Cancel editing
+    cancel: ->
+      # Revert to old content
+      @set 'tag', @get('tagBackup')
+      @set 'body', @get('bodyBackup')
+
+      # Turn off editing + write mode
+      @set 'isEditing', no
+      @set 'isWriteMode', no
+
     submit: ->
       if @get('isEditing')
         @sendAction 'edit', @get('comment')
       else
         @sendAction 'submit', @get('comment')
 
-      @send 'clear'
+      @sendAction 'clear'
 
     startEditing: ->
+      # Store old body/tag to be able to revert
+      @set 'tagBackup', @get('tag')
+      @set 'bodyBackup', @get('body')
       @set 'isWriteMode', yes
       @set 'isEditing', yes
 

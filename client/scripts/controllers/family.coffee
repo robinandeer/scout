@@ -8,7 +8,8 @@ App.FamilyController = Ember.ObjectController.extend
   ).observes('id')
 
   filter: (->
-    return App.Filter.find @get('id')
+    if @get 'id'
+      return App.Filter.find @get('id')
   ).property 'id'
 
   # +------------------------------------------------------------------+

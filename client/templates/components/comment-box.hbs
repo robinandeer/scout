@@ -13,7 +13,17 @@
              prompt=tagPrompt}}
     </div>
     {{/if}}
-    <button type="submit" class="comment-box__submit regular--stretched small">{{submitPrompt}}</button>
+    <div class="btn-group slim--stretched">
+      {{#if isEditing}}
+      <button {{action "cancel"}} type="reset" class="btn">
+        <div class="btn__body small">Cancel</div>
+      </button>
+      {{/if}}
+      <button type="submit" class="btn">
+        <div class="btn__body small">{{submitPrompt}}</div>
+      </button>
+    </div>
+    </div>
   </form>
 
   {{else}}

@@ -382,6 +382,10 @@ $family-header-height: 50px;
   overflow: auto;
   max-width: 960px;
   margin-right: 0 auto;
+
+  td {
+    min-width: 100px;
+  }
 }
 
 // Variants
@@ -451,6 +455,10 @@ $family-header-height: 50px;
 
 .undef {
   background-color: rgba(#000, .02);
+}
+
+.always-visible-text {
+  color: $base-font-color;
 }
 
 .column, .column--small, .column--mini, .column--medium, td {
@@ -593,4 +601,22 @@ $family-header-height: 50px;
 .issue-sidebar {
   min-width: 400px;
   border-right: 1px solid $dark-gray;
+}
+
+// bs-popover
+.bs-popover {
+  position: absolute;
+  right: -200px;
+  top: -50px;
+  background: white;
+  padding: 10px;
+  width: 200px;
+  z-index: 9999;
+  border: 1px solid $dark-gray;
+  box-shadow: 0 1px 2px rgba(#000, .2);
+}
+
+.bs-popover__wrapper {
+  position: relative;
+  overflow: visible;
 }

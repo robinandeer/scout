@@ -16,6 +16,7 @@
   </div>
 
   <div class="header-footer__body">
+    {{#unless model.isLoading}}
     <div class="list--vertical">
       {{#each family in model}}
       {{#unless family.isHidden}}
@@ -42,8 +43,13 @@
         </div>
       {{/unless}}
       {{/each}}
-    </div>{{! END header-footer__body }}
-  </div>
+    </div>{{! END list--vertical }}
+    {{else}}
+    <div class="center-center">
+      <img src="/static/img/loader.gif">
+    </div>
+    {{/unless}}
+  </div>{{! END header-footer__body }}
 
 </div>
 

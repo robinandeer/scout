@@ -10,8 +10,16 @@ App.Variant = Ember.Model.extend
   individualRankScore: attr()
   rankScore: attr()
   GTCallFilter: attr()
+  clinicalDbGeneAnnotation: attr()
 
   chr: attr()
+  chrom: (->
+    if @get('chr')
+      return @get('chr').slice(3)
+  ).property('chr')
+  chromPosString: (->
+    return "#{@get('chr')}: #{@get('startBp')}-#{@get('stopBp')}"
+  ).property 'chr', 'startBp', 'stopBp'
   startBp: attr()
   stopBp: attr()
   isSingleBase: (->
@@ -27,6 +35,12 @@ App.Variant = Ember.Model.extend
       return @get('hgncSynonyms').split(';').slice(0, -1).join(', ')
   ).property 'hgncSynonyms'
   hgncApprovedName: attr()
+  ensemblGeneid: attr()
+  ensemblGeneIdString: (->
+    if @get('ensemblGeneid')
+      return @get('ensemblGeneid').split(';').slice(0, -1).join(', ')
+  ).property 'ensemblGeneid'
+
   hgncTranscriptId: attr()
   variantFunctions: (->
     if @get('hgncTranscriptId')
@@ -34,17 +48,32 @@ App.Variant = Ember.Model.extend
     else
       return []
   ).property 'hgncTranscriptId'
-  ensemblGeneid: attr()
-  ensemblGeneIdString: (->
-    if @get('ensemblGeneid')
-      return @get('ensemblGeneid').split(';').slice(0, -1).join(', ')
-  ).property 'ensemblGeneid'
 
+  # Severity predictions
   siftWholeExome: attr()
   polyphenDivHuman: attr()
   gerpWholeExome: attr()
   mutationTaster: attr()
+  severities: (->
+    severities = []
+    properties = ['siftWholeExome', 'polyphenDivHuman', 'gerpWholeExome',
+                  'mutationTaster']
+    for property in properties
+      if @get property
+        severities.push
+          id: property
+          name: property.capitalize()
+          value: @get property
 
+    return severities
+  ).property('siftWholeExome', 'polyphenDivHuman', 'gerpWholeExome',
+             'mutationTaster')
+  scaledCscoreThousandG: attr()
+  unscaledCscoreThousandG: attr()
+  unscaledCscoreSnv: attr()
+  scaledCscoreSnv: attr()
+
+  # Frequencies
   thousandG: attr()
   dbsnpId: attr()
   dbsnp: attr()
@@ -55,13 +84,36 @@ App.Variant = Ember.Model.extend
   dbsnp129: attr()
   dbsnp132: attr()
   esp6500: attr()
+  variantCount: attr()
+  hbvdb: attr()
+  hbvdbHuman: (->
+    freq = @get('hbvdb')
+    if freq
+      if freq > 0.1
+        return 'is-common'
+      return 'is-found'
+    return 'is-not-found'
+  ).property 'hbvdb'
+  frequencies: (->
+    frequencies = []
+    for property in ['thousandG', 'esp6500', 'dbsnp129', 'hbvdb']
+      if @get property
+        frequencies.push
+          id: property
+          name: property.capitalize()
+          value: @get property
 
+    return frequencies
+  ).property 'thousandG', 'esp6500', 'dbsnp129', 'hbvdb'
+
+  # Conservation
   phylopWholeExome: attr()
   lrtWholeExome: attr()
   phastConstElements: attr()
   gerpElement: attr()
   polyphenVarHuman: attr()
 
+  # Disease gene annotations
   hgmd: attr(ReplaceNull)
   hgmdAccession: attr()
   hgmdVariantType: attr()
@@ -79,58 +131,11 @@ App.Variant = Ember.Model.extend
   omimGeneDesc: attr()
   diseaseGroup: attr()
 
-  locationReliability: attr()
-  functionalAnnotation: attr(ReplaceNull)
-  snornaMirnaAnnotation: attr()
-  pseudogene: attr()
-  mainLocation: attr()
-  geneAnnotation: attr()
-  otherLocation: attr()
-  gwasCatalog: attr()
-  expressionType: attr()
+  # Inheritance models
   geneModel: attr(ReplaceNull)
-  diseaseGeneModel: attr()
-  diseaseGeneModels: (->
-    if @get('diseaseGeneModel')
-      return @get('diseaseGeneModel').split(',')
-    return []
-  ).property 'diseaseGeneModel'
-  variantCount: attr()
-  hbvdb: attr()
-  hbvdbHuman: (->
-    freq = @get('hbvdb')
-    if freq
-      if freq > 0.1
-        return 'is-common'
-      return 'is-found'
-    return 'is-not-found'
-  ).property 'hbvdb'
-  clinicalDbGeneAnnotation: attr()
-  genomicSuperDups: attr()
-
-  scaledCscoreThousandG: attr()
-  unscaledCscoreThousandG: attr()
-  unscaledCscoreSnv: attr()
-  scaledCscoreSnv: attr()
-
-  isInOtherFamilies: (->
-    return @get('variantCount') > 1
-  ).property('variantCount')
-
-  otherFamiliesCount: (->
-    # Subtract this
-    return @get('variantCount') - 1
-  ).property('variantCount')
-
-  chrom: (->
-    if @get('chr')
-      return @get('chr').slice(3)
-  ).property("chr")
-
-  chromPosString: (->
-    return "#{@get('chr')}: #{@get('startBp')}-#{@get('stopBp')}"
-  ).property 'chr', 'startBp', 'stopBp'
-
+  hasComounds: (->
+    return @get('geneModel').indexOf('compound') != -1
+  ).property 'geneModel'
   geneModels: (->
     modelString = @get('geneModel')
     if modelString
@@ -143,22 +148,35 @@ App.Variant = Ember.Model.extend
     else
       return []
   ).property('geneModel')
-
   geneModelString: (->
     return @get('geneModels').join(' – ')
   ).property('geneModels')
+  diseaseGeneModel: attr()
+  diseaseGeneModels: (->
+    if @get('diseaseGeneModel')
+      return @get('diseaseGeneModel').split(',')
+    return []
+  ).property 'diseaseGeneModel'
 
-  severity: (->
-    sum = @get('polyphenDivHuman') + @get('siftWholeExome') + @get("mutationTaster")
+  locationReliability: attr()
+  functionalAnnotation: attr(ReplaceNull)
+  snornaMirnaAnnotation: attr()
+  pseudogene: attr()
+  mainLocation: attr()
+  geneAnnotation: attr()
+  otherLocation: attr()
+  gwasCatalog: attr()
+  expressionType: attr()
+  genomicSuperDups: attr()
 
-    return Math.round(sum/3 * 100)
-  ).property 'polyphenDivHuman', 'siftWholeExome', 'mutationTaster'
+  isInOtherFamilies: (->
+    return @get('variantCount') > 1
+  ).property('variantCount')
 
-  frequency: (->
-    sum = @get('lrtWholeExome') + @get('phylopWholeExome')
-
-    return Math.round(sum/2 * 100)
-  ).property 'lrtWholeExome', 'phylopWholeExome'
+  otherFamiliesCount: (->
+    # Subtract this
+    return @get('variantCount') - 1
+  ).property('variantCount')
 
   uniqueId: (->
     "#{@get('chr')}-#{@get('startBp')}-#{@get('stopBp')}-#{@get('altNt')}"

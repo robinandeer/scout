@@ -310,7 +310,8 @@ def sanger_order():
   # Send an email with Sanger sequencing order
   # TODO: should also send to the person submitting the order
   # current_user.email
-  msg = Message('Sanger sequencing of ' + request.form['hgnc_symbol'],
+  msg = Message(
+    'Sanger sequencing of ' + request.form['hgnc_symbol'],
     sender=gmail_keys.username,
     recipients=['robin.andeer@gmail.com']
   )
@@ -350,11 +351,10 @@ def sanger_order():
 def pedigrees(pedigree_id=None):
   # Get a specific comment if requested
   if pedigree_id:
-    pedigree = Pedigree.objects.get(id=ObjectId(pedigree_id))
+    pedigree = Pedigree.objects.get(family_id=pedigree_id)
 
   if request.method == 'POST':
     data = request.json
-    data['samples'] = [Sample(**sample) for sample in data['samples']]
     data['update_date'] = datetime.strptime(data['update_date'],
                                             '%Y-%m-%dT%H:%M:%S.%fZ')
 
@@ -373,7 +373,7 @@ def pedigrees(pedigree_id=None):
     for key in ['body', 'type']:
       data['set__{}'.format(key)] = request.json[key]
 
-    Pedigree.objects(id=pedigree_id).update_one(**data)
+    Pedigree.objects(family_id=pedigree_id).update_one(**data)
     pedigree.reload()
 
   elif request.method == 'DELETE':
@@ -381,3 +381,40 @@ def pedigrees(pedigree_id=None):
     pedigree.delete()
 
   return jsonify_mongo(pedigree.to_mongo().to_dict())
+
+
+@app.route('/v1/samples', methods=['OPTIONS', 'POST', 'GET'])
+@app.route('/v1/samples/<sample_id>', methods=['OPTIONS', 'GET', 'PUT',
+                                               'DELETE'])
+@crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
+def samples(sample_id=None):
+  # Get a specific comment if requested
+  if sample_id:
+    sample = Sample.objects.get(id=ObjectId(sample_id))
+
+  if request.method == 'POST':
+    data = request.json
+
+    # Create a new comment
+    sample = sample(**data).save()
+
+  elif request.method == 'GET':
+    if sample_id is None:
+      samples = Sample.objects()
+      raw_samples = [c.to_mongo().to_dict() for c in samples]
+      return jsonify_mongo(samples=raw_samples)
+
+  elif request.method == 'PUT':
+    # Update a specific comment
+    data = {}
+    for key in ['body', 'type']:
+      data['set__{}'.format(key)] = request.json[key]
+
+    Sample.objects(id=sample_id).update_one(**data)
+    sample.reload()
+
+  elif request.method == 'DELETE':
+    # Delete a specific comment
+    sample.delete()
+
+  return jsonify_mongo(sample.to_mongo().to_dict())
