@@ -1,5 +1,4 @@
 <div class="panel header-footer__wrapper--overlay families-panel medium">
-
   <div class="header--overlay text-center regular--stretched">
     <small>Families</small>
     
@@ -16,41 +15,40 @@
   </div>
 
   <div class="header-footer__body">
-    {{#unless model.isLoading}}
-    <div class="list--vertical">
-      {{#each family in model}}
-      {{#unless family.isHidden}}
-        <div class="list__item bar--space-between regular--stretched">
-          <div>
-            <div class="btn-group families-links-buttons">
-              <div class="btn">
-                {{#link-to "family" family classNames="btn__body regular--stretched"}}
-                  Family {{family.family_id}}
-                {{/link-to}}
-              </div>
-              <div class="btn">
-                {{#link-to "variants" family classNames="btn__body regular--stretched"}}
-                  Variants
-                {{/link-to}}
-              </div>
-              <div {{action "hideFamily" family}} class="btn">
-                <div class="btn__body regular--stretched">Hide</div>
-              </div>
-            </div>
-          </div>
-
-          <div>{{fromNow family.updateDate}}</div>
-        </div>
-      {{/unless}}
-      {{/each}}
-    </div>{{! END list--vertical }}
+    {{#if model.isLoading}}
+      <div class="center-center">
+        <img src="/static/img/loader.gif">
+      </div>
     {{else}}
-    <div class="center-center">
-      <img src="/static/img/loader.gif">
-    </div>
-    {{/unless}}
-  </div>{{! END header-footer__body }}
+      <div class="list--vertical">
+        {{#each family in controller}}
+          {{#unless family.isHidden}}
+            <div class="list__item bar--space-between regular--stretched">
+              <div>
+                <div class="btn-group families-links-buttons">
+                  <div class="btn">
+                    {{#link-to "family" family classNames="btn__body regular--stretched"}}
+                      Family {{family.family_id}}
+                    {{/link-to}}
+                  </div>
+                  <div class="btn">
+                    {{#link-to "variants" family classNames="btn__body regular--stretched"}}
+                      Variants
+                    {{/link-to}}
+                  </div>
+                  <div {{action "hideFamily" family}} class="btn">
+                    <div class="btn__body regular--stretched">Hide</div>
+                  </div>
+                </div>{{! btn-group }}
+              </div>
 
-</div>
+              <div>{{fromNow family.updateDate}}</div>
+            </div>
+          {{/unless}}
+        {{/each}}
+      </div>{{! END list--vertical }}
+    {{/if}}
+  </div>{{! END header-footer__body }}
+</div>{{! panel }}
 
 {{outlet}}

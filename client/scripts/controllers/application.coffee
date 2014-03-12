@@ -14,9 +14,11 @@ App.ApplicationController = Ember.Controller.extend
 
           # Up arrow
           if event.which is 38
-            model = @get('controllers.variant').adjacentVariant('prev')
+            direction = 'prev'
           else if event.which is 40
             # ... down arrow
-            model = @get('controllers.variant').adjacentVariant('next')
+            direction = 'next'
 
-          @transitionToRoute 'variant', model
+          nextVariant = @get('controllers.variant').adjacentVariant(direction)
+
+          @transitionToRoute 'variant', nextVariant

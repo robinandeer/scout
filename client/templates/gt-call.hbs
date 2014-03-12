@@ -1,32 +1,20 @@
 <table class="table--auto">
   <thead>
     <tr>
-      <th class="slim--stretched">Rank score</th>
-      {{#each idn in compounds.1.idns}}
-      <th class="slim--stretched">{{idn}}</th>
-      {{/each}}
-      <th class="slim--stretched">Gene annotation</th>
-      <th class="slim--stretched">Func. annotation</th>
-      <th class="slim--stretched">Inheritance</th>
+      <th class="slim--stretched">Combined score</th>
+      <th class="slim--stretched">Reference allele</th>
+      <th class="slim--stretched">Alternative allele</th>
     </tr>
   </thead>
 
   <tbody>
-  {{#each compound in compounds}}
+  {{#each compound in model}}
     <tr>
     <td class="text-center">
-      {{#link-to "variant" compound.vpk}}
-        {{compound.rank_score}}
-      {{/link-to}}
+      {{#link-to "variant" variant}}{{compound.combinedScore}}{{/link-to}}
     </td>
-
-    {{#each call in compound.gtCalls}}
-    <td class="text-center">{{call}}</td>
-    {{/each}}
-
-    <td class="slim">{{compound.gene_annotation}}</td>
-    <td class="slim">{{compound.functional_annotation}}</td>
-    <td class="slim">{{compound.gene_model}}</td>
+    <td class="slim">{{compound.refNt}}</td>
+    <td class="slim">{{compound.altNt}}</td>
     </tr>
   {{/each}}
   </tbody>

@@ -1,21 +1,3 @@
-MomentDate =
-  deserialize: (raw_date) ->
-    return moment raw_date
-
-  serialize: (date) ->
-    return date.toJSON()
-
-Ember.NewRESTAdapter = Ember.RESTAdapter.extend
-  buildURL: (klass, id) ->
-    urlRoot = Ember.get(klass, 'url')
-    if !urlRoot
-      throw new Error('Ember.RESTAdapter requires a `url` property to be specified');
-
-    if !Ember.isEmpty(id)
-      return "#{urlRoot}/#{id}"
-    else
-      return urlRoot
-
 App.Comment = Ember.Model.extend
   _id: Em.attr()
   context: Em.attr()
@@ -44,7 +26,6 @@ App.FamilyComment.camelizeKeys = yes
 App.FamilyComment.primaryKey = '_id'
 App.FamilyComment.collectionKey = 'comments'
 App.FamilyComment.url = 'http://localhost:8081/v1/comments'
-
 App.FamilyComment.adapter = Ember.NewRESTAdapter.create()
 
 App.VariantComment = App.Comment.extend()

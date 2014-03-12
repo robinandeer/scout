@@ -1,6 +1,8 @@
 App.BsPopoverComponent = Ember.Component.extend
   classNames: ['bs-popover']
+  classNameBindings: ['direction']
 
+  direction: 'right'
   title: ''
   content: null
   html: no
@@ -16,15 +18,18 @@ App.BsPopoverComponent = Ember.Component.extend
 
   didInsertElement: ->
     @$tip = @$()
-    @$element = @$tip.parent(':not(script)')
+    if @$tip
+      @$element = @$tip.parent(':not(script)')
 
-    eventIn = 'mouseenter'
-    eventOut = 'mouseleave'
+      eventIn = 'mouseenter'
+      eventOut = 'mouseleave'
 
-    @$element.on eventIn, $.proxy(@enter, @)
-    @$element.on eventOut, $.proxy(@leave, @)
+      @$element.on eventIn, $.proxy(@enter, @)
+      @$element.on eventOut, $.proxy(@leave, @)
 
-    @set 'inserted', yes
+      @set 'inserted', yes
+    else
+      Ember.run.next @, @didInsertElement
 
   enter: ->
     @set 'isVisible', yes
@@ -32,3 +37,8 @@ App.BsPopoverComponent = Ember.Component.extend
   leave: ->
     unless @get('isLocked')
       @set 'isVisible', no
+
+  isVisibleObserver: (->
+    Ember.run.next @, =>
+      @$().css(@get('direction'), -@$().outerWidth())
+  ).observes 'isVisible'

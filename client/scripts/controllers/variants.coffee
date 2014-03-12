@@ -45,6 +45,10 @@ App.VariantsController = Ember.ArrayController.extend
     propertyChanged: Em.observer 'property', ->
       @get('self').set @get('id'), @get('property')
 
+  familyIdObserver: (->
+    @send 'clearFilter'
+  ).observes 'currentFamilyModel.family_id'
+
   filterGroups: (->
     groups = Em.A()
     if @get('filter.groups')
@@ -107,6 +111,8 @@ App.VariantsController = Ember.ArrayController.extend
       @get('target').send 'filtersWhereUpdated'
 
     clearFilter: ->
+      @set 'offset', 0
+
       for group in @get('filterGroups')
         for filter in group.filters
           filter.set 'property', no
@@ -133,6 +139,10 @@ App.VariantsController = Ember.ArrayController.extend
   # +------------------------------------------------------------------+
   hoveredVariantId: null
   isShowingGtCall: no
+
+  compounds: (->
+    return App.Compound.find({ variant_id: @get('hoveredVariantId') })
+  ).property 'hoveredVariantId'
 
   gt: (->
     return App.GTCall.find "#{@get('hoveredVariantId')},#{@get('database')}"

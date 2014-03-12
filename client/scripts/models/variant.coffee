@@ -12,11 +12,10 @@ App.Variant = Ember.Model.extend
   GTCallFilter: attr()
   clinicalDbGeneAnnotation: attr()
 
-  chr: attr()
+  chr: attr({ defaultValue: '' })
   chrom: (->
-    if @get('chr')
-      return @get('chr').slice(3)
-  ).property('chr')
+    return (@get('chr') or '').replace('chr', '')
+  ).property 'chr'
   chromPosString: (->
     return "#{@get('chr')}: #{@get('startBp')}-#{@get('stopBp')}"
   ).property 'chr', 'startBp', 'stopBp'
@@ -29,24 +28,19 @@ App.Variant = Ember.Model.extend
   altNt: attr()
 
   hgncSymbol: attr()
-  hgncSynonyms: attr()
+  hgncSynonyms: attr({ defaultValue: '' })
   hgncSynonymsString: (->
-    if @get('hgncSynonyms')
-      return @get('hgncSynonyms').split(';').slice(0, -1).join(', ')
+    return (@get('hgncSynonyms') or '').split(';').slice(0, -1).join(', ')
   ).property 'hgncSynonyms'
   hgncApprovedName: attr()
-  ensemblGeneid: attr()
+  ensemblGeneid: attr({ defaultValue: '' })
   ensemblGeneIdString: (->
-    if @get('ensemblGeneid')
-      return @get('ensemblGeneid').split(';').slice(0, -1).join(', ')
+    return (@get('ensemblGeneid') or '').split(';').slice(0, -1).join(', ')
   ).property 'ensemblGeneid'
 
-  hgncTranscriptId: attr()
+  hgncTranscriptId: attr({ defaultValue: '' })
   variantFunctions: (->
-    if @get('hgncTranscriptId')
-      return @get("hgncTranscriptId").split(',').slice(0,-1)
-    else
-      return []
+    return (@get('hgncTranscriptId') or '').split(',').slice(0,-1)
   ).property 'hgncTranscriptId'
 
   # Severity predictions
@@ -74,12 +68,12 @@ App.Variant = Ember.Model.extend
   scaledCscoreSnv: attr()
 
   # Frequencies
+  otherVariants: attr()
   thousandG: attr()
   dbsnpId: attr()
-  dbsnp: attr()
+  dbsnp: attr({ defaultValue: '' })
   dbsnpFlag: (->
-    if @get('dbsnp')
-      return @get('dbsnp').replace('snp137', '')
+    return (@get('dbsnp') or '').replace('snp137', '')
   ).property 'dbsnp'
   dbsnp129: attr()
   dbsnp132: attr()
@@ -117,15 +111,14 @@ App.Variant = Ember.Model.extend
   hgmd: attr(ReplaceNull)
   hgmdAccession: attr()
   hgmdVariantType: attr()
-  hgmdVariantPmid: attr()
+  hgmdVariantPmid: attr({ defaultValue: '' })
   hgmdVariantPmidLinks: (->
     # Separated by ';' and trailing ';'
     links = Em.A()
-    if @get('hgmdVariantPmid')
-      for pmid in @get('hgmdVariantPmid').split(';').slice(0, -1)
-        links.pushObject
-          id: pmid
-          link: "http://www.ncbi.nlm.nih.gov/pubmed/#{pmid}"
+    for pmid in (@get('hgmdVariantPmid') or '').split(';').slice(0, -1)
+      links.pushObject
+        id: pmid
+        link: "http://www.ncbi.nlm.nih.gov/pubmed/#{pmid}"
     return links
   ).property 'hgmdVariantPmid'
   omimGeneDesc: attr()
@@ -133,8 +126,8 @@ App.Variant = Ember.Model.extend
 
   # Inheritance models
   geneModel: attr(ReplaceNull)
-  hasComounds: (->
-    return @get('geneModel').indexOf('compound') != -1
+  hasCompounds: (->
+    return (@get('geneModel') or '').indexOf('compound') != -1
   ).property 'geneModel'
   geneModels: (->
     modelString = @get('geneModel')
@@ -151,11 +144,9 @@ App.Variant = Ember.Model.extend
   geneModelString: (->
     return @get('geneModels').join(' – ')
   ).property('geneModels')
-  diseaseGeneModel: attr()
+  diseaseGeneModel: attr({ defaultValue: '' })
   diseaseGeneModels: (->
-    if @get('diseaseGeneModel')
-      return @get('diseaseGeneModel').split(',')
-    return []
+    return (@get('diseaseGeneModel') or '').split(',')
   ).property 'diseaseGeneModel'
 
   locationReliability: attr()
@@ -177,6 +168,14 @@ App.Variant = Ember.Model.extend
     # Subtract this
     return @get('variantCount') - 1
   ).property('variantCount')
+
+  gtcalls: (->
+    return App.GtCall.find({ variant_id: @get('id') })
+  ).property 'id'
+
+  compounds: (->
+    return App.Compound.find({ variant_id: @get('id') })
+  ).property 'id'
 
   uniqueId: (->
     "#{@get('chr')}-#{@get('startBp')}-#{@get('stopBp')}-#{@get('altNt')}"
@@ -236,6 +235,10 @@ App.VariantAdapter = Ember.Object.extend
   findQuery: (klass, records, params) ->
     url = "#{@get('host')}/families/#{params.family_id}/variants"
 
+    # Must include some database
+    if not params.queryParams.database
+      params.queryParams.database = 'IEM'
+
     # Add optional query parameters
     if params.queryParams
       queryString = @buildQueryString(params.queryParams)
@@ -243,7 +246,19 @@ App.VariantAdapter = Ember.Object.extend
       url += queryString
 
     $.getJSON(url).then (data) ->
-      records.load(klass, data)
+      # Temporary fix to avoid showing non-clinical genes!
+      if params.queryParams.database is not 'Research'
+        approved = []
+        for variant in data
+          ensembl_geneids = variant.ensembl_geneid.slice(0, -1)
+          # All variants have ';' in the last position
+          # Keep only variants with a single Ensembl Gene ID
+          if ensembl_geneids.indexOf(';') == -1
+            approved.push(variant)
+      else
+        approved = data
+
+      records.load(klass, approved)
 
 App.Variant.camelizeKeys = yes
 App.Variant.adapter = App.VariantAdapter.create()

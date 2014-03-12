@@ -39,7 +39,9 @@
         </div>
 
         <div class="btn">
-          <div class="btn__body regular--stretched">{{#link-to 'variants' currentFamily}}All variants{{/link-to}}</div>
+          <div class="btn__body regular--stretched">
+            {{#link-to 'variants' currentFamily}}All variants{{/link-to}}
+          </div>
         </div>
 
         {{#unless isHidden}}
@@ -110,7 +112,7 @@
 
           <tr>
             <th>Frequency</th>
-            <td {{bind-attr class="hbvdb::undef :slim"}}>
+            <td {{bind-attr class="hbvdb::undef :slim :bs-popover__wrapper"}}>
               <div class="predict__number">{{fallback hbvdb}}</div>
               <div class="predict__text"><small>HBVdb</small></div>
             </td>
@@ -205,7 +207,7 @@
             <tbody>
               {{#each item in variantFunctions}}
               <tr>
-                <td class="slim">{{item}}</td>
+                <td class="slim scrollable">{{item}}</td>
               </tr>
               {{else}}
               <tr>
@@ -232,13 +234,13 @@
               </tr>
             </thead>
             <tbody>
-            {{#each call in gt.gtCalls}}
+            {{#each gtcall in gtcalls}}
               <tr>
-                <td class="slim text-center">{{call.idn}}</td>
-                <td class="slim text-center">{{call.gt}}</td>
-                <td class="slim text-center">{{call.ad}}</td>
-                <td class="slim">{{call.pl}}</td>
-                <td class="slim text-right">{{call.gq}}</td>
+                <td class="slim text-center">{{gtcall.idn}}</td>
+                <td class="slim text-center">{{gtcall.gt}}</td>
+                <td class="slim text-center">{{gtcall.ad}}</td>
+                <td class="slim">{{gtcall.pl}}</td>
+                <td class="slim text-right">{{gtcall.gq}}</td>
               </tr>
             {{/each}}
             </tbody>
@@ -280,7 +282,41 @@
 
     {{#if hasCompounds}}
     <div class="regular-width compounds">
-      {{render "gt-call" gt}}
+      <table class="table--auto">
+        <thead>
+          <tr>
+            <th class="slim--stretched">Combined score</th>
+            <th class="slim--stretched">Rank score</th>
+            {{#each sample in compounds.content.0.samples}}
+            <th class="slim--stretched">{{sample}}</th>
+            {{/each}}
+            <th class="slim--stretched">Inheritance models</th>
+            <th class="slim--stretched">Gene annotations</th>
+            <th class="slim--stretched">Functional annotation</th>
+          </tr>
+        </thead>
+
+        <tbody>
+        {{#each compound in compounds}}
+          <tr>
+            <td class="text-center slim">
+              {{compound.combinedScore}}
+            </td>
+            <td class="text-center">
+              {{#link-to "variant" compound.variant}}
+                {{compound.rankScore}}
+              {{/link-to}}
+            </td>
+            {{#each gtcall in compound.gtcalls}}
+            <td class="slim">{{gtcall}}</td>
+            {{/each}}
+            <td class="slim">{{compound.geneModel}}</td>
+            <td class="slim">{{compound.geneAnnotation}}</td>
+            <td class="slim">{{compound.functionalAnnotation}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
     </div>
     {{/if}}
 

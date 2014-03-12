@@ -1,4 +1,6 @@
 App.OrderModalController = Ember.ObjectController.extend
+  classNameBindings: ['wasSent']
+
   actions:
     close: ->
       return @send 'closeOrderModal'

@@ -64,18 +64,13 @@ App.VariantController = Ember.ObjectController.extend
 
     return model
 
-  gt: (->
-    database = @get 'controllers.variants.database'
-    return App.GTCall.find "#{@get('id')},#{database}"
-  ).property 'id', 'controllers.variants.database'
-
   gtString: (->
-    calls = []
-    for call in @get('gt.gtCalls')
-      calls.push "#{call.get('idn')}: #{call.get('gt')}"
+    gtcalls = []
+    for gtcall in @get('gtcalls.content')
+      gtcalls.push "#{gtcall.get('idn')}: #{gtcall.get('gt')}"
 
-    return calls.join('\n')
-  ).property 'gt.gtCalls.@each.idn', 'gt.gtCalls.@each.gt'
+    return gtcalls.join('\n')
+  ).property 'gtcalls.@each.idn', 'gtcalls.@each.gt'
 
   sangerData: (->
     return Ember.Object.create
@@ -88,10 +83,6 @@ App.VariantController = Ember.ObjectController.extend
       gt_call: @get 'gtString'
   ).property('App.Family', 'hgncSymbol', 'chromPosString', 'hgncTranscriptId',
              'gtString', 'controllers.variants.database')
-
-  hasCompounds: (->
-    return @get('gt.compounds.length') > 1
-  ).property 'gt.compounds'
 
   comments: (->
     return App.VariantComment.find

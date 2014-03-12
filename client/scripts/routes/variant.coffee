@@ -15,9 +15,11 @@ App.VariantRoute = Ember.Route.extend
         parentView: 'variant'
 
     sendOrderForm: (orderModel) ->
+      orderModel.set 'isSending', yes
       payload = orderModel.getProperties('family_id', 'hgnc_symbol', 'chr_pos'
         'database', 'amino_change', 'gt_call', 'variant_link')
 
-      $.post 'http://localhost:8081/v1/sanger', payload, (data) ->
-        @send 'closeOrderModal'
-        console.log data
+      $.post 'http://localhost:8081/v1/sanger', payload, (data) =>
+        orderModel.set 'isSending', no
+        orderModel.set 'wasSent', yes
+        orderModel.set 'body', data.message

@@ -3,7 +3,7 @@ App.FamilyIndexController = Ember.ObjectController.extend
   queryParams: ['database']
 
   userBinding: 'controllers.application.user'
-  database: 'research'
+  database: 'IEM'
 
   hasGeneModels: (->
     return @get('samples.1.inheritanceModels.length') > 0

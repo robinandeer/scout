@@ -1,6 +1,7 @@
 App.VariantsRoute = Ember.Route.extend
   model: (params) ->
-    family_id = @modelFor('family').get('family_id')
+    familyModel = @modelFor('family')
+    family_id = familyModel.get('family_id') or (familyModel.get('id') or familyModel.get('_id'))
 
     App.Variant.find
       family_id: family_id

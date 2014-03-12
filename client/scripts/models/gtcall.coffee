@@ -1,40 +1,22 @@
-App.GTCall = Ember.Model.extend
-  gtCalls: attr()
-  compounds: attr()
-
-Ember.GTCallAdapter = Ember.Object.extend
-  host: 'http://localhost:8081/api/v1'
-
-  find: (record, _id) ->
-    params = _id.split(',')
-    id = params[0]
-    database = params[1]
-    url = "#{@get('host')}/variants/#{id}/gtcall?database=#{database}"
-    $.getJSON(url).then (data) ->
-      compounds = Em.A()
-      for compound in data.COMPOUNDS
-        unless compound.vpk is id
-          compounds.pushObject(App.Compound.create(compound))
-
-      objects =
-        gtCalls: (App.Call.create(call) for call in data.GT)
-        # Only show the first 10 compounds
-        compounds: compounds.slice(0,10)
-
-      record.load(id, objects)
-
-App.GTCall.adapter = Ember.GTCallAdapter.create()
-
-App.Call = Ember.Object.extend
-  filter: null
-  gt: null
-  ad: null
-  gq: null
-  idn: null
-  pl: null
-  variantid: null
-  pk: null
-  dp: null
+App.GtCall = Ember.Model.extend
+  pk: Em.attr()
+  variantid: Em.attr()
+  variantId: (->
+    return @get('variantid')
+  ).property 'variantid'
+  idn: Em.attr({ defaultValue: '' })
+  filter: Em.attr()
+  gt: Em.attr()
+  gq: Em.attr()
+  dp: Em.attr()
+  pl: Em.attr({ defaultValue: '' })
+  pls: (->
+    return @get('pl').split(',')
+  ).property 'pl'
+  ad: Em.attr({ defaultValue: '' })
+  ads: (->
+    return @get('ad').split(',')
+  ).property 'ad'
 
   ok: (->
     if @get('filter') is 'PASS'
@@ -74,23 +56,8 @@ App.Call = Ember.Object.extend
 
   ).property 'idn', 'gender'
 
-App.Compound = Ember.Object.extend
-  functional_annotation: null
-  gt: null
-  gene_model: null
-  idn: null
-  gene_annotation: null
-  vpk: null
-  rank_score: null
-
-  gtCalls: (->
-    return @get('gt').split(',')
-  ).property('gt')
-
-  geneModels: (->
-    return @get('gene_model').split(':')
-  ).property('gene_model')
-
-  idns: (->
-    return @get('idn').split(',')
-  ).property('idn')
+App.GtCall.camelizeKeys = yes
+App.GtCall.primaryKey = 'pk'
+App.GtCall.collectionKey = 'gtcalls'
+App.GtCall.url = 'http://localhost:8081/api/v1/gtcalls'
+App.GtCall.adapter = Ember.NewRESTAdapter.create()

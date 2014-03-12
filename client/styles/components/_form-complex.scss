@@ -28,7 +28,8 @@ h5 {
   label {
     display: block;
     font-size: 13px;
-    color: $flat-gray-2;
+    color: darken($dark-gray, 30%);
+    margin-bottom: 5px;
   }
   textarea {
     min-height: 100px;

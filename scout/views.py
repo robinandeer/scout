@@ -210,6 +210,13 @@ def remote_static(path):
 # +--------------------------------------------------------------------+
 # |  Family/Variant Comments CRUD
 # +--------------------------------------------------------------------+
+def post_comment(data):
+  # Create a new comment
+  d = datetime.strptime(data['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ')
+  data['created_at'] = d
+  return Comment(**data).save()
+
+
 @app.route('/v1/comments', methods=['OPTIONS', 'POST', 'GET'])
 @app.route('/v1/comments/<comment_id>', methods=['OPTIONS', 'GET', 'PUT',
                                                  'DELETE'])
@@ -221,9 +228,7 @@ def comments(comment_id=None):
 
   if request.method == 'POST':
     # Create a new comment
-    d = datetime.strptime(request.json['created_at'], '%Y-%m-%dT%H:%M:%S.%fZ')
-    request.json['created_at'] = d
-    comment = Comment(**request.json).save()
+    comment = post_comment(request.json)
 
   elif request.method == 'GET':
     if comment_id is None:
@@ -307,38 +312,68 @@ submitted by **{author}**.
 @app.route('/v1/sanger', methods=['POST'])
 @crossdomain(origin='*', methods=['POST'])
 def sanger_order():
+  try:
+    sender = current_user.name
+    sender_email = current_user.email
+  except AttributeError:
+    sender = 'anonymous'
+    sender_email = 'robin.andeer@gmail.com'
+
   # Send an email with Sanger sequencing order
-  # TODO: should also send to the person submitting the order
-  # current_user.email
   msg = Message(
     'Sanger sequencing of ' + request.form['hgnc_symbol'],
     sender=gmail_keys.username,
-    recipients=['robin.andeer@gmail.com']
+    recipients=['cmms.dna@karolinska.se'],
+    cc=[sender_email],
+    bcc=['robin.andeer@scilifelab.se']
   )
 
   body = {
     'family_id': request.form['family_id'],
     'variant_link': request.form['variant_link'],
+    'hgnc': request.form['hgnc_symbol'],
     'db': request.form['database'],
     'chr_pos': request.form['chr_pos'],
     'amino_change': request.form['amino_change'],
     'gt_call': request.form['gt_call'],
-    'name': current_user.name
+    'name': sender
   }
 
-  msg.body = """\n
-    Family {family_id}: {variant_link} \n
-    HGNC symbol: {hgnc}\n
-    Database: {db}\n
-    Chr position: {chr_pos}\n
-    Amino acid change:\n{amino_change}\n
-    GT-call:\n{gt_call}\n
-    Ordered by: {name}\n
+  msg.body = """
+Family {family_id}: {variant_link}
+
+HGNC symbol: {hgnc}
+
+Database: {db}
+
+Chr position: {chr_pos}
+
+Amino acid change:
+{amino_change}
+
+GT-call:
+{gt_call}
+
+Ordered by: {name}
   """.format(**body)
 
   mail.send(msg)
 
-  return jsonify(**body)
+  # Also make a corresponding comment about this event
+  comment_body = 'Sanger sequencing ordered by {0}. Variant: {1}'\
+                 .format(sender, request.form['variant_link'])
+  post_data = {
+    'context': 'family',
+    'parent_id': request.form['family_id'],
+    'email': sender_email,
+    'created_at': datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
+    'body': comment_body,
+    'category': request.form['database'],
+    'type': 'action'
+  }
+  _ = post_comment(post_data)
+
+  return jsonify(message=msg.body)
 
 
 # +--------------------------------------------------------------------+

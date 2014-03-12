@@ -34,6 +34,13 @@
   min-width: 100px;
 }
 
+.column--semi {
+  @extend %column;
+
+  @include flex-basis(160px);
+  min-width: 160px;
+}
+
 .column--medium {
   @extend %column;
 

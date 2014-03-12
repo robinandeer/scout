@@ -34,9 +34,7 @@
 
   <div class="header-footer__body family-body">
     {{#if isShowingRawPedigree}}
-    <div class="raw-pedigree">
-      {{{pedigree}}}
-    </div>
+    <div class="raw-pedigree">{{{pedigree}}}</div>
 
     {{else}}
     <div class="bar--center pedigree-table regular-width mb">
@@ -103,7 +101,7 @@
           <tr>
             <th class="regular--stretched">Possible gene models</th>
             {{#each model in samples.1.inheritanceModels}}
-              <td class="regular--stretched">{{model}}</td>
+            <td class="regular--stretched">{{model}}</td>
             {{/each}}
           </tr>
         </tbody>
@@ -114,26 +112,26 @@
     <div class="tab__wrapper mb">
       <div class="tab__bar--top">
         {{#each db in filter.clinical_db_gene_annotation}}
-        {{#link-to (query-params database=db) classNames="tab medium slim"}}
-          {{capitalize db}}
-        {{/link-to}}
+          {{#link-to (query-params database=db) classNames="tab medium slim"}}
+            {{capitalize db}}
+          {{/link-to}}
         {{/each}}
       </div>
       <div class="tab__body regular">
         <div class="panel__wrapper">
           <div class="panel mr">
             {{#each group in groupedComments}}
-            <div class="list__divider medium slim mb">{{group.id}}</div>
+              <div class="list__divider medium slim mb">{{group.id}}</div>
               {{#each comment in group.comments}}
-              {{comment-box
-                  comment=comment
-                  commentId=comment._id
-                  date=comment.createdAt
-                  username=comment.email
-                  currentUsername=user.email
-                  remove="deleteComment"
-                  edit="editComment"
-                  tags=commentCategories}}
+                {{comment-box
+                    comment=comment
+                    commentId=comment._id
+                    date=comment.createdAt
+                    username=comment.email
+                    currentUsername=user.email
+                    remove="deleteComment"
+                    edit="editComment"
+                    tags=commentCategories}}
               {{/each}}
             {{/each}}
           </div>
