@@ -6,3 +6,7 @@ App.IndexController = Ember.ArrayController.extend
     hideFamily: (family) ->
       # Add variant to the list of hidden elements (localStorage)
       family.hide()
+
+  recentComments: (->
+    return App.Comment.find()
+  ).property()

@@ -68,7 +68,6 @@ App.Variant = Ember.Model.extend
   scaledCscoreSnv: attr()
 
   # Frequencies
-  otherVariants: attr()
   thousandG: attr()
   dbsnpId: attr()
   dbsnp: attr({ defaultValue: '' })
@@ -169,12 +168,16 @@ App.Variant = Ember.Model.extend
     return @get('variantCount') - 1
   ).property('variantCount')
 
+  otherFamilies: (->
+    return App.OtherFamily.find { variant_id: @get('id') }
+  ).property 'id'
+
   gtcalls: (->
-    return App.GtCall.find({ variant_id: @get('id') })
+    return App.GtCall.find { variant_id: @get('id') }
   ).property 'id'
 
   compounds: (->
-    return App.Compound.find({ variant_id: @get('id') })
+    return App.Compound.find { variant_id: @get('id') }
   ).property 'id'
 
   uniqueId: (->
@@ -247,7 +250,7 @@ App.VariantAdapter = Ember.Object.extend
 
     $.getJSON(url).then (data) ->
       # Temporary fix to avoid showing non-clinical genes!
-      if params.queryParams.database is not 'Research'
+      unless params.queryParams.database is 'Research'
         approved = []
         for variant in data
           ensembl_geneids = variant.ensembl_geneid.slice(0, -1)

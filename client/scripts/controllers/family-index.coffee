@@ -20,7 +20,7 @@ App.FamilyIndexController = Ember.ObjectController.extend
       return null
 
     postComment: (comment) ->
-      newComment = App.FamilyComment.create
+      newComment = App.Comment.create
         context: 'family'
         parentId: @get('id')
         email: @get('user.email')
@@ -39,13 +39,13 @@ App.FamilyIndexController = Ember.ObjectController.extend
         @get('comments').pushObject(updatedComment)
 
     deleteComment: (commentId) ->
-      comment = App.FamilyComment.find(commentId)
+      comment = App.Comment.find(commentId)
       # Delete the record from the server
       @get('comments').removeObject(comment)
       comment.deleteRecord()
 
   comments: (->
-    return App.FamilyComment.find
+    return App.Comment.find
       context: 'family'
       parent_id: @get('id')
       database: @get('database')

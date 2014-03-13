@@ -115,6 +115,25 @@
             <td {{bind-attr class="hbvdb::undef :slim :bs-popover__wrapper"}}>
               <div class="predict__number">{{fallback hbvdb}}</div>
               <div class="predict__text"><small>HBVdb</small></div>
+
+              {{#if hbvdb}}
+                {{#bs-popover}}
+                  <table class="table--auto always-visible-text">
+                    <tbody>
+                      {{#each family in otherFamilies}}
+                        <tr>
+                          <th class="slim">Family {{family.id}}</th>
+                          <td class="slim text-right">
+                            {{#link-to "variant" family.pk}}
+                              {{family.pk}}
+                            {{/link-to}}
+                          </td>
+                        </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                {{/bs-popover}}
+              {{/if}}
             </td>
 
             <td {{bind-attr class="thousandG::undef :slim"}}>

@@ -21,7 +21,7 @@ App.VariantController = Ember.ObjectController.extend
       return null
 
     postComment: (comment) ->
-      newComment = App.VariantComment.create
+      newComment = App.Comment.create
         context: 'variant'
         parentId: @get 'uniqueId'
         email: @get 'user.email'
@@ -34,7 +34,7 @@ App.VariantController = Ember.ObjectController.extend
       )
 
     deleteComment: (commentId) ->
-      comment = App.VariantComment.find(commentId)
+      comment = App.Comment.find(commentId)
       # Delete the record from the server
       @get('comments').removeObject(comment)
       comment.deleteRecord()
@@ -85,7 +85,7 @@ App.VariantController = Ember.ObjectController.extend
              'gtString', 'controllers.variants.database')
 
   comments: (->
-    return App.VariantComment.find
+    return App.Comment.find
       context: 'variant'
       parent_id: @get 'uniqueId'
   ).property 'id'

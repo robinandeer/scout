@@ -232,12 +232,8 @@ def comments(comment_id=None):
 
   elif request.method == 'GET':
     if comment_id is None:
-      # Get all comments for a given family/variant
-      context = request.args.get('context')
-      parent_id = request.args.get('parent_id')
-      database = request.args.get('database')
-      comments = Comment.objects(context=context, parent_id=parent_id,
-                                 category=database)
+      # Get all comments for a given set of restrictions
+      comments = Comment.objects(**request.args.to_dict()).limit(25)
       raw_comments = [c.to_mongo().to_dict() for c in comments]
       return jsonify_mongo(comments=raw_comments)
 

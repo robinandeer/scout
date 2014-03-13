@@ -58,6 +58,10 @@
   margin-bottom: 15px;
 }
 
+.mb--tiny {
+  margin-bottom: 5px;
+}
+
 .mt {
   margin-top: 15px;
 }
@@ -325,6 +329,8 @@ textarea {
 
 // Families
 .families-panel {
+  border-right: 1px solid $dark-gray;
+
   > .header-footer__body {
     padding-top: 50px;
   }
@@ -333,6 +339,16 @@ textarea {
 .families-links-buttons {
   > .btn {
     min-width: 120px;
+  }
+}
+
+.recent-comments-panel {
+  > .header--overlay {
+    height: 49px;
+  }
+
+  .comment-box__wrapper {
+    margin-bottom: 0;
   }
 }
 

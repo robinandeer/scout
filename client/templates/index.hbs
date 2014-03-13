@@ -51,4 +51,36 @@
   </div>{{! END header-footer__body }}
 </div>{{! panel }}
 
+<div class="panel--sidebar header-footer__wrapper--overlay recent-comments-panel">
+  <div class="header--overlay regular--stretched">
+    <div class="medium text-center">Recent comments</div>
+  </div>
+
+  <div class="header-footer__body list--vertical">
+    {{#each comment in recentComments}}
+      <div class="list__item regular">
+        <div>
+          {{#if comment.isFamilyComment}}
+            {{#link-to comment.context comment.parentId}}
+              <div class="small text-center mb--tiny">
+                Family {{comment.parentId}}
+              </div>
+            {{/link-to}}
+          {{else}}
+            <div class="small text-center mb--tiny">
+              Variant {{comment.parentId}}
+            </div>
+          {{/if}}
+          {{comment-box
+              comment=comment
+              commentId=comment._id
+              date=comment.createdAt
+              username=comment.email
+          }}
+        </div>
+      </div>{{! list-item }}
+    {{/each}}
+  </div>{{! header-footer__body }}
+</div>{{! panel }}
+
 {{outlet}}
