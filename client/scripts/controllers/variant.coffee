@@ -75,6 +75,7 @@ App.VariantController = Ember.ObjectController.extend
   sangerData: (->
     return Ember.Object.create
       family_id: App.family
+      variant_id: @get('uniqueId')
       variant_link: document.URL
       database: @get 'controllers.variants.database'
       hgnc_symbol: @get 'hgncSymbol'

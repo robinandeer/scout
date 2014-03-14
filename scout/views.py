@@ -369,6 +369,10 @@ Ordered by: {name}
     'type': 'action'
   }
   _ = post_comment(post_data)
+  # Also make a comment about this event on variant level
+  post_data['context'] = 'variant'
+  post_data['parent_id'] = request.form['variant_id']
+  _ = post_comment(post_data)
 
   return jsonify(message=msg.body)
 
