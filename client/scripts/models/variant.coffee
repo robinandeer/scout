@@ -249,19 +249,7 @@ App.VariantAdapter = Ember.Object.extend
       url += queryString
 
     $.getJSON(url).then (data) ->
-      # Temporary fix to avoid showing non-clinical genes!
-      unless params.queryParams.database is 'Research'
-        approved = []
-        for variant in data
-          ensembl_geneids = variant.ensembl_geneid.slice(0, -1)
-          # All variants have ';' in the last position
-          # Keep only variants with a single Ensembl Gene ID
-          if ensembl_geneids.indexOf(';') == -1
-            approved.push(variant)
-      else
-        approved = data
-
-      records.load(klass, approved)
+      records.load(klass, data)
 
 App.Variant.camelizeKeys = yes
 App.Variant.adapter = App.VariantAdapter.create()
