@@ -48,7 +48,7 @@ App.FamilyIndexController = Ember.ObjectController.extend
     return App.Comment.find
       context: 'family'
       parent_id: @get('id')
-      database: @get('database')
+      category: @get('database')
   ).property 'id', 'database'
 
   groupedComments: (->

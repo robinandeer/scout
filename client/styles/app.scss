@@ -343,12 +343,19 @@ textarea {
 }
 
 .recent-comments-panel {
+  background: lighten($dark-gray, 8%);
+
   > .header--overlay {
     height: 49px;
   }
 
+  .list__item > div {
+    width: 100%;
+  }
+
   .comment-box__wrapper {
     margin-bottom: 0;
+    width: 100%;
   }
 }
 

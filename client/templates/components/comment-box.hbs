@@ -1,57 +1,60 @@
 <div class="comment-box">
   {{#if isWriteMode}}
-
-  {{textarea valueBinding="comment.body" classNames="comment-box__body--input medium regular" placeholder=bodyPrompt}}
-  <form {{action "submit" on="submit"}} class="comment-box__footer bar--space-between small">
-    {{#if hasTags}}
-    <div class="slim--stretched">
-      {{view Ember.Select
-             content=tags
-             value=comment.type
-             optionValuePath="content.id"
-             optionLabelPath="content.label"
-             prompt=tagPrompt}}
-    </div>
-    {{/if}}
-    <div class="btn-group slim--stretched">
-      {{#if isEditing}}
-      <button {{action "cancel"}} type="reset" class="btn">
-        <div class="btn__body small">Cancel</div>
-      </button>
+    {{textarea valueBinding="comment.body"
+               classNames="comment-box__body--input medium regular" placeholder=bodyPrompt
+    }}
+    <form {{action "submit" on="submit"}} class="comment-box__footer bar--space-between small">
+      {{#if hasTags}}
+        <div class="slim--stretched">
+          {{view Ember.Select
+                 content=tags
+                 value=comment.type
+                 optionValuePath="content.id"
+                 optionLabelPath="content.label"
+                 prompt=tagPrompt
+          }}
+        </div>
       {{/if}}
-      <button type="submit" class="btn">
-        <div class="btn__body small">{{submitPrompt}}</div>
-      </button>
-    </div>
-    </div>
-  </form>
+
+      <div class="btn-group slim--stretched">
+        {{#if isEditing}}
+          <button {{action "cancel"}} type="reset" class="btn">
+            <div class="btn__body small">Cancel</div>
+          </button>
+        {{/if}}
+        <button type="submit" class="btn">
+          <div class="btn__body small">{{submitPrompt}}</div>
+        </button>
+      </div>{{! END btn-group }}
+    </form>
 
   {{else}}
-
-  <div class="comment-box__header bar--space-between slim--stretched small">
-    <div>
-      <b>{{username}}</b>
-      {{#if date}}commented {{fromNow date}}{{/if}}
-    </div>
-    {{#if hasFullAccess}}
-      <div class="btn-group">
-        <div {{action "startEditing"}} class="btn">
-          <div class="btn__body">Edit</div>
-        </div>
-
-        {{#unless isConfirming}}
-          <div {{action "toggleProperty" "isConfirming"}} class="btn">
-            <div class="btn__body">Delete</div>
-          </div>
-          {{else}}
-          <div {{action "remove"}} class="btn">
-            <div class="btn__body">Confirm</div>
-          </div>
-        {{/unless}}
+    <div class="comment-box__header bar--space-between slim--stretched small">
+      <div>
+        <b>{{displayName}}</b>
+        {{#if date}}commented {{fromNow date}}{{/if}}
       </div>
-    {{/if}}
-  </div>
-  <div class="comment-box__body scrollable slim medium">{{comment.body}}</div>
+      {{#if hasFullAccess}}
+        <div class="btn-group">
+          <div {{action "startEditing"}} class="btn">
+            <div class="btn__body">Edit</div>
+          </div>
+
+          {{#unless isConfirming}}
+            <div {{action "toggleProperty" "isConfirming"}} class="btn">
+              <div class="btn__body">Delete</div>
+            </div>
+            {{else}}
+            <div {{action "remove"}} class="btn">
+              <div class="btn__body">Confirm</div>
+            </div>
+          {{/unless}}
+        </div>{{! END btn-group }}
+      {{/if}}
+    </div>{{! comment-box__header }}
+    <div class="comment-box__body scrollable slim medium">
+      {{comment.body}}
+    </div>
 
   {{/if}}
 </div>

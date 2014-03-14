@@ -8,9 +8,10 @@ App.Comment = Ember.Model.extend
   category: Em.attr()
   type: Em.attr()
 
-  firstLetter: (->
-    return @get('userName')[0].capitalize()
-  ).property 'userName'
+  firstName: (->
+    email = @get('email')
+    return email.slice(0, email.indexOf('.')).capitalize()
+  ).property 'email'
 
   isDiagnostic: (->
     return @get('category') in ['IEM', 'EP']

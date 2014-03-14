@@ -5,7 +5,7 @@ App.CommentBoxComponent = Ember.Component.extend
   username: null
   # Used to determine edit/delete permissions
   hasFullAccess: (->
-    return @get('username') is @get('currentUsername')
+    return @get('username') and (@get('username') is @get('currentUsername'))
   ).property 'username', 'currentUsername'
 
   isConfirming: no
