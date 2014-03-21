@@ -24,13 +24,25 @@ from scout.utils import jsonify_mongo
 @login_manager.user_loader
 def load_user(user_id):
   user = User.objects.get(id=ObjectId(user_id))
+
+  # Get user from reference by email
+  res = requests.get(
+    'http://clinical-db.scilifelab.se:8082/checkEmail/' + user.email)
+  data = res.json()
+
+  # Update user with latest values from ref database + logged_in_at
+  user.logged_in_at = datetime.now()
+  user.institutes = data['institute'].split(',')
+  user.save()
+
   if DEBUG and user is None:
     print('\nFAKING A USER!')
-    user = {
-      'name': 'Robin Andeer',
-      'email': 'robin.andeer@scilifelab.se',
-      'fake': True
-    }
+    user = User(
+      name='Robin Andeer',
+      email='robin.andeer@scilifelab',
+      institutes=['CMMS']
+    )
+
   return user
 
 

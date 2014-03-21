@@ -11,6 +11,7 @@ class User(db.Document):
   locale = db.StringField()
   email = db.EmailField(required=True, unique=True)
   created_at = db.DateTimeField(default=datetime.now())
+  logged_in_at = db.DateTimeField(default=datetime.now())
   google_id = db.StringField()
   name = db.StringField()
   institutes = db.ListField()
