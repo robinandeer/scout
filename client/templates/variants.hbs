@@ -177,9 +177,9 @@
           <div class="column--small slim">PolyPhen</div>
           <div class="column--small slim">Gene annotation</div>
           <div class="column--semi slim">Functional annotation</div>
+          <div class="column slim">Disease group</div>
           <div class="column--small slim">Disease gene model</div>
           <div class="column slim">Inheritance models</div>
-          <div class="column slim">Disease group</div>
           <div class="column--mini slim">HGMD</div>
           <div class="column--mini slim">Hide</div>
         {{/unless}}
@@ -284,6 +284,15 @@
                   </div>
 
                   {{! COLUMN }}
+                  <div {{bind-attr class=":column :slim variant.diseaseGroup::undef"}}>
+                    {{#if variant.diseaseGroup}}
+                      {{variant.diseaseGroup}}
+                    {{else}}
+                      Nada
+                    {{/if}}
+                  </div>
+
+                  {{! COLUMN }}
                   <div {{bind-attr class=":column--small :slim variant.diseaseGeneModel::undef"}}>
                     {{#if variant.diseaseGeneModel}}
                       {{variant.diseaseGeneModel}}
@@ -347,15 +356,6 @@
                       {{/bs-popover}}
                     {{/if}}
                   </div>{{! column }}
-
-                  {{! COLUMN }}
-                  <div {{bind-attr class=":column :slim variant.diseaseGroup::undef"}}>
-                    {{#if variant.diseaseGroup}}
-                      {{variant.diseaseGroup}}
-                    {{else}}
-                      Nada
-                    {{/if}}
-                  </div>
 
                   {{! COLUMN }}
                   <div {{bind-attr class=":column--mini :slim variant.hgmdVariantType::undef"}}>
