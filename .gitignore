@@ -40,6 +40,7 @@ nosetests.xml
 DEV
 node_modules
 dev-server
+dev.txt
 
 *.py[cod]
 
