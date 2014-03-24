@@ -28,7 +28,7 @@
                 <div class="btn-group families-links-buttons">
                   <div class="btn">
                     {{#link-to "family" family classNames="btn__body regular--stretched"}}
-                      Family {{family.family_id}}
+                      Family {{family.id}}
                     {{/link-to}}
                   </div>
                   <div class="btn">
@@ -63,12 +63,12 @@
           {{#if comment.isFamilyComment}}
             {{#link-to comment.context comment.parentId}}
               <div class="small text-center mb--tiny">
-                Family {{comment.parentId}}
+                Family {{comment.contextId}}
               </div>
             {{/link-to}}
           {{else}}
             <div class="small text-center mb--tiny">
-              Variant {{comment.parentId}}
+              Variant {{comment.contextId}}
             </div>
           {{/if}}
           {{comment-box

@@ -2,8 +2,8 @@ App.VariantController = Ember.ObjectController.extend
   needs: ['family', 'variants', 'application']
 
   currentPathBinding: 'controllers.application.currentPath'
-  userBinding: 'controllers.application.user'
-
+  userBinding: 'controllers.application.model'
+  instituteBinding: 'controllers.application.institute'
   currentFamilyBinding: 'controllers.family.model'
 
   actions:
@@ -26,8 +26,8 @@ App.VariantController = Ember.ObjectController.extend
         parentId: @get 'uniqueId'
         email: @get 'user.email'
         body: comment.body
-        type: comment.type
-        createdAt: moment()
+        priority: comment.priority
+        ecosystem: @get('institute')
 
       newComment.save().then((newObject) =>
         @get('comments').pushObject(newObject)
@@ -89,6 +89,7 @@ App.VariantController = Ember.ObjectController.extend
     return App.Comment.find
       context: 'variant'
       parent_id: @get 'uniqueId'
+      ecosystem: @get 'institute'
   ).property 'id'
 
   variantPriorities: [

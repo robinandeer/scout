@@ -2,8 +2,9 @@ App.FamilyIndexController = Ember.ObjectController.extend
   needs: ['application']
   queryParams: ['database']
 
-  userBinding: 'controllers.application.user'
+  userBinding: 'controllers.application.model'
   database: 'IEM'
+  instituteBinding: 'controllers.application.institute'
 
   hasGeneModels: (->
     return @get('samples.1.inheritanceModels.length') > 0
@@ -22,12 +23,12 @@ App.FamilyIndexController = Ember.ObjectController.extend
     postComment: (comment) ->
       newComment = App.Comment.create
         context: 'family'
-        parentId: @get('id')
+        contextId: @get('id')
         email: @get('user.email')
+        ecosystem: @get('institute')
         body: comment.body
         category: @get('database')
-        type: comment.type
-        createdAt: moment()
+        tags: [comment.type]
 
       newComment.save().then((newObject) =>
         @get('comments').pushObject(newObject)
@@ -47,9 +48,10 @@ App.FamilyIndexController = Ember.ObjectController.extend
   comments: (->
     return App.Comment.find
       context: 'family'
-      parent_id: @get('id')
+      context_id: @get('id')
       category: @get('database')
-  ).property 'id', 'database'
+      ecosystem: @get('institute')
+  ).property 'id', 'database', 'institute'
 
   groupedComments: (->
     groups =
@@ -58,8 +60,8 @@ App.FamilyIndexController = Ember.ObjectController.extend
       conclusion: []
 
     @get('comments').forEach (comment) ->
-      if comment.get('type')
-        groups[comment.get('type')].push(comment)
+      if comment.get('tags')
+        groups[comment.get('tags')[0]].push(comment)
 
     return [
       id: 'Findings'

@@ -1,21 +1,3 @@
-MomentDate =
-  deserialize: (raw_date) ->
-    return moment raw_date
-
-  serialize: (date) ->
-    return date.toJSON()
-
-Ember.NewRESTAdapter = Ember.RESTAdapter.extend
-  buildURL: (klass, id) ->
-    urlRoot = Ember.get(klass, 'url')
-    if !urlRoot
-      throw new Error('Ember.RESTAdapter requires a `url` property to be specified');
-
-    if !Ember.isEmpty(id)
-      return "#{urlRoot}/#{id}"
-    else
-      return urlRoot
-
 App.Compound = Ember.Model.extend
   variant: Em.attr()
   idn: Em.attr()

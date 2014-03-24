@@ -1,6 +1,15 @@
 App.IndexController = Ember.ArrayController.extend
+  needs: ['application']
   sortProperties: ['familyId']
   sortAscending: no
+
+  queryParams: ['institute']
+  instituteBinding: 'controllers.application.institute'
+
+  instituteObserver: (->
+    if @get 'institute'
+      @get('target').send 'instanceWasUpdated'
+  ).observes 'institute'
 
   actions:
     hideFamily: (family) ->
@@ -8,5 +17,5 @@ App.IndexController = Ember.ArrayController.extend
       family.hide()
 
   recentComments: (->
-    return App.Comment.find()
-  ).property()
+    return App.Comment.find({ ecosystem: @get('institute') })
+  ).property 'institute'

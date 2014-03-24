@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from bson import ObjectId
 from datetime import datetime
+import json
 import requests
 
 from flask import request, Response, make_response, jsonify, flash
@@ -141,7 +142,14 @@ def user():
   except AttributeError:
     if DEBUG:
       print('\nFAKING A USER!')
-      user = {'name': 'Robin Andeer', 'email': 'robin.andeer@scilifelab.se'}
+
+      user = {
+        'name': 'Robin Andeer',
+        'given_name': 'Robin',
+        'family_name': 'Andeer',
+        'email': 'robin.andeer@scilifelab.se',
+        'institutes': ['CMMS', 'TIU']
+      }
     else:
       return jsonify(error="You are not logged in."), 403
 
@@ -156,9 +164,14 @@ def api(path):
   # Route incoming request to Tornado
   try:
     cookie = {'institute': ','.join(current_user.institutes)}
-  except AttributeError, e:
+  except AttributeError:
     #return jsonify(error='You are not logged in!'), 403
     cookie = {'institute': 'CMMS'}
+
+  # Double check that user has access to the institute
+  if request.args.get('institute'):
+    if request.args.get('institute') not in cookie['institute'].split(','):
+      return Response('Error'), 401
 
   url = 'http://clinical-db.scilifelab.se:8082/{path}?{query}'\
         .format(path=path, query=request.query_string)
@@ -230,8 +243,8 @@ def post_comment(data):
 
 
 @app.route('/v1/comments', methods=['OPTIONS', 'POST', 'GET'])
-@app.route('/v1/comments/<comment_id>', methods=['OPTIONS', 'GET', 'PUT',
-                                                 'DELETE'])
+@app.route('/v1/comments/<comment_id>',
+           methods=['OPTIONS', 'GET', 'PUT', 'DELETE'])
 @crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
 def comments(comment_id=None):
   # Get a specific comment if requested
@@ -270,8 +283,8 @@ def comments(comment_id=None):
 # |  GitHub Issues
 # +--------------------------------------------------------------------+
 @app.route('/v1/issues', methods=['OPTIONS', 'GET', 'POST'])
-@app.route('/v1/issues/<issue_id>', methods=['OPTIONS', 'GET', 'PUT',
-                                             'DELETE'])
+@app.route('/v1/issues/<issue_id>',
+           methods=['OPTIONS', 'GET', 'PUT', 'DELETE'])
 @crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
 def issues(issue_id=None):
   if request.method == 'POST':
@@ -373,17 +386,17 @@ Ordered by: {name}
                  .format(sender, request.form['variant_link'])
   post_data = {
     'context': 'family',
-    'parent_id': request.form['family_id'],
+    'context_id': request.form['family_id'],
     'email': sender_email,
     'created_at': datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ'),
     'body': comment_body,
     'category': request.form['database'],
-    'type': 'action'
+    'tags': ['action']
   }
   _ = post_comment(post_data)
   # Also make a comment about this event on variant level
   post_data['context'] = 'variant'
-  post_data['parent_id'] = request.form['variant_id']
+  post_data['context_id'] = request.form['variant_id']
   _ = post_comment(post_data)
 
   return jsonify(message=msg.body)
@@ -393,8 +406,8 @@ Ordered by: {name}
 # |  Pedigree + Sample CRUD
 # +--------------------------------------------------------------------+
 @app.route('/v1/pedigrees', methods=['OPTIONS', 'POST', 'GET'])
-@app.route('/v1/pedigrees/<pedigree_id>', methods=['OPTIONS', 'GET', 'PUT',
-                                                   'DELETE'])
+@app.route('/v1/pedigrees/<pedigree_id>',
+           methods=['OPTIONS', 'GET', 'PUT', 'DELETE'])
 @crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
 def pedigrees(pedigree_id=None):
   # Get a specific comment if requested
@@ -432,8 +445,8 @@ def pedigrees(pedigree_id=None):
 
 
 @app.route('/v1/samples', methods=['OPTIONS', 'POST', 'GET'])
-@app.route('/v1/samples/<sample_id>', methods=['OPTIONS', 'GET', 'PUT',
-                                               'DELETE'])
+@app.route('/v1/samples/<sample_id>',
+           methods=['OPTIONS', 'GET', 'PUT', 'DELETE'])
 @crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
 def samples(sample_id=None):
   # Get a specific comment if requested

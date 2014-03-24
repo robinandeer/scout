@@ -1,7 +1,7 @@
 App.FamilyController = Ember.ObjectController.extend
   needs: ['application']
   currentPathBinding: 'controllers.application.currentPath'
-  userBinding: 'controllers.application.user'
+  userBinding: 'controllers.application.model'
 
   changeFamily: (->
     App.family = @get('id')

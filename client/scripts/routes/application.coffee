@@ -1,4 +1,7 @@
 App.ApplicationRoute = Ember.Route.extend
+  model: (params) ->
+    return App.User.find('NA')
+
   actions:
     openModal: (modalName, model) ->
       @controllerFor(modalName).set('model', model)

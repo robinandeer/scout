@@ -71,10 +71,13 @@ App.Family = Ember.Model.extend
   id: attr()
   family_id: attr()
   familyId: (->
-    return parseInt(@get('family_id'))
-  ).property 'family_id'
+    return parseInt(@get('id'))
+  ).property 'id'
   updateDate: attr(MomentDate)
   database: attr()
+  databases: (->
+    return (@get('database') or '').split(',')
+  ).property 'database'
   samples: attr()
 
   hide: ->
@@ -123,14 +126,13 @@ App.FamilyAdapter = Ember.Object.extend
 
       records.load(klass, data)
 
-App.Family.adapter = App.FamilyAdapter.create()
+# App.Family.adapter = App.FamilyAdapter.create()
 
-# App.Family.camelizeKeys = yes
-# App.Family.primaryKey = '_id'
-# App.Family.collectionKey = 'pedigrees'
-# App.Family.url = 'http://localhost:8081/v1/pedigrees'
+App.Family.camelizeKeys = yes
+App.Family.primaryKey = 'id'
+App.Family.url = 'http://localhost:8081/api/v1/families'
 
-# App.Family.adapter = Ember.NewRESTAdapter.create()
+App.Family.adapter = Ember.NewRESTAdapter.create()
 
 # App.Sample.camelizeKeys = yes
 # App.Sample.primaryKey = '_id'

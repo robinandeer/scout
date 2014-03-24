@@ -320,11 +320,18 @@ textarea {
 
 // Menu
 .panel__menu--footer {
+  text-align: center;
   position: absolute;
-  bottom: 100px;
-  left: -47px;
+  bottom: 0;
   color: rgba(#fff, 0.7);
-  @include transform(rotate(-90deg));
+}
+
+.instance-tag-selector {
+  width: 90%;
+  margin: 10px auto 20px;
+  > select {
+    width: 100%;
+  }
 }
 
 // Families

@@ -1,11 +1,6 @@
 App.ApplicationController = Ember.Controller.extend
   needs: ['variants', 'variant']
 
-  user: null
-  init: ->
-    $.getJSON 'http://localhost:8081/v1/user', (data) =>
-      @set 'user', Em.Object.create(data)
-
   actions:
     keyup: (event) ->
       if @get('controllers.variants.variantLoaded')
@@ -22,3 +17,16 @@ App.ApplicationController = Ember.Controller.extend
           nextVariant = @get('controllers.variant').adjacentVariant(direction)
 
           @transitionToRoute 'variant', nextVariant
+
+  instanceTagOptions: (->
+    tags = Em.A()
+    for tag in (@get('model.institutes') or [])
+      tags.pushObject({ label: tag, id: tag })
+    return tags
+  ).property 'model.institutes'
+
+  instanceTagOptionsObserver: (->
+    @set 'institute', @get('instanceTagOptions.0.id')
+  ).observes 'instanceTagOptions.@each'
+
+  institute: null

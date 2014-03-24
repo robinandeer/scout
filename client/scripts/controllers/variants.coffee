@@ -5,6 +5,11 @@ App.VariantsController = Ember.ArrayController.extend
   currentFamilyModelBinding: 'controllers.family.model'
   filterBinding: 'controllers.family.filter'
 
+  databasesObserver: (->
+    # This is needed for the route's initial model hook
+    @set 'database', @get('currentFamilyModel.databases')[0]
+  ).observes('currentFamilyModel.databases')
+
   # +------------------------------------------------------------------+
   # |  Filters and query params
   # +------------------------------------------------------------------+
@@ -73,9 +78,6 @@ App.VariantsController = Ember.ArrayController.extend
   ).property('filter.functional_annotations.@each',
              'filter.gene_annotations.@each',
              'filter.inheritence_models.@each')
-
-  # This is needed for the route's initial model hook
-  database: 'IEM'
 
   actions:
     showPopOver: (variant_id) ->

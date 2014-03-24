@@ -2,7 +2,7 @@ App.SettingsController = Ember.Controller.extend
   needs: ['application', 'index']
 
   # Bind to the current user object
-  userBinding: 'controllers.application.user'
+  userBinding: 'controllers.application.model'
 
   actions:
     resetHidden: (klass) ->

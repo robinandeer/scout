@@ -13,7 +13,6 @@ class User(db.Document):
   created_at = db.DateTimeField(default=datetime.now())
   logged_in_at = db.DateTimeField(default=datetime.now())
   google_id = db.StringField()
-  name = db.StringField()
   institutes = db.ListField()
   access_token = db.StringField()
 
@@ -34,18 +33,42 @@ class User(db.Document):
 
 
 class Comment(db.Document):
-  user = db.ReferenceField(User)
-  email = db.StringField(required=True)
-  # 'variantid' or 'family'
-  parent_id = db.StringField(required=True)
-  body = db.StringField()
-  created_at = db.DateTimeField(default=datetime.now())
-  # 'column' or 'rating'
-  category = db.StringField()
-  # 'position_in_column'
-  type = db.StringField()
-  # 'family' or 'variant'
+  # Context describes in what context the comment was written
+  # E.g. 'blog post' or 'article'
   context = db.StringField()
+
+  # The context Id provides a specific end point within the context
+  # to asscociate the comment with a unique record or set of records.
+  context_id = db.StringField(required=True)
+
+  # User is a pointer to the user, responsible for the actual comment
+  user = db.ReferenceField(User)
+  # ... as is email (for conveniance)
+  email = db.EmailField(required=True)
+
+  # Ecosystem can be used to restrict access to a subset of users
+  ecosystem = db.StringField()
+
+  # Body is the content of the comment which could be stored in e.g.
+  # markdown.
+  body = db.StringField()
+
+  # The created at date records at what point in time the comment was
+  # initially created
+  created_at = db.DateTimeField(default=datetime.now())
+  # And the update date describes the last time the comment was edited
+  updated_at = db.DateTimeField(default=datetime.now())
+
+  # Tags can be used to list multiple properties to associate the
+  # comment with.
+  tags = db.ListField(db.StringField(), default=list)
+
+  # Category allows for a less fine grain filtering compared to tags for
+  # grouping comments into discrete groups (non-overlapping)
+  category = db.StringField()
+
+  # Priority can be used to prioritize/rank comments based on some factor
+  priority = db.IntField()
 
 
 class Process(db.EmbeddedDocument):
