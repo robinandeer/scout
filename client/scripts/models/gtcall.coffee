@@ -59,5 +59,5 @@ App.GtCall = Ember.Model.extend
 App.GtCall.camelizeKeys = yes
 App.GtCall.primaryKey = 'pk'
 App.GtCall.collectionKey = 'gtcalls'
-App.GtCall.url = 'http://localhost:8081/api/v1/gtcalls'
+App.GtCall.url = 'http://localhost:8083/api/v1/gtcalls'
 App.GtCall.adapter = Ember.NewRESTAdapter.create()

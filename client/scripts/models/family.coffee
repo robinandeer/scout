@@ -112,7 +112,7 @@ App.Family = Ember.Model.extend
 
 App.Family.camelizeKeys = yes
 App.FamilyAdapter = Ember.Object.extend
-  host: "http://localhost:8081/api/v1"
+  host: "http://localhost:8083/api/v1"
 
   find: (record, id) ->
     $.getJSON("#{@get('host')}/families/#{id}").then (data) ->
@@ -130,7 +130,7 @@ App.FamilyAdapter = Ember.Object.extend
 
 App.Family.camelizeKeys = yes
 App.Family.primaryKey = 'id'
-App.Family.url = 'http://localhost:8081/api/v1/families'
+App.Family.url = 'http://localhost:8083/api/v1/families'
 
 App.Family.adapter = Ember.NewRESTAdapter.create()
 

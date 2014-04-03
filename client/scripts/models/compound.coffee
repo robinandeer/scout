@@ -23,5 +23,5 @@ App.Compound = Ember.Model.extend
 App.Compound.camelizeKeys = yes
 App.Compound.primaryKey = 'variant'
 App.Compound.collectionKey = 'compounds'
-App.Compound.url = 'http://localhost:8081/api/v1/compounds'
+App.Compound.url = 'http://localhost:8083/api/v1/compounds'
 App.Compound.adapter = Ember.NewRESTAdapter.create()

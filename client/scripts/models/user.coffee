@@ -26,5 +26,5 @@ App.UserAdapter = Ember.Object.extend
 App.User.camelizeKeys = yes
 App.User.primaryKey = '_id'
 App.User.collectionKey = 'users'
-App.User.url = 'http://localhost:8081/v1/user'
+App.User.url = 'http://localhost:8083/v1/user'
 App.User.adapter = App.UserAdapter.create()

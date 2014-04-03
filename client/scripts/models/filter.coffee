@@ -17,7 +17,7 @@ App.Filter = Ember.Model.extend
   ]
 
 Ember.FilterAdapter = Ember.Object.extend
-  host: 'http://localhost:8081/api/v1'
+  host: 'http://localhost:8083/api/v1'
 
   find: (record, id) ->
     $.getJSON("#{@get('host')}/families/#{id}/filter").then (data) ->

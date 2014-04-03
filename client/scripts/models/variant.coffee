@@ -215,7 +215,7 @@ App.Variant = Ember.Model.extend
   ).property('id')
 
 App.VariantAdapter = Ember.Object.extend
-  host: 'http://localhost:8081/api/v1'
+  host: 'http://localhost:8083/api/v1'
 
   buildQueryString: (queryParams) ->
     queryString = '?'

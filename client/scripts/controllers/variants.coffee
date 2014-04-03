@@ -10,6 +10,10 @@ App.VariantsController = Ember.ArrayController.extend
     @set 'database', @get('currentFamilyModel.databases')[0]
   ).observes('currentFamilyModel.databases')
 
+  isResearch: (->
+    return @get('database') is 'Research'
+  ).property 'database'
+
   # +------------------------------------------------------------------+
   # |  Filters and query params
   # +------------------------------------------------------------------+

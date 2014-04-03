@@ -5,9 +5,10 @@ from datetime import datetime
 import json
 import requests
 
-from flask import request, Response, make_response, jsonify, flash
+from flask import request, Response, make_response, jsonify
 from flask import render_template, session, url_for, redirect
 from flask.ext.login import current_user, login_user, logout_user
+from flask.ext.login import login_required
 from flask.ext.mail import Message
 
 from cors import crossdomain
@@ -16,7 +17,7 @@ from scout import app
 from scout.core import it, mail, google, login_manager
 from scout.models import User, Comment, Pedigree, Sample
 from scout.settings import REDIRECT_URI, DEBUG
-from scout.utils import jsonify_mongo
+from scout.utils import jsonify_mongo, conditionally
 
 
 # +--------------------------------------------------------------------+
@@ -135,7 +136,7 @@ def logout():
 # +--------------------------------------------------------------------+
 # Get user info object
 @app.route('/v1/user', methods=['GET'])
-@crossdomain(origin='*', methods=['GET'])
+@conditionally(crossdomain(origin='*', methods=['GET']), DEBUG)
 def user():
   try:
     user = current_user.to_mongo().to_dict()
@@ -159,7 +160,9 @@ def user():
 
 # Route incoming API calls to the Tornado backend and sends JSON response
 @app.route('/api/v1/<path:path>', methods=['GET', 'POST', 'DELETE'])
-@crossdomain(origin='*', methods=['GET', 'POST', 'DELETE'])
+@conditionally(crossdomain(origin='*', methods=['GET', 'POST', 'DELETE']),
+               DEBUG)
+@conditionally(login_required, not DEBUG)
 def api(path):
   # Route incoming request to Tornado
   try:
@@ -199,7 +202,8 @@ def api(path):
 
 # Route incoming API calls to the Tornado backend and sends JSON response
 @app.route('/remote/static/<path:path>', methods=['GET'])
-@crossdomain(origin='*', methods=['GET'])
+@conditionally(crossdomain(origin='*', methods=['GET']), DEBUG)
+@conditionally(login_required, not DEBUG)
 def remote_static(path):
   # Check if GET 206
   range_header = request.headers.get('Range', None)
@@ -245,7 +249,9 @@ def post_comment(data):
 @app.route('/v1/comments', methods=['OPTIONS', 'POST', 'GET'])
 @app.route('/v1/comments/<comment_id>',
            methods=['OPTIONS', 'GET', 'PUT', 'DELETE'])
-@crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
+@conditionally(crossdomain(origin='*',
+  methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE']), DEBUG)
+@conditionally(login_required, not DEBUG)
 def comments(comment_id=None):
   # Get a specific comment if requested
   if comment_id:
@@ -285,7 +291,9 @@ def comments(comment_id=None):
 @app.route('/v1/issues', methods=['OPTIONS', 'GET', 'POST'])
 @app.route('/v1/issues/<issue_id>',
            methods=['OPTIONS', 'GET', 'PUT', 'DELETE'])
-@crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
+@conditionally(crossdomain(origin='*',
+  methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE']), DEBUG)
+@conditionally(login_required, not DEBUG)
 def issues(issue_id=None):
   if request.method == 'POST':
     # Submits an issue to Scout repo at GitHub
@@ -332,7 +340,8 @@ submitted by **{author}**.
 # |  Sanger Sequencing Order Mail
 # +--------------------------------------------------------------------+
 @app.route('/v1/sanger', methods=['POST'])
-@crossdomain(origin='*', methods=['POST'])
+@conditionally(crossdomain(origin='*', methods=['POST']), DEBUG)
+@conditionally(login_required, not DEBUG)
 def sanger_order():
   try:
     sender = current_user.name
@@ -408,7 +417,9 @@ Ordered by: {name}
 @app.route('/v1/pedigrees', methods=['OPTIONS', 'POST', 'GET'])
 @app.route('/v1/pedigrees/<pedigree_id>',
            methods=['OPTIONS', 'GET', 'PUT', 'DELETE'])
-@crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
+@conditionally(crossdomain(origin='*',
+  methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE']), DEBUG)
+@conditionally(login_required, not DEBUG)
 def pedigrees(pedigree_id=None):
   # Get a specific comment if requested
   if pedigree_id:
@@ -447,7 +458,9 @@ def pedigrees(pedigree_id=None):
 @app.route('/v1/samples', methods=['OPTIONS', 'POST', 'GET'])
 @app.route('/v1/samples/<sample_id>',
            methods=['OPTIONS', 'GET', 'PUT', 'DELETE'])
-@crossdomain(origin='*', methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'])
+@conditionally(crossdomain(origin='*',
+  methods=['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE']), DEBUG)
+@conditionally(login_required, not DEBUG)
 def samples(sample_id=None):
   # Get a specific comment if requested
   if sample_id:

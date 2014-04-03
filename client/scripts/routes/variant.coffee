@@ -19,7 +19,7 @@ App.VariantRoute = Ember.Route.extend
       payload = orderModel.getProperties('family_id', 'hgnc_symbol', 'chr_pos'
         'database', 'amino_change', 'gt_call', 'variant_link')
 
-      $.post 'http://localhost:8081/v1/sanger', payload, (data) =>
+      $.post 'http://localhost:8083/v1/sanger', payload, (data) =>
         orderModel.set 'isSending', no
         orderModel.set 'wasSent', yes
         orderModel.set 'body', data.message

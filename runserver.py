@@ -12,8 +12,8 @@ from scout.core import ctx
 if __name__ == '__main__':
 
   if DEBUG:
-    # Run in development mode
-    app.run('0.0.0.0', port=8081)
+    # Run in development mode, use development port
+    app.run('0.0.0.0', port=8083)
 
   else:
     # Set up logging to a file

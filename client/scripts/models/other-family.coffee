@@ -8,6 +8,6 @@ App.OtherFamily = Ember.Model.extend
 
 App.OtherFamily.camelizeKeys = yes
 App.OtherFamily.collectionKey = 'other_families'
-App.OtherFamily.url = 'http://localhost:8081/api/v1/other_families'
+App.OtherFamily.url = 'http://localhost:8083/api/v1/other_families'
 
 App.OtherFamily.adapter = Ember.NewRESTAdapter.create()

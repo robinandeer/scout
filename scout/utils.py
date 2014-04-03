@@ -7,7 +7,7 @@ import json
 
 
 # +--------------------------------------------------------------------+
-# |  JSON related
+# | JSON related
 # +--------------------------------------------------------------------+
 class MongoDocumentEncoder(json.JSONEncoder):
   def default(self, o):
@@ -25,3 +25,17 @@ def jsonify_mongo(*args, **kwargs):
                        separators=(',', ':'), ensure_ascii=False)
 
   return Response(payload, mimetype='application/json; charset=utf-8')
+
+
+# +--------------------------------------------------------------------+
+# | Conditional decorators
+# +--------------------------------------------------------------------+
+def conditionally(decorator, condition):
+  def resdec(f):
+    if not condition:
+      # A failing condition returns the original function
+      return f
+
+    # ... else the decorated function
+    return decorator(f)
+  return resdec

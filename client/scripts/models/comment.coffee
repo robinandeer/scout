@@ -53,5 +53,5 @@ App.Comment = Ember.Model.extend
 App.Comment.camelizeKeys = yes
 App.Comment.primaryKey = '_id'
 App.Comment.collectionKey = 'comments'
-App.Comment.url = 'http://localhost:8081/v1/comments'
+App.Comment.url = 'http://localhost:8083/v1/comments'
 App.Comment.adapter = Ember.NewRESTAdapter.create()

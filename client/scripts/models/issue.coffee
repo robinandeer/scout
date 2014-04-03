@@ -8,6 +8,6 @@ App.Issue = Ember.Model.extend
 
 App.Issue.camelizeKeys = yes
 App.Issue.collectionKey = 'issues'
-App.Issue.url = 'http://localhost:8081/v1/issues'
+App.Issue.url = 'http://localhost:8083/v1/issues'
 
 App.Issue.adapter = Ember.NewRESTAdapter.create()

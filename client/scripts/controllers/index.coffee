@@ -6,11 +6,6 @@ App.IndexController = Ember.ArrayController.extend
   queryParams: ['institute']
   instituteBinding: 'controllers.application.institute'
 
-  instituteObserver: (->
-    if @get 'institute'
-      @get('target').send 'instanceWasUpdated'
-  ).observes 'institute'
-
   actions:
     hideFamily: (family) ->
       # Add variant to the list of hidden elements (localStorage)

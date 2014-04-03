@@ -88,7 +88,7 @@ App.VariantController = Ember.ObjectController.extend
   comments: (->
     return App.Comment.find
       context: 'variant'
-      parent_id: @get 'uniqueId'
+      context_id: @get 'uniqueId'
       ecosystem: @get 'institute'
   ).property 'id'
 
