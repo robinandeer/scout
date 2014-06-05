@@ -15,7 +15,6 @@ from ..utils import get_current_time, PLURAL_METHODS, SINGLE_METHODS, \
   jsonify_mongo, HTTP_METHODS
 
 api = Blueprint('api', __name__, url_prefix='/api/v1')
-TORNADO_PORT = current_app.config.get('TORNADO_PORT')
 
 
 @api.route('/remote/static/<path:path>', methods=['GET'])
@@ -30,6 +29,7 @@ def remote_static(path):
     headers = {}
 
   # Route request to Tornado
+  TORNADO_PORT = current_app.config.get('TORNADO_PORT')
   url = 'http://clinical-db.scilifelab.se:{port}/static/{path}'\
         .format(port=TORNADO_PORT, path=path)
   cookie = {'institute': ','.join(['cmms'])}
@@ -215,6 +215,7 @@ def remote_api(path):
   if request.args.get('institute') and unauthorized:
     return Response('Error'), 401
 
+  TORNADO_PORT = current_app.config.get('TORNADO_PORT')
   url = 'http://clinical-db.scilifelab.se:{port}/{path}?{query}'\
         .format(port=TORNADO_PORT, path=path, query=request.query_string)
 
