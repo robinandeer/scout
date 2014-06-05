@@ -1,0 +1,35 @@
+<div class="a-layout--vertical">
+  <header class="a-toolbar slim bb">
+    <nav class="a-toolbar__group a-button__group">
+      {{#link-to "index" classNames="a-button"}}
+        <div class="a-button__body">Institutes</div>
+      {{/link-to}}
+      {{#link-to "issues" classNames="a-button"}}
+        <div class="a-button__body">Issues</div>
+      {{/link-to}}
+    </nav>
+
+    <div class="logo">Scout</div>
+
+    {{#ic-menu}}
+      {{#ic-menu-trigger classNames="a-button"}}
+        <div class="a-button__icon entypo user a-icon"></div>
+        <div class="a-button__body">
+          {{#if model.name}}
+            {{model.name}}
+          {{else}}
+            Login
+          {{/if}}
+        </div>
+      {{/ic-menu-trigger}}
+
+      {{#ic-menu-list classNames="expand-right"}}
+        {{#ic-menu-item on-select="goToSettings"}}Settings{{/ic-menu-item}}
+        {{#ic-menu-item on-select="logout"}}<a href="/logout">Logout</a>{{/ic-menu-item}}
+      {{/ic-menu-list}}
+    {{/ic-menu}}
+  </header>
+
+  {{outlet}}
+
+</div>

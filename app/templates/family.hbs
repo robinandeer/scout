@@ -1,0 +1,178 @@
+<div class="a-layout__panel--double a-layout__wrapper">
+  <div class="a-layout--vertical">
+    <div class="a-layout__panel--full bb">
+      <div class="variant-page-wrapper">
+        <div class="a-toolbar header-style slim b">
+          <div class="a-button">
+            <div class="a-button__icon entypo pencil a-icon"></div>
+            Edit case
+          </div>
+
+          <div class="a-button">
+            <div class="a-button__icon entypo add-user a-icon"></div>
+            <div>Add sample</div>
+          </div>
+
+          <div class="a-button">
+            <div class="a-button__icon entypo archive a-icon"></div>
+            <div>Archive case</div>
+          </div>
+        </div>
+
+        <div class="a-card a-bar--space-between mb--big">
+          <div class="a-bar__item br--listed center__wrapper regular">
+            <span class="a-icon entypo users mr--slim"></span>
+            Case {{familyId}}
+          </div>
+
+          <div class="a-bar__item br--listed center__wrapper regular">
+            <span class="a-icon entypo clock mr--slim"></span>
+            Last updated {{fromNow updateDate}}
+          </div>
+
+          <div class="a-bar__item br--listed center__wrapper regular">
+            <span class="a-icon entypo numbered-list mr--slim"></span>
+            {{#link-to "variants" instituteId model.id model.firstDatabase}}
+              Go to variants
+            {{/link-to}}
+          </div>
+        </div>
+
+        <div class="a-list--horizontal a-well regular mb--big">
+          {{#each sample in samples}}
+            <div class="a-list__item mr--listed">
+              <div class="a-card a-list">
+                <div class="a-list__item--header slim">{{sample.idn}}</div>
+                <div class="a-list__item small slim">Sex: {{sample.sex}}</div>
+                <div class="a-list__item small slim">
+                  Phenotype: {{sample.phenotype}}
+                </div>
+                <div class="a-list__item small slim">
+                  Inheritance models: {{sample.inheritance_model}}
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+    <div class="a-layout__panel--full a-layout__wrapper">
+      <div class="a-layout">
+        <div class="a-layout__panel--full a-layout__wrapper br--listed">
+          <div class="a-layout--vertical">
+            <div class="a-layout__panel a-toolbar header-style slim">
+              <div>Clinical activity</div>
+              <div>
+                <small>Show only</small>
+                {{view Ember.Select
+                   content=activityTypes
+                   valueBinding="selectedClinicalActivityType"}}</div>
+            </div>
+
+            <div class="a-layout__panel--full is-scrollable">
+              <div class="variant-page-wrapper">
+                {{#if clinicalActivities}}
+                  <div class="a-activity__feed mb--big">
+                    {{#each activity in clinicalActivities}}
+                      <div class="a-activity__divider">
+                        <div class="a-activity__divider__time">
+                          {{fromNow activity.createdAt}}
+                        </div>
+                      </div>
+
+                      <div class="a-activity__wrapper">
+                        <div class="a-activity">
+                          <div class="a-activity__icon entypo comment a-icon--small"></div>
+
+                          <div class="full-width">
+                            <div class="a-bar--space-between">
+                              <div class="a-activity__caption">
+                                {{{activity.caption}}}
+                              </div>
+
+                              <div {{action deleteActivity "clinical" activity}} class="a-button--naked">
+                                <div class="a-button__icon entypo circled-cross a-icon"></div>
+                              </div>
+                            </div>
+
+                            <div class="a-activity__body">
+                              {{activity.content}}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/if}}
+
+                {{activity-form contentBinding="clinicalActivityContent"
+                                onSubmit="postClinicalActivity"
+                                tagOptions=activityTypes
+                                selectedTagBinding="selectedClinicalTag"}}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {{#if isResearch}}
+          <div class="a-layout__panel--full a-layout__wrapper br--listed">
+            <div class="a-layout--vertical">
+              <div class="a-layout__panel a-toolbar header-style slim">
+                <div>Research activity</div>
+                <div>
+                  <small>Show only</small>
+                  {{view Ember.Select
+                     content=activityTypes
+                     valueBinding="selectedResearchActivityType"}}</div>
+              </div>
+
+              <div class="a-layout__panel--full is-scrollable">
+                <div class="variant-page-wrapper">
+                  {{#if researchActivities}}
+                    <div class="a-activity__feed mb--big">
+                      {{#each activity in researchActivities}}
+                        <div class="a-activity__divider">
+                          <div class="a-activity__divider__time">
+                            {{fromNow activity.createdAt}}
+                          </div>
+                        </div>
+
+                        <div class="a-activity__wrapper">
+                          <div class="a-activity">
+                            <div class="a-activity__icon entypo comment a-icon--small"></div>
+
+                            <div class="full-width">
+                              <div class="a-bar--space-between">
+                                <div class="a-activity__caption">
+                                  {{{activity.caption}}}
+                                </div>
+
+                                <div {{action deleteActivity "research" activity}} class="a-button--naked">
+                                  <div class="a-button__icon entypo circled-cross a-icon"></div>
+                                </div>
+                              </div>
+
+                              <div class="a-activity__body">
+                                {{activity.content}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      {{/each}}
+                    </div>
+                  {{/if}}
+
+                  {{activity-form contentBinding="researchActivityContent"
+                                  onSubmit="postResearchActivity"
+                                  tagOptions=activityTypes
+                                  selectedTagBinding="selectedResearchTag"}}
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>

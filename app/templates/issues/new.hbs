@@ -1,0 +1,24 @@
+<div class="issue-box center__wrapper">
+  <form {{action "saveIssue" on="submit"}}>
+    <h2>Submit new issue</h2>
+    {{input valueBinding="model.title"
+            placeholder="Title"
+            classNames="a-form__input mb"
+            required=""}}
+    {{textarea valueBinding="model.body"
+               placeholder="Describe your problem/request"
+               classNames="a-textarea mb"}}
+
+    {{#if isConfirmingSubmit}}
+      <button type="submit" class="a-button">
+        <div class="a-button__icon a-icon">&#59140;</div>
+        <div class="a-button__body">Are you sure?</div>
+      </button>
+    {{else}}
+      <button {{action "toggleProperty" "isConfirmingSubmit"}} class="a-button">
+        <div class="a-button__icon a-icon">&#128319;</div>
+        <div class="a-button__body">Send</div>
+      </button>
+    {{/if}}
+  </form>
+</div>

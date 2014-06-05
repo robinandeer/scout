@@ -1,0 +1,381 @@
+@import '../../node_modules/node-bourbon/assets/stylesheets/bourbon';
+@import 'utils/flex-box';
+@import 'entypo';
+
+// RESET
+a {
+  text-decoration: none;
+}
+
+// VARIABLES
+$border-color: #d8dae3;
+
+// +--------------------------------------------------------------------
+// |  WebKit font-smoothing - controvertial option, use responsibly!
+// | 
+// |  Values: none, antialiased (default), subpixel-antialiased
+// |
+// |  References:
+// |    1. http://maxvoltar.com/sandbox/fontsmoothing/
+// |    2. http://maxvoltar.com/archive/-webkit-font-smoothing
+// +--------------------------------------------------------------------
+@mixin font-smoothing($value: antialiased) {
+  -webkit-font-smoothing: $value;
+}
+
+// +--------------------------------------------------------------------
+// |  dotdotdot - Replaces ending of text with "..." when it
+// |  no longer fits in the container element.
+// | 
+// |  Usage:
+// |
+// |    .text__container {
+// |      @include dotdotdot;
+// |    }
+// +--------------------------------------------------------------------
+@mixin dotdotdot {
+  // Allow one line of text only
+  white-space: nowrap;
+
+  // Don't allow container to expand beyond parent container size
+  max-width: 100%;
+
+  // 'overflow' value must be different from 'visible'
+  overflow: hidden;
+
+  // This is where the magic happens
+  text-overflow: ellipsis;
+}
+
+// +-------------------------------------------------------------------+
+// | Basics - stuff needed for every project
+// +-------------------------------------------------------------------+
+// Include padding & border in the size of elements
+*,
+*:before,
+*:after {
+  @include box-sizing(border-box);
+}
+
+.fill-up {
+  height: 100%;
+  width: 100%;
+}
+
+// Indicate interaction
+.is-clickable {
+  cursor: pointer;
+}
+
+.is-scrollable {
+  overflow-y: scroll;  // Has to be scroll, not auto
+  -webkit-overflow-scrolling: touch;  // Momentum scrolling on iOS
+}
+
+.is-non-selectable {
+  @include user-select(none);
+}
+
+.is-fixed-size {
+  @include flex-shrink(0);
+}
+
+.is-highlighted {
+  background: rgba(#edbb0f, .1) !important;
+}
+
+// +-------------------------------------------------------------------+
+// | Quick padding
+// +-------------------------------------------------------------------+
+.slim {
+  padding: 5px;
+}
+
+.slim--stretched {
+  @extend .slim;
+  padding-top: 3px;
+  padding-bottom: 3px; 
+}
+
+.slim--right {
+  padding-right: 5px;
+}
+
+.slim--squashed {
+  padding: 0 5px;
+}
+
+.regular {
+  padding: 10px;
+}
+
+.loose {
+  padding: 15px;
+}
+
+.mb {
+  margin-bottom: 15px;
+}
+
+.mb--big {
+  margin-bottom: 35px;
+}
+
+.mr {
+  margin-right: 15px;
+}
+
+.mr--big {
+  margin-right: 35px;
+}
+
+.mr--slim {
+  margin-right: 5px;
+}
+
+.mr--listed {
+  &:not(:last-of-type) {
+    margin-right: 15px;
+  }
+}
+
+// +-------------------------------------------------------------------+
+// | Single borders
+// +-------------------------------------------------------------------+
+.b {
+  border: 1px solid $border-color;
+}
+
+.bb {
+  border-bottom: 1px solid $border-color;
+}
+
+.bt {
+  border-top: 1px solid $border-color;
+}
+
+.br {
+  border-right: 1px solid $border-color;
+}
+
+.br--listed {
+  &:not(:last-of-type) {
+    border-right: 1px solid $border-color;
+  }
+}
+
+.bl {
+  border-left: 1px solid $border-color;
+}
+
+// +-------------------------------------------------------------------+
+// | Text transforms
+// +-------------------------------------------------------------------+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.dotdotdot {
+  @include dotdotdot;
+}
+
+h2 {
+  font-weight: normal;
+}
+
+// Shrink the font size for greater information density without
+// sacrificing readability
+.small,
+.small-font {
+  font-size: 80%;
+}
+
+.big-font {
+  font-size: 120%;
+}
+
+.full-width {
+  width: 100%;
+}
+
+@import 'components/a-list';
+@import 'components/a-bar';
+@import 'components/a-layout';
+@import 'components/a-toolbar';
+@import 'components/a-button';
+@import 'components/a-icon';
+@import 'components/a-card';
+@import 'components/a-activity';
+@import 'components/a-progress';
+@import 'components/a-dropdown';
+@import 'components/a-notify';
+@import 'components/a-table';
+@import 'components/a-form';
+@import 'components/a-popover';
+
+// Center content easily
+.center__wrapper {
+  @include display(flex);
+  @include justify-content(center);
+  @include align-items(center);
+}
+
+.is-notifying {
+  color: #2b84d3;
+}
+
+html,
+body {
+  @extend .fill-up;
+  overflow: hidden;
+}
+
+ic-menu {
+  @extend .a-dropdown__wrapper;
+}
+
+ic-menu-list {
+  @extend .a-dropdown;
+}
+
+.a-well {
+  $well-border-color: darken($border-color, 5%);
+  background: rgba(#000, .05);
+  border: 1px solid $well-border-color;
+  box-shadow: inset 0 1px 2px -1px rgba(#000, .1);
+  border-radius: 5px;
+}
+
+// Toolbar + Card
+.a-toolbar + .a-card {
+  border-top: 0;
+}
+
+.header-style {
+  background: lighten($border-color, 10%);
+}
+
+.stretch-self {
+  @include align-self(stretch);
+}
+
+// +-------------------------------------------------------------------+
+// | Variants Page (big list)
+// +-------------------------------------------------------------------+
+// Shrink the font size for greater information density without
+// sacrificing readability
+.variants-main {
+  @extend .small-font;
+}
+
+.variants-header {
+  @extend .small-font;
+  box-shadow: 0 0 2px -1px #333;
+}
+
+.filter-panel {
+  @extend .small-font;
+}
+
+.rank-score-column {
+  &.active,
+  &.active + div {
+    background: #2b84d3;
+    color: #fff;
+    border-right-color: rgba(#000, .2);
+  }
+}
+
+// Grey out table cells without values to show
+.a-bar__item {
+  &.undef {
+    background-color: rgba(#000, .02);
+    color: rgba(#000, 0);
+  }
+}
+
+.a-notify--bubble {
+  &.LOW,
+  &.is-found {
+    background-color: darken(#edbb0f, 2%);
+    box-shadow: 0px 0px 5px #edbb0f;
+  }
+
+  &.MIDDLE {
+    background-color: #de691b;
+    box-shadow: 0px 0px 5px #ee8a10;
+  }
+
+  &.TOP,
+  &.is-common {
+    background-color: #b12420;
+    box-shadow: 0px 0px 5px #e0332d;
+  }
+}
+
+// Text should be visible in popovers even when table cell is greyed out
+.always-visible-text {
+  color: #444;
+}
+
+.flex-start {
+  @include align-items(flex-start);
+}
+
+// VARIANT
+.variant-page-wrapper {
+  padding: 30px 15px;
+  max-width: 1000px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.max-height-135 {
+  max-height: 135px;
+}
+
+.logo--omim {
+  font-family: 'Palatino Linotype';
+  font-weight: bold;
+  color: #2A6936;
+}
+
+.ic-modal-form {
+  background: rgba(#000, .7);
+  z-index: 9999;
+}
+
+ic-modal-title {
+  display: block;
+  text-align: center;
+  font-size: 150%;
+}
+
+ic-modal-main {
+  display: block;
+  max-width: 550px;
+  border-color: #000;
+}
+
+.email__wrapper {
+  border: 1px solid $border-color;
+  background: lighten($border-color, 10%);
+  padding: 10px 20px;
+}
+
+// ISSUE
+.issue-box {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 650px;
+  padding: 50px;
+
+  textarea {
+    min-height: 200px;
+  }
+}
+

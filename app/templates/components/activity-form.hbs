@@ -1,0 +1,20 @@
+<form {{action "submit" on="submit"}} class="a-activity__form">
+  {{textarea
+      valueBinding="content"
+      placeholder=writePrompt
+      classNames="a-textarea"
+      classBinding="isFailing" }}
+
+  <div class="a-bar--space-between">
+    <button class="a-button mr--listed" type="submit">
+      <span class="a-button__icon a-icon">&#59160;</span>
+      {{submitPrompt}}
+    </button>
+    
+    {{#if tagOptions}}
+      {{view Ember.Select
+         content=tagOptions
+         valueBinding="selectedTag"}}
+    {{/if}}
+  </div>
+</form>

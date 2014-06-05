@@ -1,5 +1,22 @@
-# Mac OS X hidden files
+# Numerous always-ignore extensions
+*.diff
+*.err
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.vi
+*~
+*.sass-cache
+
+# OS or Editor folders
 .DS_Store
+.cache
+nbproject
+Thumbs.db
+*.sublime-project
+*.sublime-workspace
  
 *.py[cod]
  
@@ -38,29 +55,22 @@ nosetests.xml
 .pydevproject
 .tmp
 DEV
-node_modules
 dev-server
 dev.txt
 
 *.py[cod]
 
-# Databses
-*.sqlite*
-
 # Docs
 docs/_build
 
-# Secrets
-scout/secrets.py
+# NPM packages folder.
+node_modules/
+
+# Brunch folder for temporary files.
+tmp/
+
+# Brunch output folder.
+public/
 
 # Bower
-client/static/js/vendor
-
-# SASS
-.sass-cache
-client/styles/vendor/*
-
-# Static files in Flask
-scout/static/styles/*
-scout/static/js/*
-scout/static/img/*
+bower_components/

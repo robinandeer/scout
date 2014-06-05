@@ -1,0 +1,25 @@
+.a-progress {
+	// Often needs a neutral background to look OK
+	background: #fff;
+	border: 1px solid darken($border-color, 10%);
+	min-width: 250px;  // The least width to look OK
+	width: 100%;  		 // Usually what we want
+	// border-radius: 5px;
+}
+
+.a-progress__bar {
+	// border-radius: 5px 0 0 5px;
+	@extend .a-bar--space-between;
+	background: #d7f9d5;
+  text-align: right;
+  padding: 5px;
+  border-right: 1px solid rgba(#000, .1);
+}
+
+.a-progress__bar--complete {
+	@extend .a-progress__bar;
+	// border-radius: 5px;
+	border: 0;
+	background: darken(#d7f9d5, 7%);
+	color: rgba(#000, .3);
+}

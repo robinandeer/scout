@@ -1,0 +1,28 @@
+<div class="a-layout__wrapper a-layout__panel--full">
+
+  <div class="a-layout">
+
+    <div {{bind-attr class="familyIsLoaded:a-layout__panel--minimal:a-layout__panel--full :loose :br--listed"}}>
+      {{#link-to "institute" id}}
+        <div class="mb">{{id}}</div>
+      {{/link-to}}
+
+      {{#unless familyIsLoaded}}
+      <div class="a-progress mb">
+        <div class="a-progress__bar" style="width: 0%">0%</div>
+      </div>
+
+      <div {{action "createFamily"}} class="a-button regular">
+        <div class="a-button__icon entypo plus a-icon"></div>
+        <div class="a-button__body">Open new case</div>
+      </div>
+      {{/unless}}
+    </div>
+
+    {{outlet "second-panel"}}
+
+    {{outlet}}
+
+  </div>
+
+</div>

@@ -1,0 +1,42 @@
+.a-toolbar {
+	@extend .a-bar--space-between;
+
+	border-bottom: 1px solid $border-color;
+}
+
+.a-toolbar--standalone {
+	@extend .a-toolbar;
+	
+	border-radius: 5px;
+	border: 1px solid $border-color;
+}
+
+.a-toolbar--right {
+	@extend .a-toolbar;
+
+	@include justify-content(flex-end);
+}
+
+// Groups toolbar items into groups
+.a-toolbar__group {
+	// Place items next to each other
+	@include display(flex);
+	@include align-items(center);
+}
+
+.a-toolbar__group__item {
+	&:not(:last-of-type) {
+		margin-right: 5px;
+	}
+}
+
+.a-toolbar__divider {
+	// This is only here to center the divider vertically
+	@include align-self(stretch);
+	@include display(flex);
+	@include justify-content(center);
+	@include flex-direction(column);
+
+	border-right: 1px solid lighten(#b3b8c3, 10%);
+	margin: 0 5px;
+}

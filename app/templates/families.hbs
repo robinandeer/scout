@@ -1,0 +1,46 @@
+<div class="a-layout__wrapper a-layout__panel--full br--listed">
+
+  <div class="a-layout--vertical">
+
+    <div class="header-style slim bb text-center">Open cases</div>
+    
+    <div class="a-layout__panel--full is-scrollable loose">
+      {{#each family in model}}
+        <div class="a-card a-bar--space-between regular mb">
+          {{#link-to "family" family classNames="a-bar__item"}}
+            {{family.id}}
+          {{/link-to}}
+
+          {{#link-to "variants" instituteId family.id family.firstDatabase classNames="a-bar__item"}}
+            Variants
+          {{/link-to}}
+
+          <div {{bind-attr class="familyIsLoaded:a-bar__item--half:a-bar__item familyIsLoaded:a-bar--end:a-bar--space-between :stretch-self"}}>
+            {{#unless familyIsLoaded}}
+              <div class="a-button--naked mr">
+                <small>{{fromNow family.updateDate}}</small>
+              </div>
+            {{/unless}}
+
+            {{#ic-menu classNames="a-button--naked"}}
+              {{#ic-menu-trigger classNames="a-button__icon entypo three-dots a-icon"}}{{/ic-menu-trigger}}
+              {{#ic-menu-list classNames="expand-right"}}
+                {{#ic-menu-item on-select="hideFamily" model=family}}
+                  Hide
+                {{/ic-menu-item}}
+                {{#ic-menu-item on-select="moveFamily" model=family}}
+                  Move to research
+                {{/ic-menu-item}}
+                {{#ic-menu-item on-select="closeFamily" model=family}}
+                  Mark as closed
+                {{/ic-menu-item}}
+              {{/ic-menu-list}}
+            {{/ic-menu}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+  </div>
+
+</div>

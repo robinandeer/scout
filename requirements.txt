@@ -1,9 +1,15 @@
-requests
+# Conda installables
+arrow
 Flask
-Flask-MongoEngine
-Flask-Mail
-Flask-Login
-Flask-OAuthlib
-Flask-SSLify
-pyOpenSSL
+requests
+
 github3.py
+pyOpenSSL
+
+# Flask extensions
+Flask-Login
+Flask-Mail
+Flask-OAuthlib
+Flask-PyMongo
+Flask-Script
+Flask-SSLify

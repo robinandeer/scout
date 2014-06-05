@@ -1,0 +1,95 @@
+.a-button {
+	// Indicate clickability
+	@extend .is-clickable;
+	@extend .is-non-selectable;
+
+	// Reset "button" tag styles
+	display: inline-block;
+	background: transparent;
+
+	@include display(flex);
+	@include align-items(center);
+
+	border: 1px solid $border-color;
+	padding: .3em .6em;
+	border-radius: 3px;
+
+	zoom: 1;
+	line-height: normal;
+	white-space: nowrap;
+	vertical-align: baseline;
+
+	background: #fff;
+
+	&:hover {
+		// Mimic "clicky" appearence
+		background: darken(#fff, 5%);
+		box-shadow: 0 1px 3px -1px darken($border-color, 5%);
+	}
+
+	&:active,
+	&.active,
+	&.is-active {
+		background: rgba(#000, .03);
+		box-shadow: 0 0 0 #000;
+	}
+}
+
+.a-button--stretched {
+	@extend .a-button;
+
+	// Take up available space
+	@include align-self(stretch);
+}
+
+.a-button--naked {
+	@extend .a-button;
+	// Make borders invisible (not to skrew with layout)
+	border-color: rgba(#000, 0);
+
+	// Don't need as much horizontal padding since borders "are gone"
+	padding: 3px 0;
+
+	&:hover {
+		// Supress normal button effects
+		background: inherit;
+		box-shadow: 0 0 0 #000;
+
+		> .a-icon {
+			color: #b3b8c3;
+		}
+	}
+}
+
+.a-button__icon {
+	@include align-self(center);
+  margin-right: 8px;
+}
+
+
+// +-------------------------------------------------------------------+
+// |  Button group
+// +-------------------------------------------------------------------+
+.a-button__group {
+	// Place buttons next to each other
+  @include display(flex);
+
+  > .a-button {
+    border-radius: 0;
+
+    // xxx-of-type is compatible with Handlebars metamorphs
+    // simple first/last-child will break down when using e.g. Ember.js
+    &:not(:first-of-type) {
+      border-left: none;
+      border-radius: 0;
+    }
+
+    &:first-of-type {
+      border-radius: 3px 0 0 3px;
+    }
+
+    &:last-of-type {
+      border-radius: 0 3px 3px 0;
+    }
+  }
+}

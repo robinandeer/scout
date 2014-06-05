@@ -1,0 +1,43 @@
+// +-------------------------------------------------------------------+
+// | Hovering notify
+// +-------------------------------------------------------------------+
+.a-notify {
+  @extend .a-bar--center;
+  background: darken($border-color, 15%);
+  color: #fff;
+  border-radius: 20px;
+  font-size: 75%;
+  padding: 1px 5px 1px 4px;
+  text-decoration: none;
+  width: 20px;
+}
+
+.a-notify--fake {
+  @extend .a-notify;
+  background: none;
+}
+
+.a-notify--bubble {
+  @extend .a-notify;
+
+  color: rgba(#000, 0);
+  width: 10px;
+  height: 10px;
+  // box-shadow: 0px 0px 5px $flat-green-1;
+  cursor: pointer;
+
+  &.is-positive {
+    background-color: #1eb18a;
+    box-shadow: 0px 0px 5px #1eb18a;
+  }
+
+  &.is-negative {
+    background-color: #e0332d;
+    box-shadow: 0px 0px 5px #e0332d;
+  }
+
+  &.is-passive {
+    box-shadow: inset 0 0 0 2px darken($border-color, 10%);
+    background-color: rgba(#000, 0);
+  }
+}

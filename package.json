@@ -1,36 +1,44 @@
 {
-  "name": "scout",
-  "version": "0.0.1",
-  "private": true,
-  "description": "Web interface to browse and evaluate clinical MPS variants",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "tapas-with-ember",
+  "description": "A Brunch skeleton for rapid Ember development. Including Ember install scripts, and generators.",
+  "author": {
+    "name": "Robin Andeer",
+    "email": "@robinandeer",
+    "url": "http://twitter.com/robinandeer"
   },
+  "version": "0.1.0",
+  "homepage": "https://github.com/robinandeer/tapas-with-ember",
   "repository": {
     "type": "git",
-    "url": "https://robinandeer@github.com/robinandeer/scout.git"
+    "url": "https://github.com/robinandeer/tapas-with-ember.git"
   },
-  "author": "Robin Andeer",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/robinandeer/scout/issues"
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "start": "cake server",
+    "test": "./node_modules/.bin/testem"
+  },
+  "dependencies": {
+    "adm-zip": "~0.4.4",
+    "auto-reload-brunch": "~1.7.1",
+    "bower": "~1.3.2",
+    "brunch": "=1.7.13",
+    "clean-css-brunch": "~1.7.1",
+    "coffee-script": "~1.7.1",
+    "coffee-script-brunch": "~1.8.0",
+    "css-brunch": "~1.7.0",
+    "digest-brunch": "^1.2.1",
+    "ember-handlebars-brunch": "~1.2.0",
+    "github": "~0.1.13",
+    "javascript-brunch": "~1.7.1",
+    "node-bourbon": "^1.2.3",
+    "sass-brunch": "^1.8.1",
+    "semver": "^2.3.0",
+    "uglify-js-brunch": "~1.7.6"
   },
   "devDependencies": {
-    "connect-livereload": "~0.3.2",
-    "gulp": "~3.5.0",
-    "gulp-concat": "~2.1.7",
-    "gulp-sass": "~0.2.3",
-    "gulp-livereload": "~0.2.0",
-    "coffee-script": "~1.6.3",
-    "gulp-coffee": "~1.3.0",
-    "tiny-lr": "0.0.5",
-    "gulp-ruby-sass": "~0.2.0",
-    "gulp-util": "~2.2.13",
-    "express": "~3.4.8",
-    "ejs": "~0.8.5",
-    "gulp-if": "0.0.4",
-    "gulp-uglify": "~0.2.0",
-    "gulp-csso": "~0.2.3",
-    "gulp-replace": "~0.2.0"
+    "qunitjs": "*",
+    "testem": "~0.5.15"
   }
 }

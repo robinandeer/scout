@@ -1,0 +1,439 @@
+<div class="a-layout__wrapper a-layout__panel--full">
+
+  <div class="a-layout">
+    <div {{bind-attr class=":a-layout__wrapper variantIsLoaded:a-layout__panel--quarter:a-layout__panel--full :a-floater__wrapper :br--listed"}}>
+      <div class="a-layout--vertical">
+
+        {{! "Floating" headers }}
+        <div class="variants-header a-list__item--header bb">
+
+          <div class="a-bar--space-between">
+            <div class="dotdotdot slim a-bar__item--half br--listed">Rank score</div>
+            <div class="dotdotdot slim a-bar__item--half br--listed">Gene</div>
+
+            {{#unless variantIsLoaded}}
+              <div class="dotdotdot slim a-bar__item--half br--listed">1000 Genomes</div>
+              <div class="dotdotdot slim a-bar__item--half br--listed">PolyPhen</div>
+              <div class="dotdotdot slim a-bar__item br--listed">Gene annotation</div>
+              <div class="dotdotdot slim a-bar__item br--listed">Func. annotation</div>
+              {{#unless researchMode}}
+                <div class="dotdotdot slim a-bar__item--double br--listed">Disease group</div>
+                <div class="dotdotdot slim a-bar__item--half br--listed">Disease gene model</div>
+              {{/unless}}
+              <div class="dotdotdot slim a-bar__item--double br--listed">Inheritance models</div>
+              <div class="dotdotdot slim a-bar__item--half br--listed">HGMD</div>
+              <div class="dotdotdot slim a-bar__item--half br--listed">Settings</div>
+            {{/unless}}
+          </div>
+        </div>
+
+        <div class="a-layout__panel--full is-scrollable variants-main">
+          {{#each variant in model}}
+            <div class="a-list__item a-bar--space-between variant-list-item">
+              {{!-- COLUMN --}}
+              {{#link-to "variant" variant
+                         classNames="dotdotdot slim a-bar__item--half a-bar--space-around rank-score-column br"}}
+                <div>{{variant.rankScore}}</div>
+
+                {{#if variant.hasCompounds}}
+                  <div class="a-notify">
+                    {{variant.individualRankScore}}
+                  </div>
+                {{else}}
+                  {{!-- Just fill-out --}}
+                  <div class="a-notify--fake"></div>
+                {{/if}}
+              {{/link-to}}
+              
+              {{!-- COLUMN --}}
+              <div class="dotdotdot slim a-bar__item--half br--listed">
+                {{variant.hgncSymbol}}
+              </div>
+              
+              {{#unless variantIsLoaded}}
+                {{!-- COLUMN --}}
+                <div {{bind-attr class=":slim :a-bar__item--half variant.hbvdb:a-bar--space-between variant.thousandG::undef :br--listed"}}>
+                  {{#if variant.hbvdb}}
+                    <div {{bind-attr class=":a-notify--bubble variant.hbvdbHuman"}}>
+                      &nbsp;
+                    </div>
+                  {{/if}}
+
+                  <div class="text-right">
+                    {{fallback variant.thousandG}}
+                  </div>
+
+                  {{#if variant.frequencies}}
+                    {{#a-popover triggerdBy="hover" direction="right" classNames="slim"}}
+                      <div class="always-visible-text">
+                        {{#each property in variant.frequencies}}
+                          <div class="a-bar--space-between">
+                            <div class="dotdotdot slim">
+                              <strong>{{property.name}}</strong>
+                            </div>
+                            <div class="slim text-right">
+                              {{fallback property.value}}
+                            </div>
+                          </div>
+                        {{/each}}
+                      </div>
+                    {{/a-popover}}
+                  {{/if}}
+                </div>
+
+                {{!-- COLUMN --}}
+                <div {{bind-attr class=":slim :a-bar__item--half variant.polyphenDivHuman::undef :br--listed"}}>
+                  <div class="text-right">
+                    {{fallback variant.polyphenDivHuman}}
+                  </div>
+
+                  {{#if variant.severities}}
+                    {{#a-popover triggerdBy="hover" direction="right" classNames="slim"}}
+                      <div class="always-visible-text">
+                        {{#each property in variant.severities}}
+                          <div class="a-bar--space-between">
+                            <div class="dotdotdot slim">
+                              <strong>{{property.name}}</strong>
+                            </div>
+                            <div class="slim text-right">
+                              {{fallback property.value}}
+                            </div>
+                          </div>
+                        {{/each}}
+                      </div>
+                    {{/a-popover}}
+                  {{/if}}
+                </div>
+
+                {{!-- COLUMN --}}
+                <div {{bind-attr class=":dotdotdot :slim :a-bar__item variant.geneAnnotation::undef :br--listed"}}>
+                  {{fallback variant.geneAnnotation}}
+                </div>
+
+                {{!-- COLUMN --}}
+                <div {{bind-attr class=":dotdotdot :slim :a-bar__item variant.functionalAnnotation::undef :br--listed"}}>
+                  {{fallback variant.functionalAnnotation}}
+                </div>
+
+                {{#unless researchMode}}
+                  {{!-- COLUMN --}}
+                  <div {{bind-attr class=":dotdotdot :slim :a-bar__item--double :br--listed variant.diseaseGroup::undef"}}>
+                    {{fallback variant.diseaseGroup}}
+                  </div>
+
+                  {{!-- COLUMN --}}
+                  <div class="dotdotdot slim a-bar__item--half br--listed">
+                    {{variant.diseaseGeneModel}}
+                  </div>
+                {{/unless}}
+
+                {{!-- COLUMN --}}
+                <div class="a-bar__item--double slim--squashed a-bar br--listed">
+                  {{#each model in variant.geneModels}}
+                    <div {{bind-attr title="model"}} class="dotdotdot br--listed slim">{{model}}</div>
+                  {{/each}}
+
+                  {{#if variant.hasCompounds}}
+                    {{#a-popover triggerdBy="hover" direction="left" classNames="slim"}}
+                      <table class="a-table">
+                        <thead class="a-table__head">
+                          <tr class="a-table__row">
+                            <th class="a-table__cell--header">
+                              Combined score
+                            </th>
+                            <th class="a-table__cell--header">Rank score</th>
+                            {{#each sample in variant.compounds.content.0.samples}}
+                              <th class="a-table__cell--header dotdotdot">
+                                {{sample}}
+                              </th>
+                            {{/each}}
+                            <th class="a-table__cell--header">
+                              Inheritance models
+                            </th>
+                            <th class="a-table__cell--header">
+                              Gene annotations
+                            </th>
+                            <th class="a-table__cell--header">
+                              Functional annotation
+                            </th>
+                          </tr>
+                        </thead>
+
+                        <tbody class="a-table__body">
+                          <tr class="a-table__row is-highlighted">
+                            <td class="a-table__cell dotdotdot">
+                              {{variant.gtData.combinedScore}}
+                            </td>
+
+                            <td class="a-table__cell dotdotdot">
+                              {{#link-to "variant" variant.gtData.variant}}
+                                {{variant.gtData.rankScore}}
+                              {{/link-to}}
+                            </td>
+                            
+                            {{#each gtcall in variant.gtData.gtcalls}}
+                              <td class="a-table__cell dotdotdot text-center">
+                                {{gtcall}}
+                              </td>
+                            {{/each}}
+
+                            <td class="a-table__cell dotdotdot">
+                              {{variant.gtData.geneModel}}
+                            </td>
+
+                            <td class="a-table__cell dotdotdot">
+                              {{variant.gtData.geneAnnotation}}
+                            </td>
+
+                            <td class="a-table__cell dotdotdot">
+                              {{variant.gtData.functionalAnnotation}}
+                            </td>
+                          </tr>
+
+                          {{#each compound in variant.compounds}}
+                            <tr class="a-table__row">
+                              <td class="a-table__cell dotdotdot">
+                                {{compound.combinedScore}}
+                              </td>
+
+                              <td class="a-table__cell dotdotdot">
+                                {{#link-to "variant" compound.variant}}
+                                  {{compound.rankScore}}
+                                {{/link-to}}
+                              </td>
+
+                              {{#each gtcall in compound.gtcalls}}
+                                <td class="a-table__cell dotdotdot text-center">
+                                  {{gtcall.genotype}}
+                                </td>
+                              {{/each}}
+
+                              <td class="a-table__cell dotdotdot">
+                                {{compound.geneModel}}
+                              </td>
+
+                              <td class="a-table__cell dotdotdot">
+                                {{compound.geneAnnotation}}
+                              </td>
+
+                              <td class="a-table__cell dotdotdot">
+                                {{compound.functionalAnnotation}}
+                              </td>                              
+                            </tr>
+                          {{/each}}
+                        </tbody>
+                      </table>
+                    {{/a-popover}}
+                  {{/if}}
+                </div>
+
+                {{!-- COLUMN --}}
+                <div {{bind-attr class=":dotdotdot :slim :a-bar__item--half variant.hgmdVariantType::undef :br--listed"}}>
+                  {{fallback variant.hgmdVariantType}}
+                </div>        
+
+                {{!-- COLUMN --}}
+                <div class="a-bar__item--half a-bar--center a-icon entypo three-dot slim--squashed br--listed"></div>
+              {{/unless}}
+
+            </div>
+          {{/each}}
+
+          <div class="a-list__item slim">
+            <div {{action "loadMore"}} class="a-button center__wrapper">
+              <div class="a-button__icon a-icon entypo infinity"></div>
+              <div class="a-button__body big-font">Load more...</div>
+            </div>
+          </div>
+        </div>
+        
+        {{#unless variantIsLoaded}}
+          {{! "Floating" footer }}
+          <div class="a-layout__footer a-toolbar slim bt">
+            <div class="a-button__group">
+              {{#link-to "institute" instituteId classNames="a-button"}}
+                <div class="a-button__body">
+                  Institue: {{instituteId}}
+                </div>
+              {{/link-to}}
+
+              {{#link-to "family" instituteId familyId classNames="a-button"}}
+                <div class="a-button__body">Case: {{familyId}}</div>
+              {{/link-to}}
+            </div>
+
+            <div class="center__wrapper">Database: {{database}}</div>
+
+            <div class="a-button__group">
+              <div {{action "doFilter"}} class="a-button">
+                <div class="a-button__icon a-icon entypo ccw"></div>
+                <div class="a-button__body">Update variants</div>
+              </div>
+
+              <div {{action "toggleProperty" "isShowingFilters"}} class="a-button">
+                <div class="a-button__icon a-icon entypo hair-cross"></div>
+                <div class="a-button__body">
+                  {{#unless isShowingFilters}} Show {{else}} Hide {{/unless}}
+                  filters
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/unless}}
+      </div>
+
+    </div>
+
+    {{#unless variantIsLoaded}}
+      {{! FILTER PANEL }}
+      {{#if isShowingFilters}}
+        <div class="filter-panel a-layout__panel--quarter a-list br--listed">
+          <div class="a-bar--space-between slim bb">
+            <div {{action "doFilterClinically"}} class="a-button">
+              <div class="a-button__icon a-icon entypo lifebuoy"></div>
+              <div class="a-button__body">Clinical filter</div>
+            </div>
+
+            <div {{action "doClearFilters"}} class="a-button">
+              <div class="a-button__icon a-icon entypo circled-cross"></div>
+              <div class="a-button__body">Clear</div>
+            </div>
+          </div>
+          <form {{action "submitdiv" on="submit"}}>
+            <div class="a-list__item--header slim text-center">
+              Frequency cutoffs
+            </div>
+
+            <div class="a-list__item a-choice__wrapper regular">
+              <div class="a-choice">
+                {{view Ember.RadioButton
+                    name="relation"
+                    selectionBinding="relation"
+                    value="LESSER"}}
+                <div class="a-choice__label">Less than</div>
+              </div>
+
+              <div class="a-choice">
+                {{view Ember.RadioButton
+                    name="relation"
+                    selectionBinding="relation"
+                    value="GREATER"}}
+                <div class="a-choice__label">Greater than</div>
+              </div>
+            </div>
+
+            <div class="regular">
+              {{input id="hbvdb"
+                      type="number"
+                      step="0.01"
+                      valueBinding="hbvdb"
+                      placeholder="HBVdb"
+                      classNames="a-form__input"
+                      required=""}}
+            </div>
+
+            <div class="regular">
+              {{input id="genomes"
+                      type="number"
+                      step="0.01"
+                      valueBinding="thousand_g"
+                      placeholder="1000 Genomes"
+                      classNames="a-form__input"
+                      required=""}}
+            </div>
+
+            <div class="regular">
+              {{input id="dbSNP129"
+                      type="number"
+                      step="0.01"
+                      valueBinding="dbsnp129"
+                      placeholder="dbSNP 129"
+                      classNames="a-form__input"
+                      required=""}}
+            </div>
+
+            <div class="regular">
+              {{input id="dbSNP132"
+                      type="number"
+                      step="0.01"
+                      valueBinding="dbsnp132"
+                      placeholder="dbSNP 132"
+                      classNames="a-form__input"
+                      required=""}}
+            </div>
+
+            <div class="regular">
+              {{input id="esp6500"
+                      type="number"
+                      step="0.01"
+                      valueBinding="esp6500"
+                      placeholder="esp6500"
+                      classNames="a-form__input"
+                      required=""}}
+            </div>
+
+            <div class="a-list__item--header bt slim text-center">
+              Database and gene search
+            </div>
+
+            <div class="a-list__item a-choice__wrapper regular">
+              {{#each db in filter.clinical_db_gene_annotation}}
+                <div class="a-choice">
+                  <div class="a-choice__label">{{db}}</div>
+                  {{view Ember.RadioButton
+                      name="database"
+                      selectionBinding="database"
+                      value=db}}
+                </div>
+              {{/each}}
+            </div>
+
+            <div class="regular">
+              {{input id="gene-name"
+                      type="text"
+                      valueBinding="gene_name"
+                      placeholder="HGNC gene symbol"
+                      classNames="a-form__input"
+                      required=""}}
+            </div>
+
+            <div class="regular">
+              {{input id="offset"
+                      type="number"
+                      valueBinding="offset"
+                      classNames="a-form__input"
+                      placeholder="Skip first..."
+                      required=""}}
+            </div>
+
+            {{! Multiple dynamic filter panels}}
+            {{#each group in filterGroups}}
+              <div class="a-list__item--header bt slim text-center">
+                {{group.name}}
+              </div>
+
+              {{#each filter in group.filters}}
+                <div class="regular">
+                  <div class="a-checkbox__wrapper">
+                    <div class="a-checkbox__box">
+                      {{input type="checkbox"
+                              checkedBinding="filter.property"
+                              classNames="toggle-slider__input"}}
+                    </div>
+                    <div class="a-checkbox__caption dotdotdot">
+                      {{filter.name}}
+                    </div>
+                  </div>
+                </div>
+              {{/each}}
+            {{/each}}
+
+          </form>
+        </div>
+      {{/if}}
+    {{/unless}}
+
+    {{outlet}}
+  </div>
+
+</div>

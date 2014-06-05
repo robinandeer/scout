@@ -1,0 +1,10 @@
+<main class="a-layout__panel--full center__wrapper">
+  {{#each institute in model.institutes}}
+    {{#link-to "institute" institute classNames="a-card is-clickable loose mr--listed"}}
+      <div class="mb">{{institute}}</div>
+      <div class="a-progress">
+        <div class="a-progress__bar" style="width: 0%">0%</div>
+      </div>
+    {{/link-to}}
+  {{/each}}
+</main>

@@ -1,12 +1,9 @@
 {
-  "name": "scout",
-  "version": "0.0.1",
-  "homepage": "https://github.com/robinandeer/scout",
-  "authors": [
-    "Robin Andeer <robin.andeer@gmail.com>"
-  ],
-  "description": "Web interface to browse and evaluate clinical MPS variants",
-  "license": "MIT",
+  "name": "tapas-with-ember",
+  "version": "0.1.0",
+  "homepage": "https://github.com/mutewinter/tapas-with-ember",
+  "authors": [],
+  "license": "",
   "private": true,
   "ignore": [
     "**/.*",
@@ -16,15 +13,9 @@
     "tests"
   ],
   "dependencies": {
-    "ember": "http://builds.emberjs.com/canary/ember.js",
-    "ember-min": "http://builds.emberjs.com/canary/ember.min.js",
-    "jquery": ">=2.0.3",
-    "handlebars": ">=1.3.0",
-    "normalize-css": ">=2.1.3",
-    "momentjs": ">=2.1.0",
-    "ember-model": ">=0.0.10"
-  },
-  "resolutions": {
-    "ember": "e-tag:9a8b28f84"
+    "handlebars": "~1.3.0",
+    "jquery": "~1.11.1",
+    "normalize-css": "~3.0.1",
+    "momentjs": "~2.6.0"
   }
 }

@@ -1,0 +1,13 @@
+<div class="issue-box">
+  {{#if model.isLoading}}
+    <div class="center__wrapper">
+      <img src="/static/img/loader.gif">
+    </div>
+  {{else}}
+    <h2>
+      <a {{bind-attr href="url"}}>{{title}}</a>
+      <small>{{fromNow createdAt}}</small>
+    </h2>
+    {{{html}}}
+  {{/if}}
+</div>

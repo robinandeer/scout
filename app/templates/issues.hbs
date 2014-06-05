@@ -1,0 +1,27 @@
+<div class="a-layout__panel--full a-layout__panel__wrapper">
+  <div class="a-layout">
+    <div class="a-layout__panel--full a-layout__wrapper br--listed">
+      
+      <div class="a-layout--vertical">
+        <div class="a-layout__panel slim header-style bb">
+          {{#link-to "issues.new" classNames="a-button"}}
+            <div class="a-button__body">Submit new issue</div>
+          {{/link-to}}
+        </div>
+
+        <div class="a-layout__panel--full a-list">
+          {{#each issue in model}}
+            {{#link-to "issue" issue.id classNames="a-list__item regular"}}
+              {{issue.title}}
+              <small>{{fromNow issue.createdAt}}</small>
+            {{/link-to}}
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    
+    <div class="a-layout__panel--double is-scrollable">
+      {{outlet}}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+.a-bar,
+.a-bar--start {
+  @include display(flex);
+  // Center vertically by default
+  @include align-items(center);
+}
+
+.is-vertical {
+  @include flex-direction(column);
+}
+
+.a-bar--end {
+  @extend .a-bar;
+
+  // Push content to the right/bottom
+  @include justify-content(flex-end);
+}
+
+.a-bar--center {
+  @extend .a-bar;
+
+  // Group content in the center
+  @include justify-content(center);
+}
+
+.a-bar--space-between {
+  @extend .a-bar;
+
+  // Space out content as far apart as possible
+  @include justify-content(space-between);
+}
+
+.a-bar--space-around {
+  @extend .a-bar;
+
+  // Space out content with equal spacing
+  @include justify-content(space-around);
+}
+
+.a-bar__item {
+  @include flex-basis(100%);
+}
+
+.a-bar__item--double {
+  @extend .a-bar__item;
+  @include flex-basis(200%);
+}
+
+.a-bar__item--half {
+  @extend .a-bar__item;
+  @include flex-basis(50%);
+}
+
+.a-bar--space-between--with-borders {
+  @extend .a-bar--space-between;
+
+  .a-bar__item {
+    &:not(:last-of-type) {
+      border-right: 1px solid $border-color;
+    }
+  }
+}

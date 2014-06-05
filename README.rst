@@ -19,3 +19,8 @@ Each user must login though Google OAuth2 and will be added as a new user or sim
 A separate SQLite database will be tied to the Flask environment for storing users and some basic meta-data.
 
 Upon reaching the index route, Flask will determine login status. If OK'd, the full app interface will be revealed. Otherwise a simple login template will be shown instead.
+
+PyOpenSSL
+~~~~~~~~~~
+Before pip install:
+export DYLD_LIBRARY_PATH=$HOME/anaconda/lib

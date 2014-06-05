@@ -1,0 +1,364 @@
+<div class="variant-page a-layout__panel--double is-scrollable br--listed">
+  <div class="variant-page-wrapper">
+    <div class="a-toolbar header-style slim b">
+      <div class="a-toolbar__group a-button__group">
+        <div class="a-button">
+          <div class="a-button__icon a-icon entypo chevron-left"></div>
+          {{#link-to "variants" instituteId familyId databaseId title="Back to all variants"}}
+            <div>Back</div>
+          {{/link-to}}
+        </div>
+
+        <div class="a-button" title="Archive variant">
+          <div class="a-button__icon a-icon entypo archive"></div>
+          <div>Archive</div>
+        </div>
+      </div>
+
+      <div class="center__wrapper big-font" title="rank score">
+        <span class="a-icon entypo network mr--slim"></span>{{rankScore}}
+      </div>
+
+      <div class="a-toolbar__group a-button__group">
+        {{#ic-modal-trigger controls="order-sanger-form" tagName="div" classNames="a-button"}}
+          <div class="a-button__icon a-icon entypo cart"></div>
+          <div class="a-button__body">Sanger</div>
+        {{/ic-modal-trigger}}
+
+        <div {{action "toggleProperty" "isShowingActivity"}} class="a-button" title="Toggle activity panel">
+          <div {{bind-attr class=":a-button__icon :a-icon :entypo :chat hasActivity:is-notifying"}}></div>
+          <div class="a-button__body">
+            {{#if isShowingActivity}}
+              Hide
+            {{else}}
+              Show
+            {{/if}}
+            Activity
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="a-card a-bar--space-between mb--big">
+      <div class="a-bar__item br center__wrapper regular" title="chromosome + position">
+        <span class="a-icon entypo location mr--slim"></span>
+        <span {{bind-attr class="isMultiBase:small"}}>
+          Chr{{chromosome}}-{{startBp}}{{#if isMultiBase}}-{{stopBp}}{{/if}}
+        </span>
+      </div>
+
+      <div class="a-bar__item br center__wrapper regular" title="change">
+        <span class="a-icon entypo shuffle mr--slim"></span>
+        {{refNt}} &rarr; {{altNt}}
+      </div>
+
+      <div class="a-bar__item br center__wrapper regular" title="annotations">
+        <span {{bind-attr class=":a-icon :entypo isProbablyBenign:circled-info:warning :mr--slim"}}></span>
+        {{capitalize geneAnnotation}}
+      </div>
+
+      <div class="a-bar__item center__wrapper regular" title="annotations">
+        <span class="a-icon entypo tools mr--slim"></span>
+        {{#if functionalAnnotation}}
+          {{capitalize functionalAnnotation}}
+        {{else}}
+          No functional annotation
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="a-bar flex-start small mb--big">
+      <div class="a-bar__item a-card a-list br mr">
+        <div class="a-list__item--header text-center slim">General</div>
+        <div {{action "toggleProperty" "isShowingFullGeneName"}} class="a-list__item a-bar--space-between slim dotdotdot is-clickable">
+          <div>
+            {{#unless isShowingFullGeneName}}
+              {{hgncSymbol}} <small>{{hgncSynonymsString}}</small>
+            {{else}}
+              {{capitalize hgncApprovedName}}
+            {{/unless}}
+          </div>
+
+          <div class="a-icon--small entypo cycle"></div>
+        </div>
+
+        <div class="a-list__item slim">{{ensemblGeneIdString}}</div>
+
+        {{#if isFoundInOtherFamilies}}
+          <div class="a-list__item--header center__wrapper slim">
+            <span class="entypo users"></span>
+            Other familes
+          </div>
+          <div class="max-height-135 is-scrollable">
+            {{#each family in otherFamilies}}
+              <div class="a-list__item slim">
+                {{#link-to "variant" family.pk}} {{family.id}} {{/link-to}}
+              </div>
+            {{/each}}
+          </div>
+        {{/if}}
+      </div>
+
+      <div class="a-bar__item a-card a-list br mr">
+        <div class="a-list__item--header text-center slim">Predicted protein changes</div>
+        {{#each item in variantFunctions}}
+          <div class="a-list__item slim">{{item}}</div>
+        {{else}}
+          <div class="a-list__item slim">No predicted protein changes.</div>
+        {{/each}}
+      </div>
+
+      <div class="a-bar__item a-card a-list">
+        {{#if diseaseGroup}}
+          <div class="a-list__item--header text-center slim">Disease group:</div>
+          <div class="a-list__item slim">{{diseaseGroup}}</div>
+        {{/if}}
+
+        {{#if omim}}
+          <div class="a-list__item--header text-center logo--omim slim">OMIM</div>
+          <div class="max-height-135 is-scrollable">
+            {{#each syndrome in omim.SYNDROMS}}
+              <div class="a-list__item slim">{{syndrome}}</div>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{#if hgmdAccession}}
+          <div class="a-list__item--header text-center slim">HGMD</div>
+          {{#each link in hgmdVariantPmidLinks}}
+            <a {{bind-attr href=link.link}} class="a-list__item is-clickable slim" target="_blank">
+              {{link.id}}
+            </a>
+          {{/each}}
+        {{/if}}      
+      </div>
+    </div>{{!-- a-BAR --}}
+
+    <div class="a-bar--space-between flex-start small mb--big">
+      {{#each prediction in predictions}}
+        <div class="a-bar__item mr--listed">
+          <div class="a-card a-list">
+            <div class="a-list__item--header text-center slim">
+              {{prediction.name}}
+            </div>
+
+            {{#each property in prediction.values}}
+              {{#if property.value}}
+                <div class="a-list__item a-bar--space-between">
+                  <div class="slim mr dotdotdot">
+                    {{property.name}}
+                  </div>
+                  <div class="slim">{{fallback property.value}}</div>
+                </div>
+              {{/if}}
+            {{else}}
+              <div class="a-list__item slim">
+                <span class="mr">No predictions.</span>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+    <div class="a-bar flex-start small mb--big">
+      <div class="a-bar__item--double mr">
+        <table class="a-table">
+          <thead class="a-table__head">
+            <tr class="a-table__row">
+              <th class="a-table__cell--header">Sample</th>
+              <th class="a-table__cell--header">GT</th>
+              <th class="a-table__cell--header">AD</th>
+              <th class="a-table__cell--header">PL</th>
+              <th class="a-table__cell--header">GQ</th>
+            </tr>
+          </thead>
+          <tbody class="a-table__body">
+            {{#each gtcall in gtcallsBySampleId}}
+              <tr class="a-table__row">
+                <td class="a-table__cell">{{gtcall.idn}}</td>
+                <td class="a-table__cell">{{gtcall.gt}}</td>
+                <td class="a-table__cell">{{gtcall.ad}}</td>
+                <td class="a-table__cell">{{gtcall.pl}}</td>
+                <td class="a-table__cell">{{gtcall.gq}}</td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      </div>
+    
+      <div class="a-bar__item a-card a-list mr">
+        <div class="a-list__item--header text-center slim dotdotdot">
+          Disease gene models
+        </div>
+
+        {{#each model in diseaseGeneModels}}
+          <div class="a-list__item slim">
+            <div class="dotdotdot">{{model}}</div>
+          </div>
+        {{else}}
+          <div class="a-list__item slim">No models.</div>
+        {{/each}}
+      </div>
+
+      <div class="a-bar__item a-card a-list">
+        <div class="a-list__item--header text-center slim">
+          Inheritance models
+        </div>
+
+        {{#each model in geneModels}}
+          <div class="a-list__item slim">
+            <div class="dotdotdot">{{model}}</div>
+          </div>
+        {{else}}
+          <div class="a-list__item slim">No models.</div>
+        {{/each}}
+      </div>
+    </div>
+
+    {{#if hasCompounds}}
+      <table class="a-table small mb--big">
+        <thead class="a-table__head">
+          <tr class="a-table__row">
+            <th class="a-table__cell--header">Combined score</th>
+            <th class="a-table__cell--header">Rank score</th>
+            {{#each gtcall in compounds.content.0.gtcalls}}
+              <th class="a-table__cell--header">{{gtcall.sampleId}}</th>
+            {{/each}}
+            <th class="a-table__cell--header">Inheritance models</th>
+            <th class="a-table__cell--header">Gene annotations</th>
+            <th class="a-table__cell--header">Functional annotation</th>
+          </tr>
+        </thead>
+
+        <tbody class="a-table__body">
+          {{#each compound in compounds}}
+            <tr class="a-table__row">
+              <td class="a-table__cell text-center">
+                {{compound.combinedScore}}
+              </td>
+              <td class="text-center">
+                {{#link-to "variant" compound.variant}}
+                  {{compound.rankScore}}
+                {{/link-to}}
+              </td>
+              {{#each gtcall in compound.gtcalls}}
+                <td class="a-table__cell text-center">{{gtcall.genotype}}</td>
+              {{/each}}
+              <td class="a-table__cell">{{compound.geneModel}}</td>
+              <td class="a-table__cell">{{compound.geneAnnotation}}</td>
+              <td class="a-table__cell">{{compound.functionalAnnotation}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{/if}}
+  
+    {{!-- External links --}}
+    <div class="a-bar--space-between external-links">
+      <a {{bind-attr href="ensemblLink"}} class="a-button" target="_blank">
+        <div class="a-button__body">Ensembl</div>
+      </a>
+
+      <a {{bind-attr href="hpaLink"}} class="a-button" target="_blank">
+        <div class="a-button__icon a-icon entypo map"></div>
+        <div class="a-button__body">HPA</div>
+      </a>
+
+      <a {{bind-attr href="stringLink"}} class="a-button" target="_blank">
+        <div class="a-button__body">STRING</div>
+      </a>
+
+      <a {{bind-attr href="ucscLink"}} class="a-button" target="_blank">
+        <div class="a-button__body">UCSC</div>
+      </a>
+
+      <a {{bind-attr href="entrezLink"}} class="a-button" target="_blank">
+        <div class="a-button__body">Entrez</div>
+      </a>
+
+      <a {{bind-attr href="idsLink"}} class="a-button" target="_blank">
+        <div class="a-button__body">IDs</div>
+      </a>
+
+      <a {{bind-attr href="igvLink"}} class="a-button" target="_blank">
+        <div class="a-button__icon a-icon entypo open-book"></div>
+        <div class="a-button__body">IGV</div>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{{#ic-modal-form id="order-sanger-form" on-submit="submitSangerForm" awaiting-return-value=saving}}
+  {{#ic-modal-title classNames="mb"}}Order Sanger sequencing{{/ic-modal-title}}
+  
+  <div class="email__wrapper mb">
+    {{{sangerEmailBody}}}
+  </div>
+
+  <div class="center__wrapper">
+    {{#if saving}}
+      saving ...
+    {{else}}
+      <div class="a-button__group">
+        {{#ic-modal-trigger classNames="a-button"}}
+          <div class="a-button__icon a-icon entypo circled-cross"></div>
+          <div class="a-button__body">Cancel</div>
+        {{/ic-modal-trigger}}
+        <button type="submit" class="a-button">
+          <div class="a-button__icon a-icon entypo paper-plane"></div>
+          <div class="a-button__body">Send</div>
+        </button>
+      </div>
+    {{/if}}
+  </div>
+{{/ic-modal-form}}
+
+{{#if isShowingActivity}}
+  <div class="a-layout__panel--full a-layout__wrapper">
+    <div class="a-layout--vertical">
+      <div class="a-layout__panel slim header-style text-center bb">
+        Activity
+      </div>
+
+      <div class="a-layout__panel--full is-scrollable small loose">
+        {{#if activities}}
+          <div class="a-activity__feed mb--big">
+            {{#each activity in activities}}
+              <div class="a-activity__divider">
+                <div class="a-activity__divider__time">
+                  {{fromNow activity.createdAt}}
+                </div>
+              </div>
+
+              <div class="a-activity__wrapper">
+                <div class="a-activity">
+                  <div class="a-activity__icon a-icon--small entypo comment"></div>
+
+                  <div class="full-width">
+                    <div class="a-bar--space-between">
+                      <div class="a-activity__caption">
+                        {{{activity.caption}}}
+                      </div>
+
+                      <div {{action deleteActivity activity}} class="a-button--naked">
+                        <div class="a-button__icon a-icon entypo circled-cross"></div>
+                      </div>
+                    </div>
+
+                    <div class="a-activity__body">
+                      {{{activity.content}}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{activity-form content=activityContent onSubmit="postActivity"}}
+      </div>
+    </div>
+  </div>
+{{/if}}

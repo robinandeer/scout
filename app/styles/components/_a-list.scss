@@ -1,0 +1,32 @@
+// Vertical list
+.a-list {
+	@extend .is-scrollable;
+  overflow-x: visible;
+}
+
+.a-list__item {
+	// If using "a" for list items
+	display: block;
+
+	&:not(:last-of-type) {
+		border-bottom: 1px solid $border-color;
+	}
+}
+
+.a-list__item--header {
+	@extend .a-list__item;
+
+	background: lighten($border-color, 10%);
+}
+
+.a-list--horizontal {
+	@extend .is-scrollable;
+	@include display(flex);
+	overflow-x: scroll;
+	overflow-y: visible;
+
+	> .a-list__item {
+		@include flex-shrink(0);  // Needs futher testing
+		border-bottom: 0;
+	}
+}

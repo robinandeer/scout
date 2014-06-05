@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <title>
+    {% block title %}
+      {{ page_title | default('Project') }}
+    {% endblock %}
+  </title>
+
+  <meta name="description"
+        content="Scout is a Flask/Ember.js application for browsing clinical sequencing variants.">
+  <meta name="author" content="Robin Andeer">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+  <link rel="Shortcut Icon"
+        href="{{ url_for('static', filename='favicon.png') }}"
+        type="image/x-icon">
+
+  {% block css_style %}
+  {% endblock %}
+
+  {% block js_top %}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.1/modernizr.min.js"></script>
+
+    <script>
+      navigator.sayswho = (function() {
+        var ua = navigator.userAgent, tem,
+            M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*([\d\.]+)/i) || [];
+        if (/trident/i.test(M[1])) {
+            tem = /\brv[ :]+(\d+(\.\d+)?)/g.exec(ua) || [];
+            return 'IE ' + (tem[1] || '');
+        }
+        M = M[2]? [M[1], M[2]]:[navigator.appName, navigator.appVersion, '-?'];
+        if ((tem = ua.match(/version\/([\.\d]+)/i)) !== null) M[2]= tem[1];
+        return M.join(' ');
+      })();
+    </script>
+  {% endblock %}
+</head>
+<body>
+  {% include "macros/_ask_user_to_update_ie.html" %}
+
+  {% block body %}{% endblock %}
+
+  {% block js_btm %}{% endblock %}
+
+  {% block ga %}
+    {% include "macros/_google_analytics.html" %}
+  {% endblock %}
+</body>

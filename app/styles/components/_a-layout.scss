@@ -1,0 +1,62 @@
+.a-layout__wrapper {
+	// Expand child to parent size
+	// Ref: http://stackoverflow.com/questions/4804581
+  position: relative;
+}
+
+.a-layout {
+	@extend .fill-up;
+
+	@include display(flex);
+	// Contain element inside parent wrapper
+  position: absolute;
+}
+
+.a-layout--vertical {
+	@extend .a-layout;
+
+	@include flex-direction(column);
+}
+
+.a-layout__panel {
+	position: relative;
+}
+
+.a-layout__panel--full {
+	@extend .a-layout__panel;
+
+	@include flex-basis(100%);
+}
+
+.a-layout__panel--double {
+	@extend .a-layout__panel;
+
+	@include flex-basis(200%);
+}
+
+.a-layout__panel--half {
+	@extend .a-layout__panel;
+
+	@include flex-basis(50%);
+}
+
+.a-layout__panel--quarter {
+	@extend .a-layout__panel;
+
+	@include flex-basis(25%);
+}
+
+.a-layout__panel--limited {
+	@extend .a-layout__panel;
+
+	@include flex-basis(200px);
+	min-width: 200px;
+}
+
+.a-layout__panel--minimal {
+	@extend .a-layout__panel;
+
+	@include flex-basis(100px);
+	min-width: 100px;
+}
+

@@ -1,0 +1,17 @@
+.a-card {
+	border-radius: 0 0 5px 5px;
+	border: 1px solid $border-color;
+  background: #fff;
+
+	// If card for example acts as a link
+  &.is-clickable {
+    &:hover {
+      background: rgba(#000, .03);
+    }
+
+    &:active,
+    &.active {
+      @include transform(scale(.993));
+    }
+  }
+}

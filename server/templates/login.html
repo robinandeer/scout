@@ -1,0 +1,29 @@
+{% extends 'layouts/base.html' %}
+
+{% set page_title = 'Connect' %}
+
+{% block body %}
+
+  <div class="default">
+    <div class="content">
+      <a class="link" href="{{ url_for('frontend.login') }}">
+        Connect with Google
+      </a>
+    </div>
+
+    <div class="app-logo"></div>
+  </div>
+
+{% endblock %}
+
+{% block js_btm %}
+  <script>
+    var res = navigator.sayswho.split(' '),
+        browser = res[0],
+        version = parseInt(res[1]);
+
+    if (browser == 'MSIE' && version < 9) {
+      window.location.href = "{{ url_for('frontend.unsupported_browser') }}"
+    }
+  </script>
+{% endblock %}

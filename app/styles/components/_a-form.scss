@@ -1,0 +1,106 @@
+.a-input {
+	background: transparent;
+	border: 2px solid $border-color;
+	border-radius: 5px;
+	padding: 10px 15px;
+	width: 100%;
+
+	&:focus {
+		border-color: #2b9de7;
+	}
+
+	&:focus,
+	&:valid {
+    outline: none;
+  }
+}
+
+// Ref: http://codepen.io/dannykingme/full/rwmbB
+.a-form__input {
+	@extend .a-input;
+
+	&::-webkit-input-placeholder {
+		@include transition(all .2s cubic-bezier(.55, -0.55, 1, 1.55));
+		@include transform-origin(left);
+	}
+
+	&:focus {
+		&::-webkit-input-placeholder {
+      color: #1b9cec;
+    }
+	}
+
+	&:focus,
+	&:valid {
+    color: #212121;
+
+    &::-webkit-input-placeholder {
+      @include transform(translate(0, -105%) scale(.9, .9));
+      visibility: visible !important;
+      overflow: visible;
+      text-transform: uppercase;
+      font-size: 80%;
+      text-shadow: -1px  0   white,
+                   -2px  0   white,
+                   -3px  0   white,
+                   -4px  0   white,
+                   -5px  0   white,
+                    1px  0   white,
+                    2px  0   white,
+                    3px  0   white,
+                    4px  0   white,
+                    5px  0   white,
+                   -1px -1px white,
+                   -2px -2px white,
+                   -3px -3px white,
+                   -4px -4px white,
+                   -5px -5px white;
+    }
+  }
+}
+
+// Inspiration: https://dribbble.com/shots/251215-Small-snippet-of-help-text
+$checkbox-border-radius: 3px;
+
+.a-checkbox__wrapper {
+	@extend .a-bar;
+	border: 1px solid darken($border-color, 10%);
+	border-radius: $checkbox-border-radius;
+}
+
+.a-checkbox__box {
+	background: $border-color;
+	padding: 3px 5px;
+	border-radius: $checkbox-border-radius 0 0 $checkbox-border-radius;
+	border-right: 1px solid darken($border-color, 10%);
+}
+
+.a-checkbox__caption {
+	padding: 0 5px;
+}
+
+.a-choice__wrapper {
+	@extend .a-bar--space-between;
+}
+
+.a-choice {
+	@extend .a-bar;
+
+	> *:first-child {
+		margin-right: 5px;
+	}
+}
+
+.a-textarea {
+	@extend .a-input;
+
+	max-width: 100%;  // Prevent users from messing with layout
+
+	&.is-failing {
+		border-color: rgba(#e0332d, .6);
+
+		&:focus {
+			border-color: rgba(#e0332d, 1);
+		}
+	}
+}

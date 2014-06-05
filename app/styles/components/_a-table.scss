@@ -1,0 +1,38 @@
+// JUST STYLING, NO LAYOUT
+.a-table {
+	width: 100%;
+	border: 1px solid $border-color;
+}
+
+.a-table__head {
+	@extend .header-style;
+}
+
+.a-table__body {
+	> .a-table__row {
+		&:nth-of-type(even) {
+	  	background: lighten($border-color, 11%);
+	  }
+
+	  &:hover {
+	  	background: lighten($border-color, 5%);
+	  }
+	}
+}
+
+.a-table__row {
+  border: 1px solid $border-color;
+}
+
+.a-table__cell {
+	padding: 3px 6px;
+  border: 1px solid $border-color;
+}
+
+.a-table__cell--header {
+	@extend .a-table__cell;
+	padding: 5px;
+  font-weight: normal;
+  vertical-align: middle;
+  text-align: left;
+}
