@@ -17,7 +17,7 @@ def run(host='localhost', port=None):
   # Use command line, config definition or 5000 (default)
   port = port or int(app.config.get('PORT', 5000))
 
-  app.run(host=host, port=port)
+  app.run(host=host, port=port, debug=app.config.get('DEBUG'))
 
 
 @manager.command
