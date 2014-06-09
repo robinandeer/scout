@@ -105,14 +105,14 @@ def configure_extensions(app):
   # GitHub Issue Tracker
   gh_issues.init_app(app)
 
-  # Setup SSL: http://flask.pocoo.org/snippets/111/
-  ctx.use_privatekey_file(app.config.get('SSL_KEY_PATH'))
-  ctx.use_certificate_file(app.config.get('SSL_CERT_PATH'))
+  # # Setup SSL: http://flask.pocoo.org/snippets/111/
+  # ctx.use_privatekey_file(app.config.get('SSL_KEY_PATH'))
+  # ctx.use_certificate_file(app.config.get('SSL_CERT_PATH'))
 
-  # https://github.com/kennethreitz/flask-sslify
-  # Force SSL. Redirect all incoming requests to HTTPS.
-  # Only takes effect when DEBUG=False
-  sslify = SSLify(app)
+  # # https://github.com/kennethreitz/flask-sslify
+  # # Force SSL. Redirect all incoming requests to HTTPS.
+  # # Only takes effect when DEBUG=False
+  # sslify = SSLify(app)
 
 
 def configure_blueprints(app, blueprints):
@@ -131,11 +131,6 @@ def configure_logging(app):
   import logging
   from logging.handlers import SMTPHandler
 
-  logging_formatter = logging.Formatter(
-    '%(asctime)s %(levelname)s: %(message)s '
-    '[in %(pathname)s:%(lineno)d]'
-  )
-
   # Set info level on logger which might be overwritten by handlers
   # Suppress DEBUG messages
   app.logger.setLevel(logging.INFO)
@@ -144,7 +139,10 @@ def configure_logging(app):
   info_file_handler = logging.handlers.RotatingFileHandler(
     info_log, maxBytes=100000, backupCount=10)
   info_file_handler.setLevel(logging.INFO)
-  info_file_handler.setFormatter(logging_formatter)
+  info_file_handler.setFormatter(logging.Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]')
+  )
   app.logger.addHandler(info_file_handler)
 
   mail_handler = SMTPHandler(
@@ -155,7 +153,10 @@ def configure_logging(app):
     (app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
   )
   mail_handler.setLevel(logging.ERROR)
-  mail_handler.setFormatter(logging_formatter)
+  mail_handler.setFormatter(logging.Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]')
+  )
   app.logger.addHandler(mail_handler)
 
 

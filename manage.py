@@ -3,6 +3,7 @@
 from flask.ext.script import Manager
 
 from server import create_app
+from server.extensions import ctx
 
 app = create_app()
 manager = Manager(app)
@@ -17,7 +18,7 @@ def run(host='localhost', port=None):
   # Use command line, config definition or 5000 (default)
   port = port or int(app.config.get('PORT', 5000))
 
-  app.run(host=host, port=port, debug=app.config.get('DEBUG'))
+  app.run(host=host, port=port, debug=app.config.get('DEBUG'), ssl_context=ctx)
 
 
 @manager.command
