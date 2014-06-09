@@ -2,16 +2,24 @@
 
 {% set page_title = 'Connect' %}
 
+{% block css_style %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend.css') }}">
+{% endblock %}
+
 {% block body %}
 
-  <div class="default">
-    <div class="content">
+  <div class="wrapper">
+    <div class="main">
       <a class="link" href="{{ url_for('frontend.login') }}">
         Connect with Google
       </a>
     </div>
 
-    <div class="app-logo"></div>
+    <div class="footer">
+      <div class="logo"><img src="{{ url_for('static', filename='img/logo_scilifelab.png') }}" width="229" alt=""></div>
+
+      <div class="logo"><img src="{{ url_for('static', filename='img/logo_karolinska.png') }}" width="250" alt=""></div>
+    </div>
   </div>
 
 {% endblock %}
