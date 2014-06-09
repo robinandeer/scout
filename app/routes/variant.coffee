@@ -8,3 +8,4 @@ module.exports = App.VariantRoute = Ember.Route.extend
     if variant.get('content')
       variant.setProperties
         activityContent: null
+        logActivityContent: null

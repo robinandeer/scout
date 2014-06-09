@@ -76,6 +76,7 @@ $border-color: #d8dae3;
   @include user-select(none);
 }
 
+.is-fixed,
 .is-fixed-size {
   @include flex-shrink(0);
 }
@@ -200,6 +201,10 @@ h2 {
 
 .full-width {
   width: 100%;
+}
+
+strong {
+  @include font-smoothing();
 }
 
 @import 'components/a-list';

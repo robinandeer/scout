@@ -5,7 +5,7 @@
         <div class="a-button">
           <div class="a-button__icon a-icon entypo chevron-left"></div>
           {{#link-to "variants" instituteId familyId databaseId title="Back to all variants"}}
-            <div>Back</div>
+            <div>Variants</div>
           {{/link-to}}
         </div>
 
@@ -17,6 +17,8 @@
 
       <div class="center__wrapper big-font" title="rank score">
         <span class="a-icon entypo network mr--slim"></span>{{rankScore}}
+
+        (Family {{familyId}})
       </div>
 
       <div class="a-toolbar__group a-button__group">
@@ -73,7 +75,7 @@
         <div {{action "toggleProperty" "isShowingFullGeneName"}} class="a-list__item a-bar--space-between slim dotdotdot is-clickable">
           <div>
             {{#unless isShowingFullGeneName}}
-              {{hgncSymbol}} <small>{{hgncSynonymsString}}</small>
+              <strong class="big-font">{{hgncSymbol}}</strong> <small>{{hgncSynonymsString}}</small>
             {{else}}
               {{capitalize hgncApprovedName}}
             {{/unless}}
@@ -189,12 +191,12 @@
     
       <div class="a-bar__item a-card a-list mr">
         <div class="a-list__item--header text-center slim dotdotdot">
-          Disease gene models
+          <strong>Disease gene models</strong>
         </div>
 
         {{#each model in diseaseGeneModels}}
           <div class="a-list__item slim">
-            <div class="dotdotdot">{{model}}</div>
+            <div class="dotdotdot big-font">{{model}}</div>
           </div>
         {{else}}
           <div class="a-list__item slim">No models.</div>
@@ -318,11 +320,12 @@
 {{#if isShowingActivity}}
   <div class="a-layout__panel--full a-layout__wrapper">
     <div class="a-layout--vertical">
-      <div class="a-layout__panel slim header-style text-center bb">
-        Activity
+
+      <div class="a-layout__panel is-fixed slim header-style text-center bb">
+        Variant Activity
       </div>
 
-      <div class="a-layout__panel--full is-scrollable small loose">
+      <div class="a-layout__panel--full is-scrollable small loose bb">
         {{#if activities}}
           <div class="a-activity__feed mb--big">
             {{#each activity in activities}}
@@ -359,6 +362,45 @@
 
         {{activity-form content=activityContent onSubmit="postActivity"}}
       </div>
+
+      <div class="a-layout__panel is-fixed slim header-style text-center bb">
+         {{logActivityType}} Activity
+      </div>
+
+      <div class="a-layout__panel--full is-scrollable small loose">
+        {{#if logActivities}}
+          <div class="a-activity__feed mb--big">
+            {{#each activity in logActivities}}
+              <div class="a-activity__divider">
+                <div class="a-activity__divider__time">
+                  {{fromNow activity.createdAt}}
+                </div>
+              </div>
+
+              <div class="a-activity__wrapper">
+                <div class="a-activity">
+                  <div class="a-activity__icon a-icon--small entypo comment"></div>
+
+                  <div class="full-width">
+                    <div class="a-bar--space-between">
+                      <div class="a-activity__caption">
+                        {{{activity.caption}}}
+                      </div>
+                    </div>
+
+                    <div class="a-activity__body">
+                      {{{activity.content}}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{activity-form content=logActivityContent onSubmit="postLogActivity"}}
+      </div>      
+
     </div>
   </div>
 {{/if}}

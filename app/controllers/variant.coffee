@@ -13,6 +13,7 @@ module.exports = App.VariantController = Ember.ObjectController.extend
   ).observes 'hasActivity'
 
   activityContent: null
+  logActivityContent: null
 
   # +------------------------------------------------------------------+
   # | Actions
@@ -30,6 +31,20 @@ module.exports = App.VariantController = Ember.ObjectController.extend
 
       activity.save().then((newObject) =>
         @get('activities').pushObject(newObject)
+      )
+
+    postLogActivity: ->
+      activity = App.Activity.create
+        activityId: 'comment'
+        context: 'family'
+        contextId: @get 'familyId'
+        ecosystem: @get 'instituteId'
+        userId: @get 'user._id'
+        caption: "#{@get('user.firstName')} commented on family #{@get('familyId')}"
+        content: activityContent
+
+      activity.save().then((newObject) =>
+        @get('logActivities').pushObject(newObject)
       )
 
     deleteActivity: (activity) ->
@@ -50,7 +65,7 @@ module.exports = App.VariantController = Ember.ObjectController.extend
           contextId: @get 'uniqueId'
           ecosystem: @get 'instituteId'
           userId: @get 'user._id'
-          caption: "#{@get('user.firstName')} ordered Sanger for <a class='activity-caption-link' href='/#{window.location.hash}'>#{@get('uniqueId')}</a>"
+          caption: "#{@get('user.firstName')} ordered Sanger for #{@get('hgncSymbol')} <a class='activity-caption-link' href='/#{window.location.hash}'>#{@get('uniqueId')}</a>"
           content: data.message
 
         event.returnValue = activity.save().then (newObject) =>
@@ -109,12 +124,27 @@ module.exports = App.VariantController = Ember.ObjectController.extend
       ecosystem: @get('instituteId')
   ).property 'uniqueId', 'instituteId'
 
+  logActivities: (->
+    return App.Activity.find
+      context: 'family'
+      context_id: @get('familyId')
+      category: @get('logActivityType').toLowerCase()
+      ecosystem: @get('instituteId')
+  ).property 'familyId', 'logActivityType', 'instituteId'
+
   hasActivity: (->
     if @get('activities.content.length') > 0
       return yes
     else
       return no
   ).property 'activities'
+
+  logActivityType: (->
+    if @get('databaseId') is 'research'
+      return 'Research'
+    else
+      return 'Clinical'
+  ).property 'databaseId'
 
   # +------------------------------------------------------------------+
   # | External resources

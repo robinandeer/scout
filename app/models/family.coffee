@@ -8,6 +8,9 @@ App.Family = Ember.Model.extend
     return parseInt(@get('id'))
   ).property 'id'
   updateDate: Em.attr(MomentDate)
+  updateDateRaw: (->
+    return @get('updateDate').toDate()
+  ).property 'updateDate'
   database: Em.attr()
   databases: (->
     return (@get('database') or '').split(',')

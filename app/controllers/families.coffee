@@ -1,7 +1,7 @@
 module.exports = App.FamiliesController = Ember.ArrayController.extend
   # Objective: handle a list of families
   needs: ['institute']
-  sortProperties: ['familyId']
+  sortProperties: ['updateDateRaw']
   sortAscending: no
 
   instituteIdBinding: 'controllers.institute.id'

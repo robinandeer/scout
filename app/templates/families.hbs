@@ -5,7 +5,7 @@
     <div class="header-style slim bb text-center">Open cases</div>
     
     <div class="a-layout__panel--full is-scrollable loose">
-      {{#each family in model}}
+      {{#each family in controller}}
         <div class="a-card a-bar--space-between regular mb">
           {{#link-to "family" family classNames="a-bar__item"}}
             {{family.id}}

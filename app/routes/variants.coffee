@@ -1,10 +1,24 @@
 module.exports = App.VariantsRoute = Ember.Route.extend
+  beforeModel: (transition) ->
+    variantsController = @controllerFor('variants')
+
+    newFamilyId = transition.params.variants.family_id
+    if (variantsController.get('familyId') or newFamilyId) isnt newFamilyId
+      # Reset filter when switching families
+      variantsController.send('doClearFilters')
+
   model: (params) ->
     # Make available to setupController
     @set 'params', params
 
-    # Remove unwanted params before model fetch
-    queryParams = jQuery.extend {}, params
+    variantsController = @controllerFor('variants')
+    newFamilyId = params.family_id
+    if (variantsController.get('familyId') or newFamilyId) isnt newFamilyId
+      queryParams = {}
+    else
+      # Remove unwanted params before model fetch
+      queryParams = jQuery.extend {}, params
+
     $.extend queryParams,
       institute_id: params.institute_id
       institute: params.institute_id
@@ -32,6 +46,3 @@ module.exports = App.VariantsRoute = Ember.Route.extend
     # Refresh the model after user commits new filters
     filtersWhereUpdated: ->
       @refresh()
-
-  # activate: ->
-  #   @controllerFor('variants').send('doClearFilters')

@@ -52,8 +52,8 @@
               
               {{#unless variantIsLoaded}}
                 {{!-- COLUMN --}}
-                <div {{bind-attr class=":slim :a-bar__item--half variant.hbvdb:a-bar--space-between variant.thousandG::undef :br--listed"}}>
-                  {{#if variant.hbvdb}}
+                <div {{bind-attr class=":slim :a-bar__item--half variant.isFoundInOtherFamilies:a-bar--space-between variant.thousandG::undef :br--listed"}}>
+                  {{#if variant.isFoundInOtherFamilies}}
                     <div {{bind-attr class=":a-notify--bubble variant.hbvdbHuman"}}>
                       &nbsp;
                     </div>

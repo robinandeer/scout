@@ -34,7 +34,7 @@ App.Variant = Ember.Model.extend
   hgncApprovedName: Em.attr()
   ensemblGeneid: Em.attr({ defaultValue: '' })
   ensemblGeneIdString: (->
-    return (@get('ensemblGeneid') or '').split(';').slice(0, -1).join(', ')
+    return (@get('ensemblGeneid') or '').split(';').join(', ')
   ).property 'ensemblGeneid'
 
   hgncTranscriptId: Em.attr({ defaultValue: '' })
@@ -94,16 +94,16 @@ App.Variant = Ember.Model.extend
   variantCount: Em.attr()
   hbvdb: Em.attr()
   hbvdbHuman: (->
-    freq = @get('hbvdb')
+    freq = @get('variantCount')
     if freq
-      if freq > 0.1
+      if freq > 10
         return 'is-common'
       return 'is-found'
     return 'is-not-found'
-  ).property 'hbvdb'
+  ).property 'variantCount'
   frequencies: (->
     frequencies = []
-    for property in ['thousandG', 'esp6500', 'dbsnp129', 'hbvdb']
+    for property in ['thousandG', 'esp6500', 'dbsnp129', 'variantCount']
       if @get property
         frequencies.push
           id: property
@@ -111,7 +111,7 @@ App.Variant = Ember.Model.extend
           value: @get property
 
     return frequencies
-  ).property 'thousandG', 'esp6500', 'dbsnp129', 'hbvdb'
+  ).property 'thousandG', 'esp6500', 'dbsnp129', 'variantCount'
 
   # Conservation
   phylopWholeExome: Em.attr()

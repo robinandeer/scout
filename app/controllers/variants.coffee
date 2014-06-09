@@ -30,6 +30,7 @@ module.exports = App.VariantsController = Ember.ArrayController.extend
   # Static content stuff
   isShowingFilters: yes
   relation: 'LESSER'
+  familyId: null
 
   offset: 0
   loadedVariants: 100
@@ -53,12 +54,12 @@ module.exports = App.VariantsController = Ember.ArrayController.extend
 
       for group in @get('filterGroups')
         for filter in group.filters
-          filter.set 'property', no
+          filter.set 'property'
 
       filters = ['relation', 'thousand_g', 'dbsnp129', 'dbsnp132', 'esp6500',
                  'gene_name', 'priority', 'hbvdb']
       for filter in filters
-        @set filter, null
+        @set filter
 
     doFilterClinically: ->
       # Set clinical filter properties
