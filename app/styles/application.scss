@@ -110,6 +110,10 @@ $border-color: #d8dae3;
   padding: 10px;
 }
 
+.regular--stretched {
+  padding: 5px 10px;
+}
+
 .loose {
   padding: 15px;
 }
@@ -237,6 +241,7 @@ html,
 body {
   @extend .fill-up;
   overflow: hidden;
+  font-family: Lato, 'Helvetica Neue', Helvetica, sans-serif;
 }
 
 ic-menu {

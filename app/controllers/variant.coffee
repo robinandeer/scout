@@ -12,8 +12,8 @@ module.exports = App.VariantController = Ember.ObjectController.extend
       @set 'isShowingActivity', yes
   ).observes 'hasActivity'
 
-  activityContent: null
-  logActivityContent: null
+  activityContent: undefined
+  logActivityContent: undefined
 
   # +------------------------------------------------------------------+
   # | Actions
@@ -27,7 +27,7 @@ module.exports = App.VariantController = Ember.ObjectController.extend
         ecosystem: @get 'instituteId'
         userId: @get 'user._id'
         caption: "#{@get('user.firstName')} commented on <a class='activity-caption-link' href='/#{window.location.hash}'>#{@get('id')}</a>"
-        content: activityContent
+        content: @get('activityContent')
 
       activity.save().then((newObject) =>
         @get('activities').pushObject(newObject)
@@ -41,7 +41,7 @@ module.exports = App.VariantController = Ember.ObjectController.extend
         ecosystem: @get 'instituteId'
         userId: @get 'user._id'
         caption: "#{@get('user.firstName')} commented on family #{@get('familyId')}"
-        content: activityContent
+        content: @get('logActivityContent')
 
       activity.save().then((newObject) =>
         @get('logActivities').pushObject(newObject)
@@ -59,17 +59,33 @@ module.exports = App.VariantController = Ember.ObjectController.extend
 
       event.returnValue = $.post('/api/v1/sanger', payload)
       .then( (data) =>
-        activity = App.Activity.create
+
+        caption = "#{@get('user.firstName')} ordered Sanger for #{@get('hgncSymbol')} <a class='activity-caption-link' href='/#{window.location.hash}'>#{@get('uniqueId')}</a>"
+
+        attributes =
           activityId: 'sanger'
           context: 'variant'
           contextId: @get 'uniqueId'
           ecosystem: @get 'instituteId'
           userId: @get 'user._id'
-          caption: "#{@get('user.firstName')} ordered Sanger for #{@get('hgncSymbol')} <a class='activity-caption-link' href='/#{window.location.hash}'>#{@get('uniqueId')}</a>"
-          content: data.message
+          caption: caption
+          content: caption
+
+        activity = App.Activity.create attributes
 
         event.returnValue = activity.save().then (newObject) =>
           @get('activities').pushObject newObject
+
+          # Also add a comment to the family log
+          attributes['context'] = 'family'
+          attributes['contextId'] = @get('familyId')
+          attributes['tags'] = ['action']
+          attributes['category'] = @get('logActivityType').toLowerCase()
+          logActivity = App.Activity.create attributes
+
+          event.returnValue = logActivity.save().then (newLogObject) =>
+            @get('logActivities').pushObject newLogObject
+
       )
 
     hideInList: ->

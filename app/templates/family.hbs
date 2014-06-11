@@ -66,52 +66,63 @@
               <div>
                 <small>Show only</small>
                 {{view Ember.Select
+                   prompt="Select activity type"
                    content=activityTypes
                    valueBinding="selectedClinicalActivityType"}}</div>
             </div>
 
-            <div class="a-layout__panel--full is-scrollable">
-              <div class="variant-page-wrapper">
-                {{#if clinicalActivities}}
-                  <div class="a-activity__feed mb--big">
-                    {{#each activity in clinicalActivities}}
-                      <div class="a-activity__divider">
-                        <div class="a-activity__divider__time">
-                          {{fromNow activity.createdAt}}
+            <div class="a-layout__wrapper a-layout__panel--full">
+  
+              <div class="a-layout--vertical">
+
+                <div class="a-layout__panel--full is-scrollable bb">
+                  {{#if selectedClinicalActivities}}
+                    <div class="a-activity__feed mb--big">
+                      {{#each activity in selectedClinicalActivities}}
+                        <div class="a-activity__divider">
+                          <div class="a-activity__divider__time">
+                            {{fromNow activity.createdAt}}
+                          </div>
                         </div>
-                      </div>
 
-                      <div class="a-activity__wrapper">
-                        <div class="a-activity">
-                          <div class="a-activity__icon entypo comment a-icon--small"></div>
+                        <div class="a-activity__wrapper">
+                          <div class="a-activity">
+                            <div class="full-width">
+                              <div class="a-bar--space-between regular--stretched">
+                                <div class="a-activity__caption">
+                                  {{{activity.caption}}}
+                                </div>
 
-                          <div class="full-width">
-                            <div class="a-bar--space-between">
-                              <div class="a-activity__caption">
-                                {{{activity.caption}}}
+                                <div {{bind-attr class=":a-icon :entypo activity.entypoIcon" title="activity.firstTag"}}></div>
+
+                                <div {{action deleteActivity "clinical" activity}} class="a-button--naked">
+                                  <div class="a-button__icon entypo circled-cross a-icon"></div>
+                                </div>
                               </div>
 
-                              <div {{action deleteActivity "clinical" activity}} class="a-button--naked">
-                                <div class="a-button__icon entypo circled-cross a-icon"></div>
+                              <div class="a-activity__body regular">
+                                {{{activity.content}}}
                               </div>
-                            </div>
-
-                            <div class="a-activity__body">
-                              {{activity.content}}
                             </div>
                           </div>
                         </div>
-                      </div>
-                    {{/each}}
-                  </div>
-                {{/if}}
+                      {{/each}}
+                    </div>
+                  {{/if}}
+                </div>
 
-                {{activity-form contentBinding="clinicalActivityContent"
-                                onSubmit="postClinicalActivity"
-                                tagOptions=activityTypes
-                                selectedTagBinding="selectedClinicalTag"}}
+                <div class="a-layout__panel is-fixed regular">
+                  {{activity-form
+                      contentBinding="clinicalActivityContent"
+                      onSubmit="postClinicalActivity"
+                      tagOptions=activityTypes
+                      selectedTagBinding="selectedClinicalTag"}}
+                </div>
+
               </div>
-            </div>
+
+            </div>{{!-- Activity panel --}}
+
           </div>
         </div>
         
@@ -123,52 +134,63 @@
                 <div>
                   <small>Show only</small>
                   {{view Ember.Select
+                     prompt="Select activity type"
                      content=activityTypes
                      valueBinding="selectedResearchActivityType"}}</div>
               </div>
 
-              <div class="a-layout__panel--full is-scrollable">
-                <div class="variant-page-wrapper">
-                  {{#if researchActivities}}
-                    <div class="a-activity__feed mb--big">
-                      {{#each activity in researchActivities}}
-                        <div class="a-activity__divider">
-                          <div class="a-activity__divider__time">
-                            {{fromNow activity.createdAt}}
+              <div class="a-layout__wrapper a-layout__panel--full">
+  
+                <div class="a-layout--vertical">
+
+                  <div class="a-layout__panel--full is-scrollable bb">
+                    {{#if selectedResearchActivities}}
+                      <div class="a-activity__feed mb--big">
+                        {{#each activity in selectedResearchActivities}}
+                          <div class="a-activity__divider">
+                            <div class="a-activity__divider__time">
+                              {{fromNow activity.createdAt}}
+                            </div>
                           </div>
-                        </div>
 
-                        <div class="a-activity__wrapper">
-                          <div class="a-activity">
-                            <div class="a-activity__icon entypo comment a-icon--small"></div>
+                          <div class="a-activity__wrapper">
+                            <div class="a-activity">
+                              <div class="full-width">
+                                <div class="a-bar--space-between regular--stretched">
+                                  <div class="a-activity__caption">
+                                    {{{activity.caption}}}
+                                  </div>
 
-                            <div class="full-width">
-                              <div class="a-bar--space-between">
-                                <div class="a-activity__caption">
-                                  {{{activity.caption}}}
+                                  <div {{bind-attr class=":a-icon :entypo activity.entypoIcon" title="activity.firstTag"}}></div>
+
+                                  <div {{action deleteActivity "research" activity}} class="a-button--naked">
+                                    <div class="a-button__icon entypo circled-cross a-icon"></div>
+                                  </div>
                                 </div>
 
-                                <div {{action deleteActivity "research" activity}} class="a-button--naked">
-                                  <div class="a-button__icon entypo circled-cross a-icon"></div>
+                                <div class="a-activity__body regular">
+                                  {{{activity.content}}}
                                 </div>
-                              </div>
-
-                              <div class="a-activity__body">
-                                {{activity.content}}
                               </div>
                             </div>
                           </div>
-                        </div>
-                      {{/each}}
-                    </div>
-                  {{/if}}
+                        {{/each}}
+                      </div>
+                    {{/if}}
+                  </div>
 
-                  {{activity-form contentBinding="researchActivityContent"
-                                  onSubmit="postResearchActivity"
-                                  tagOptions=activityTypes
-                                  selectedTagBinding="selectedResearchTag"}}
+                  <div class="a-layout__panel is-fixed regular">
+                    {{activity-form
+                        contentBinding="researchActivityContent"
+                        onSubmit="postResearchActivity"
+                        tagOptions=activityTypes
+                        selectedTagBinding="selectedResearchTag"}}
+                  </div>
+
                 </div>
-              </div>
+
+              </div>{{!-- Activity panel (research) --}}
+
             </div>
           </div>
         {{/if}}

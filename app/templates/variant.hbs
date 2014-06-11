@@ -308,7 +308,7 @@
 
   <div class="center__wrapper">
     {{#if saving}}
-      saving ...
+      sending ...
     {{else}}
       <div class="a-button__group">
         {{#ic-modal-trigger classNames="a-button"}}
@@ -336,6 +336,7 @@
         {{#if activities}}
           <div class="a-activity__feed mb--big">
             {{#each activity in activities}}
+
               <div class="a-activity__divider">
                 <div class="a-activity__divider__time">
                   {{fromNow activity.createdAt}}
@@ -344,25 +345,24 @@
 
               <div class="a-activity__wrapper">
                 <div class="a-activity">
-                  <div class="a-activity__icon a-icon--small entypo comment"></div>
-
                   <div class="full-width">
-                    <div class="a-bar--space-between">
+                    <div class="a-bar--space-between regular--stretched">
                       <div class="a-activity__caption">
                         {{{activity.caption}}}
                       </div>
 
-                      <div {{action deleteActivity activity}} class="a-button--naked">
-                        <div class="a-button__icon a-icon entypo circled-cross"></div>
+                      <div {{action "deleteActivity" activity}} class="a-button--naked">
+                        <div class="a-button__icon entypo circled-cross a-icon"></div>
                       </div>
                     </div>
 
-                    <div class="a-activity__body">
+                    <div class="a-activity__body regular">
                       {{{activity.content}}}
                     </div>
                   </div>
                 </div>
               </div>
+
             {{/each}}
           </div>
         {{/if}}
@@ -376,8 +376,10 @@
 
       <div class="a-layout__panel--full is-scrollable small loose">
         {{#if logActivities}}
+
           <div class="a-activity__feed mb--big">
             {{#each activity in logActivities}}
+
               <div class="a-activity__divider">
                 <div class="a-activity__divider__time">
                   {{fromNow activity.createdAt}}
@@ -386,23 +388,23 @@
 
               <div class="a-activity__wrapper">
                 <div class="a-activity">
-                  <div class="a-activity__icon a-icon--small entypo comment"></div>
-
                   <div class="full-width">
-                    <div class="a-bar--space-between">
+                    <div class="a-bar--space-between regular--stretched">
                       <div class="a-activity__caption">
                         {{{activity.caption}}}
                       </div>
                     </div>
 
-                    <div class="a-activity__body">
+                    <div class="a-activity__body regular">
                       {{{activity.content}}}
                     </div>
                   </div>
                 </div>
               </div>
+
             {{/each}}
           </div>
+
         {{/if}}
 
         {{activity-form content=logActivityContent onSubmit="postLogActivity"}}

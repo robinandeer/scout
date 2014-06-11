@@ -23,6 +23,16 @@ App.Activity = Ember.Model.extend
     return @get 'tags.0'
   ).property 'tags'
 
+  entypoIcon: (->
+    tag = @get 'firstTag'
+    if tag is 'finding'
+      return 'search'
+    else if tag is 'action'
+      return 'new'
+    else if tag is 'conclusion'
+      return 'check'
+  ).property 'firstTag'
+
 App.Activity.camelizeKeys = yes
 App.Activity.primaryKey = '_id'
 App.Activity.collectionKey = 'activities'

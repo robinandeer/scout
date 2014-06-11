@@ -15,7 +15,7 @@ module.exports = App.FamilyController = Ember.ObjectController.extend
         ecosystem: @get 'instituteId'
         userId: @get 'user._id'
         caption: "#{@get('user.firstName')} commented on <a class='activity-caption-link' href='/#{window.location.hash}'>case #{@get('id')}</a>"
-        content: @get 'researchActivityContent'
+        content: @get 'clinicalActivityContent'
         category: 'clinical'
         tags: [@get('selectedClinicalTag')]
 
@@ -45,44 +45,48 @@ module.exports = App.FamilyController = Ember.ObjectController.extend
       )
 
   activityTypes: ['finding', 'action', 'conclusion']
-  selectedClinicalActivityType: null
-  selectedResearchActivityType: null
+  selectedClinicalActivityType: undefined
+  selectedResearchActivityType: undefined
   clinicalActivityContent: null
   researchActivityContent: null
   selectedClinicalTag: 'finding'
   selectedResearchTag: 'finding'
 
   clinicalActivities: (->
-    return App.Activity.find
+    queryParams =
       context: 'family'
       context_id: @get('id')
       category: 'clinical'
       ecosystem: @get('instituteId')
+
+    return App.Activity.find queryParams
   ).property 'id', 'instituteId'
 
   selectedClinicalActivities: (->
     # Optionally filter the activities by type
     activities = @get 'clinicalActivities'
     activityType = @get('selectedClinicalActivityType')
-    if activityType
+    if activityType and activityType isnt 'undefined'
       return activities.filterProperty 'firstTag', activityType
 
     return activities
   ).property 'clinicalActivities.@each', 'selectedClinicalActivityType'
 
   researchActivities: (->
-    return App.Activity.find
+    queryParams =
       context: 'family'
       context_id: @get('id')
       category: 'research'
       ecosystem: @get('instituteId')
+
+    return App.Activity.find queryParams
   ).property 'id', 'instituteId'
 
-  selectedClinicalActivities: (->
+  selectedResearchActivities: (->
     # Optionally filter the activities by type
     activities = @get 'researchActivities'
     activityType = @get('selectedResearchActivityType')
-    if activityType
+    if activityType and activityType isnt 'undefined'
       return activities.filterProperty 'firstTag', activityType
 
     return activities

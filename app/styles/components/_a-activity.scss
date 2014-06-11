@@ -30,7 +30,6 @@ $activity-line-margin-left: 25px;
 	@include display(flex);
 	@include align-items(flex-start);
 	position: relative;
-	padding: 10px 0;
 	border-top: 1px solid rgba($border-color, 0);
 	border-bottom: 1px solid rgba($border-color, 0);
 
