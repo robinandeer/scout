@@ -27,32 +27,32 @@ App.Family = Ember.Model.extend
   hide: ->
     # Do this first block to trigger property changes
     # that otherwise only happens in localStorage
-    @set('isDirtyHidden', yes)
+    @set 'isDirtyHidden', yes
     Ember.run.later @, =>
       @set 'isDirtyHidden', no
     , 1
 
-    return Ember.ls.save('family', @get('id'))
+    return Ember.ls.save 'family', @get('id'), moment().format('YYYY-MM-DD')
 
   unhide: ->
     # Do this first block to trigger property changes
     # that otherwise only happens in localStorage
-    @set('isDirtyHidden', yes)
+    @set 'isDirtyHidden', yes
     Ember.run.later @, =>
       @set 'isDirtyHidden', no
     , 1
 
-    return Ember.ls.delete('family', @get('id'))
+    return Ember.ls.delete 'family', @get('id')
 
   isDirtyHidden: no
 
   isHidden: (->
-    return Ember.ls.exists('family', @get('id'))
-  ).property('id', 'hide', 'unhide', 'isDirtyHidden')
+    return Ember.ls.exists 'family', @get('id')
+  ).property 'id', 'hide', 'unhide', 'isDirtyHidden'
 
   hiddenAt: (->
-    return Ember.ls.find('family', @get('id'))
-  ).property('id')
+    return Ember.ls.find 'family', @get('id')
+  ).property 'id'
 
 App.Family.camelizeKeys = yes
 App.Family.primaryKey = 'id'

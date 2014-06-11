@@ -6,7 +6,10 @@
     
     <div class="a-layout__panel--full is-scrollable loose">
       {{#each family in controller}}
-        <div class="a-card a-bar--space-between regular mb">
+        
+        {{#unless family.isHidden}}
+
+          <div class="a-card a-bar--space-between regular mb">
           {{#link-to "family" family classNames="a-bar__item"}}
             {{family.id}}
           {{/link-to}}
@@ -26,7 +29,7 @@
               {{#ic-menu-trigger classNames="a-button__icon entypo three-dots a-icon"}}{{/ic-menu-trigger}}
               {{#ic-menu-list classNames="expand-right"}}
                 {{#ic-menu-item on-select="hideFamily" model=family}}
-                  Hide
+                  Archive
                 {{/ic-menu-item}}
                 {{#ic-menu-item on-select="moveFamily" model=family}}
                   Move to research
@@ -37,7 +40,10 @@
               {{/ic-menu-list}}
             {{/ic-menu}}
           </div>
-        </div>
+          </div>
+
+        {{/unless}}
+
       {{/each}}
     </div>
 

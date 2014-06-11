@@ -6,6 +6,11 @@ module.exports = App.FamiliesController = Ember.ArrayController.extend
 
   instituteIdBinding: 'controllers.institute.id'
 
+  actions:
+    hideFamily: (family) ->
+      # Add variant to the list of hidden elements (localStorage)
+      family.get('model').hide()
+
   model: (->
-    App.Family.find({institute: @get('instituteId')})
-  ).property('instituteId')
+    return App.Family.find({institute: @get('instituteId')})
+  ).property 'instituteId'

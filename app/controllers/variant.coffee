@@ -72,6 +72,16 @@ module.exports = App.VariantController = Ember.ObjectController.extend
           @get('activities').pushObject newObject
       )
 
+    hideInList: ->
+      # Add variant to the list of hidden elements (localStorage)
+      @get('model').hide()
+
+    unHideInList: ->
+      # Add back variant to the list of hidden elements (localStorage)
+      @get('model').unhide()
+
+      return null
+
   # +------------------------------------------------------------------+
   # | Computed properties
   # +------------------------------------------------------------------+

@@ -1,0 +1,67 @@
+<div class="a-layout__panel--full a-layout__wrapper">
+  <div class="a-layout">
+
+    <div class="a-layout__panel--full a-list br">
+
+      <div class="a-list__item header-style bb slim text-center">
+        Archived families
+      </div>
+
+      {{#each family in hiddenFamiles}}
+        <div class="a-list__item a-bar--space-between bb loose">
+
+          <div>Case {{family.id}}</div>
+
+          <div>{{fromNow family.value}}</div>
+
+          <div class="a-button" {{action "resetItem" "family" family.id}}>
+            Unarchive
+          </div>
+
+        </div>
+      {{/each}}
+
+      <div class="a-list__item a-bar--center loose">
+        <div {{action "resetHidden" "family"}} class="a-button">
+          <div class="a-button__body">Unarchive all families</div>
+        </div>
+      </div>
+
+      <div class="a-list__item text-center bb slim">
+        <small>You might have to reload the browser for the unarchived items to return.</small>
+      </div>
+
+    </div>
+
+    <div class="a-layout__panel--full a-list br">
+
+      <div class="a-list__item header-style bb slim text-center">
+        Archived variants
+      </div>
+
+      {{#each variant in hiddenVariants}}
+        <div class="a-list__item a-bar--space-between bb loose">
+
+          <div>Variant {{variant.value}}</div>
+
+          <div class="a-button" {{action "resetItem" "variant" variant.id}}>
+            Unarchive
+          </div>
+
+        </div>
+      {{/each}}
+
+      <div class="a-list__item a-bar--center loose">
+        <div {{action "resetHidden" "variant"}} class="a-button">
+          <div class="a-button__body">Unarchive all variants</div>
+        </div>
+      </div>
+
+      <div class="a-list__item text-center bb slim">
+        <small>You might have to reload the browser for the unarchived items to return.</small>
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -241,6 +241,36 @@ App.Variant = Ember.Model.extend
   expressionType: Em.attr()
   genomicSuperDups: Em.attr()
 
+  hide: ->
+    # Do this first block to trigger property changes
+    # that otherwise only happens in localStorage
+    @set 'isDirtyHidden', yes
+    Ember.run.later @, =>
+      @set 'isDirtyHidden', no
+    , 1
+
+    return Ember.ls.save 'variant', @get('id'), @get('uniqueId')
+
+  unhide: ->
+    # Do this first block to trigger property changes
+    # that otherwise only happens in localStorage
+    @set 'isDirtyHidden', yes
+    Ember.run.later @, =>
+      @set 'isDirtyHidden', no
+    , 1
+
+    return Ember.ls.delete 'variant', @get('id')
+
+  isDirtyHidden: no
+
+  isHidden: (->
+    return Ember.ls.exists 'variant', @get('id')
+  ).property 'id', 'hide', 'unhide', 'isDirtyHidden'
+
+  hiddenAt: (->
+    return Ember.ls.find 'variant', @get('id')
+  ).property 'id'
+
 App.Variant.camelizeKeys = yes
 App.Variant.adapter = VariantAdapter.create()
 

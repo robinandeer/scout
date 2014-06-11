@@ -22,13 +22,14 @@
               {{/unless}}
               <div class="dotdotdot slim a-bar__item--double br--listed">Inheritance models</div>
               <div class="dotdotdot slim a-bar__item--half br--listed">HGMD</div>
-              <div class="dotdotdot slim a-bar__item--half br--listed">Settings</div>
+              <div class="dotdotdot slim a-bar__item--half br--listed">Archive</div>
             {{/unless}}
           </div>
         </div>
 
         <div class="a-layout__panel--full is-scrollable variants-main">
           {{#each variant in model}}
+            {{#unless variant.isHidden}}
             <div class="a-list__item a-bar--space-between variant-list-item">
               {{!-- COLUMN --}}
               {{#link-to "variant" variant
@@ -233,10 +234,12 @@
                 </div>        
 
                 {{!-- COLUMN --}}
-                <div class="a-bar__item--half a-bar--center a-icon entypo three-dot slim--squashed br--listed"></div>
+                <div {{action "hideVariant" variant}} class="a-bar__item--half a-bar--center slim--squashed br--listed is-clickable">
+                  <div class="a-icon entypo archive"></div>
+                </div>
               {{/unless}}
-
             </div>
+            {{/unless}}
           {{/each}}
 
           <div class="a-list__item slim">

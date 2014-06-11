@@ -9,10 +9,17 @@
           {{/link-to}}
         </div>
 
-        <div class="a-button" title="Archive variant">
-          <div class="a-button__icon a-icon entypo archive"></div>
-          <div>Archive</div>
-        </div>
+        {{#if isHidden}}
+          <div {{action "unHideInList"}} class="a-button">
+            <div class="a-button__icon a-icon entypo archive"></div>
+            <div class="a-button__body">Unarchive</div>
+          </div>
+        {{else}}
+          <div {{action "hideInList"}} class="a-button">
+            <div class="a-button__icon a-icon entypo archive"></div>
+            <div class="a-button__body">Archive</div>
+          </div>
+        {{/if}}
       </div>
 
       <div class="center__wrapper big-font" title="rank score">
