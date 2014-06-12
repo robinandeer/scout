@@ -1,0 +1,15 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    Robin ANdeer -- Bioinformatician -- @robinandeer
+    Mats Dahlberg -- Database Expert -- <twitter>
+
+# THANKS
+
+    <name>
+
+# TECHNOLOGY COLOPHON
+
+    Ember.js, Handlebars, jQuery, Normalize.css, Brunch.io, Flask
