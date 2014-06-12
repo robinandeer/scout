@@ -379,15 +379,11 @@
               Database and gene search
             </div>
 
-            <div class="a-list__item a-choice__wrapper regular">
+            <div class="a-list__item a-bar--space-between regular">
               {{#each db in filter.clinical_db_gene_annotation}}
-                <div class="a-choice">
-                  <div class="a-choice__label">{{db}}</div>
-                  {{view Ember.RadioButton
-                      name="database"
-                      selectionBinding="database"
-                      value=db}}
-                </div>
+                {{#link-to "variants" instituteId familyId db classNames="a-bar__item slim br--listed"}}
+                  {{db}}
+                {{/link-to}}
               {{/each}}
             </div>
 
