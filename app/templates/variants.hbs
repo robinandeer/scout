@@ -379,9 +379,9 @@
               Database and gene search
             </div>
 
-            <div class="a-list__item a-bar--space-between regular">
+            <div class="a-list__item a-bar--space-between">
               {{#each db in filter.clinical_db_gene_annotation}}
-                {{#link-to "variants" instituteId familyId db classNames="a-bar__item slim br--listed"}}
+                {{#link-to "variants" instituteId familyId db classNames="a-bar__item regular br--listed"}}
                   {{db}}
                 {{/link-to}}
               {{/each}}
