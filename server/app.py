@@ -5,7 +5,7 @@
 from datetime import timedelta
 import os
 
-from flask import Flask, render_template, session
+from flask import Flask, render_template, session, current_app
 from flask_sslify import SSLify
 
 from .api import api
@@ -50,10 +50,7 @@ def configure_app(app, config=None):
   app.config.from_object(DefaultConfig)
 
   # http://flask.pocoo.org/docs/config/#instance-folders
-  app.config.from_pyfile('scout.cfg', silent=True)
-
-  if config:
-    app.config.from_object(config)
+  app.config.from_pyfile((config or 'scout.cfg'), silent=True)
 
   # Set the timeout for our session to 30 days.
   # The session will be lost after 30 days with no interaction form
@@ -105,14 +102,14 @@ def configure_extensions(app):
   # GitHub Issue Tracker
   gh_issues.init_app(app)
 
-  # # Setup SSL: http://flask.pocoo.org/snippets/111/
-  # ctx.use_privatekey_file(app.config.get('SSL_KEY_PATH'))
-  # ctx.use_certificate_file(app.config.get('SSL_CERT_PATH'))
+  # Setup SSL: http://flask.pocoo.org/snippets/111/
+  ctx.use_privatekey_file(app.config.get('SSL_KEY_PATH'))
+  ctx.use_certificate_file(app.config.get('SSL_CERT_PATH'))
 
-  # # https://github.com/kennethreitz/flask-sslify
-  # # Force SSL. Redirect all incoming requests to HTTPS.
-  # # Only takes effect when DEBUG=False
-  # sslify = SSLify(app)
+  # https://github.com/kennethreitz/flask-sslify
+  # Force SSL. Redirect all incoming requests to HTTPS.
+  # Only takes effect when DEBUG=False
+  SSLify(app)
 
 
 def configure_blueprints(app, blueprints):
@@ -129,21 +126,21 @@ def configure_logging(app):
     return
 
   import logging
-  from logging.handlers import SMTPHandler
+  from logging.handlers import RotatingFileHandler, SMTPHandler
 
   # Set info level on logger which might be overwritten by handlers
   # Suppress DEBUG messages
   app.logger.setLevel(logging.INFO)
 
   info_log = os.path.join(app.config['LOG_FOLDER'], 'info.log')
-  info_file_handler = logging.handlers.RotatingFileHandler(
+  info_log_handler = RotatingFileHandler(
     info_log, maxBytes=100000, backupCount=10)
-  info_file_handler.setLevel(logging.INFO)
-  info_file_handler.setFormatter(logging.Formatter(
+  info_log_handler.setLevel(logging.INFO)
+  info_log_handler.setFormatter(logging.Formatter(
     '%(asctime)s %(levelname)s: %(message)s '
     '[in %(pathname)s:%(lineno)d]')
   )
-  app.logger.addHandler(info_file_handler)
+  app.logger.addHandler(info_log_handler)
 
   mail_handler = SMTPHandler(
     app.config['MAIL_SERVER'],
@@ -171,4 +168,5 @@ def configure_error_handlers(app):
 
   @app.errorhandler(500)
   def server_error_page(error):
+    current_app.logger.exception(error)
     return render_template('errors/server_error.html'), 500

@@ -1,31 +1,26 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from flask.ext.script import Manager
+from flask.ext.script import Manager, Server
 
 from server import create_app
 from server.extensions import ctx
 
-app = create_app()
-manager = Manager(app)
+manager = Manager(create_app)
 
 
-@manager.command
-@manager.option('-h', '--host')
-@manager.option('-p', '--port')
-def run(host='localhost', port=None):
-  """Run in local machine."""
+class SecureServer(Server):
+  """Enables conditional setup of SSL context during the ``app.run()``
+  execution depending on DEBUG mode."""
+  def __call__(self, app, *args, **kwargs):
 
-  # Use command line, config definition or 5000 (default)
-  port = port or int(app.config.get('PORT', 5000))
+    if not app.config.get('SSL_MODE'):
+      # Remove SSL context
+      del self.server_options['ssl_context']
 
-  app.run(host=host, port=port, debug=app.config.get('DEBUG'), ssl_context=ctx)
+    # Run the original ``__call__`` function
+    super(SecureServer, self).__call__(app, *args, **kwargs)
 
-
-@manager.command
-def initdb():
-  """Init/reset database."""
-  pass
-
+manager.add_command('serve', SecureServer(ssl_context=ctx))
 
 manager.add_option(
   '-c', '--config', dest='config', required=False, help='config file')

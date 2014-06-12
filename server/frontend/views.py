@@ -80,7 +80,7 @@ def authorized(oauth_response):
     return abort(403)
 
   # Add token to session, do it before validation to be able to fetch
-  # additional data (like email) on the authenticaed user
+  # additional data (like email) on the authenticated user
   session['google_token'] = (oauth_response['access_token'], '')
 
   # Get additional user info with the access token
@@ -140,8 +140,7 @@ def authorized(oauth_response):
     session['institutes'] = user['institutes']
     flash('Logged in', 'success')
 
-    return redirect(request.args.get('next') or request.referrer or
-                    url_for('frontend.index'))
+    return redirect(request.args.get('next') or url_for('frontend.index'))
 
   flash('Sorry, you could not log in', 'warning')
   return redirect('frontend.connect')

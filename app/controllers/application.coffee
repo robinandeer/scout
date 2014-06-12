@@ -10,6 +10,6 @@ module.exports = App.ApplicationController = Ember.ObjectController.extend
       @transitionToRoute('settings')
 
     logout: ->
-      Ember.HistoryLocation.replaceState('/logout');
+      window.location.replace '/logout'
 
   menuIsShowing: no
