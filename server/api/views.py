@@ -158,10 +158,11 @@ def issues(issue_id=None):
     # Submit an issue to the Scout repo at GitHub
 
     # Build the body content
-    body = """{body}
+    utf8_name = current_user.get('name', '').decode('utf-8')
+    body = u"""{body}
 
 submitted by **{author}**.
-    """.format(body=request.json['body'], author=current_user.get('name'))
+    """.format(body=request.json['body'].decode('utf-8'), author=utf8_name)
 
     # Create the new isssue
     issue = gh_issues.create(request.json['title'], body)
