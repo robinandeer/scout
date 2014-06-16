@@ -1,5 +1,4586 @@
-!function(){"use strict";var e="undefined"!=typeof window?window:global;if("function"!=typeof e.require){var t={},s={},a=function(e,t){return{}.hasOwnProperty.call(e,t)},n=function(e,t){var s,a,n=[];s=/^\.\.?(\/|$)/.test(t)?[e,t].join("/").split("/"):t.split("/");for(var i=0,r=s.length;r>i;i++)a=s[i],".."===a?n.pop():"."!==a&&""!==a&&n.push(a);return n.join("/")},i=function(e){return e.split("/").slice(0,-1).join("/")},r=function(t){return function(s){var a=i(t),r=n(a,s);return e.require(r,t)}},o=function(e,t){var a={id:e,exports:{}};return s[e]=a,t(a.exports,r(e),a),a.exports},l=function(e,i){var r=n(e,".");if(null==i&&(i="/"),a(s,r))return s[r].exports;if(a(t,r))return o(r,t[r]);var l=n(r,"./index");if(a(s,l))return s[l].exports;if(a(t,l))return o(l,t[l]);throw new Error('Cannot find module "'+e+'" from "'+i+'"')},h=function(e,s){if("object"==typeof e)for(var n in e)a(e,n)&&(t[n]=e[n]);else t[e]=s},u=function(){var e=[];for(var s in t)a(t,s)&&e.push(s);return e};e.require=l,e.require.define=h,e.require.register=h,e.require.list=u,e.require.brunch=!0}}(),require.register("adapters/filter",function(e,t,s){s.exports=Ember.FilterAdapter=Ember.Adapter.extend({host:"/api/v1",find:function(e,t){var s,a,n,i;return n=t.split(","),s=n[0],a=n[1],i=""+this.get("host")+"/families/"+s+"/filter?institute="+a,$.getJSON(i).then(function(s){var a,n,i,r,o,l,h,u,c;if(t)for(u=["functional_annotations","gene_annotations","inheritence_models"],r=0,l=u.length;l>r;r++){for(i=u[r],n=[],c=s[i],o=0,h=c.length;h>o;o++)a=c[o],n.push(""+i+"_"+a);s[i]=n}return e.load(t,s)})}})}),require.register("adapters/local-storage",function(e,t,s){var a;a=function(e,t){return""+e+"-"+t},s.exports=Ember.LocalStorage=Ember.Object.extend({init:function(){return this.set("length",localStorage.length)},exists:function(e,t){return a(e,t)in localStorage},find:function(e,t){var s,n;return n=localStorage.getItem(a(e,t)),s=moment(n),s.isValid()?s:n},findAll:function(e){var t,s,a,n,i,r;for(a=Em.A(),t=i=0,r=localStorage.length;r>=0?r>=i:i>=r;t=r>=0?++i:--i)s=localStorage.key(t),(s||"").startsWith(e)&&(n=moment(localStorage.getItem(s)),n.isValid()||(n=localStorage.getItem(s)),a.pushObject(Em.Object.create({id:s.split("-")[1],value:n})));return a},deleteAll:function(e){var t,s,a;a=[];for(t in localStorage)s=localStorage[t],a.push(t.substring(0,e.length)===e?delete localStorage[t]:void 0);return a},save:function(e,t,s){return localStorage[a(e,t)]=s,this.incrementProperty("length")},"delete":function(e,t){return delete localStorage[a(e,t)],this.incrementProperty("length",-1)}}),Ember.ls=Ember.LocalStorage.create()}),require.register("adapters/new-rest",function(e,t,s){s.exports=Ember.NewRESTAdapter=Ember.RESTAdapter.extend({buildURL:function(e,t){var s;if(s=Ember.get(e,"url"),!s)throw new Error("Ember.RESTAdapter requires a `url` property to be specified");return Ember.isEmpty(t)?s:""+s+"/"+t}})}),require.register("adapters/omim",function(e,t,s){s.exports=Ember.OmimAdapter=Ember.Adapter.extend({host:"/api/v1",find:function(e,t){return $.getJSON(""+this.get("host")+"/omim/"+t).then(function(s){var a;return s.SYNDROMS=function(){var e,t,n,i;for(n=s.SYNDROMS,i=[],e=0,t=n.length;t>e;e++)a=n[e],i.push(a.toLowerCase().capitalize());return i}(),e.load(t,s)})}})}),require.register("adapters/variant",function(e,t,s){s.exports=App.VariantAdapter=Ember.Adapter.extend({host:"/api/v1",buildQueryString:function(e){var t,s,a;s="?";for(t in e)a=e[t],a&&(a===!0?s+=""+t+"&":"undefined"!==a&&(s+=""+t+"="+a+"&"));return s.substring(0,s.length-1)},find:function(e,t){return $.getJSON(""+this.get("host")+"/variants/"+t).then(function(s){return e.load(t,s)})},findQuery:function(e,t,s){var a,n;return n=""+this.get("host")+"/families/"+s.family_id+"/variants",s.queryParams&&(a=this.buildQueryString(s.queryParams),n+=a),$.getJSON(n).then(function(s){return t.load(e,s)})}})}),require.register("components/a-popover",function(e,t,s){s.exports=App.APopoverComponent=Ember.Component.extend({classNames:["a-popover"],classNameBindings:["direction"],triggerdBy:"click",isVisible:!1,didInsertElement:function(){return this.$menu=this.$(),this.$menu?(this.$parent=this.$menu.parent(":not(script)"),this.$parent.addClass("a-popover__wrapper"),"click"===this.get("triggerdBy")?this.$parent.on("click",$.proxy(this.toggle,this)):"hover"===this.get("triggerdBy")&&(this.$parent.on("mouseenter",$.proxy(this.enter,this)),this.$parent.on("mouseleave",$.proxy(this.leave,this))),this.set("inserted",!0)):Ember.run.next(this,this.didInsertElement)},toggle:function(e){return 0===$(e.target).closest(".a-popover").length?this.toggleProperty("isVisible"):void 0},enter:function(){return this.set("isVisible",!0)},leave:function(){return this.set("isVisible",!1)},isVisibleObserver:function(){var e=this;return this.get("direction")?Ember.run.scheduleOnce("afterRender",this,function(){return e.$().css(e.get("direction"),-e.$menu.outerWidth())}):void 0}.observes("isVisible")})}),require.register("components/activity-form",function(e,t,s){s.exports=App.ActivityFormComponent=Ember.Component.extend({classNames:["a-activity__form__wrapper"],userId:null,content:null,currentUserId:null,userHasFullAccess:function(){return(this.get("userId")||-1)===this.get("currentUserId")}.property("userId","currentUserId"),writePrompt:"Write comment here...",submitPrompt:"Submit",isEditing:!1,hasTags:function(){return this.get("tags.length")>0}.property("tags"),isFailingObserver:function(){return this.get("isFailing")?(this.set("writePromptBackup",this.get("writePrompt")),this.set("writePrompt","You need to write something here...")):this.get("writePromptBackup")?this.set("writePrompt",this.get("writePromptBackup")):void 0}.observes("isFailing"),clear:function(){return this.set("content",null),this.set("isFailing",!1)},actions:{cancel:function(){return this.set("content",this.get("contentBackup")),this.set("isEditing",!1)},submit:function(){return this.get("content")?(this.sendAction("onSubmit",{createdAt:new Date,content:this.get("content")}),this.clear()):this.set("isFailing",!0)},startEditing:function(){return this.set("contentBackup",this.get("content")),this.set("isEditing",!0)},remove:function(){return this.sendAction("onRemove",this.get("activityId"))}}})}),require.register("config/app",function(e,t,s){var a,n;a=t("config/environment"),a.get("isDevelopment")?(n={LOG_TRANSITIONS:!0,LOG_TRANSITIONS_INTERNAL:!1,LOG_STACKTRACE_ON_DEPRECATION:!0,LOG_BINDINGS:!0,LOG_VIEW_LOOKUPS:!0,LOG_ACTIVE_GENERATION:!0},Ember.RSVP.configure("onerror",function(e){var t;return"object"===Ember.typeOf(e)?(t=(null!=e?e.message:void 0)||"No error message",Ember.Logger.error("RSVP Error: "+t),Ember.Logger.error(null!=e?e.stack:void 0),Ember.Logger.error(null!=e?e.object:void 0)):Ember.Logger.error("RSVP Error",e)}),Ember.STRUCTURED_PROFILE=!0,Ember.Logger.debug("Running in the %c"+a.get("name")+"%c environment","color: red;","")):n={},s.exports=Ember.Application.create(n)}),require.register("config/environment",function(e,t,s){var a;window.require.list().filter(function(e){return new RegExp("^config/environments/").test(e)?t(e):void 0}),a=Ember.Object.extend({isTest:Ember.computed.equal("name","test"),isDevelopment:Ember.computed.equal("name","development"),isProduction:Ember.computed.equal("name","production")}),s.exports=a.create(window.TAPAS_ENV)}),require.register("config/router",function(e,t,s){s.exports=App.Router.map(function(){return this.resource("issues",function(){return this.resource("issue",{path:"/:issue_id"}),this.route("new")}),this.resource("settings"),this.resource("institutes"),this.resource("institute",{path:"/:institute_id"},function(){return this.resource("family",{path:"/:family_id"})}),this.resource("variants",{path:"/variants/:institute_id/:family_id/:database_id"},function(){return this.resource("variant",{path:"/:variant_id"})})})}),require.register("controllers/application",function(e,t,s){s.exports=App.ApplicationController=Ember.ObjectController.extend({actions:{toggleMenu:function(){return this.toggleProperty("menuIsShowing"),!1},goToSettings:function(){return this.transitionToRoute("settings")},logout:function(){return window.location.replace("/logout")}},menuIsShowing:!1})}),require.register("controllers/families",function(e,t,s){s.exports=App.FamiliesController=Ember.ArrayController.extend({needs:["institute"],sortProperties:["updateDateRaw"],sortAscending:!1,instituteIdBinding:"controllers.institute.id",actions:{hideFamily:function(e){return e.get("model").hide()}},model:function(){return App.Family.find({institute:this.get("instituteId")})}.property("instituteId")})}),require.register("controllers/family",function(e,t,s){s.exports=App.FamilyController=Ember.ObjectController.extend({needs:["application","institute"],userBinding:"controllers.application.model",instituteIdBinding:"controllers.institute.id",queryParams:["selectedClinicalActivityType","selectedResearchActivityType"],actions:{postClinicalActivity:function(){var e,t=this;return e=App.Activity.create({activityId:"comment",context:"family",contextId:this.get("id"),ecosystem:this.get("instituteId"),userId:this.get("user._id"),caption:""+this.get("user.firstName")+" commented on <a class='activity-caption-link' href='/"+window.location.hash+"'>case "+this.get("id")+"</a>",content:this.get("clinicalActivityContent"),category:"clinical",tags:[this.get("selectedClinicalTag")]}),e.save().then(function(e){return t.get("clinicalActivities").pushObject(e)})},deleteActivity:function(e,t){return this.get(""+e+"Activities").removeObject(t),t.deleteRecord()},postResearchActivity:function(){var e,t=this;return e=App.Activity.create({activityId:"comment",context:"family",contextId:this.get("id"),ecosystem:this.get("instituteId"),userId:this.get("user._id"),caption:""+this.get("user.firstName")+" commented on <a class='activity-caption-link' href='/"+window.location.hash+"'>case "+this.get("id")+"</a>",content:this.get("researchActivityContent"),category:"research",tags:[this.get("selectedResearchTag")]}),e.save().then(function(e){return t.get("researchActivities").pushObject(e)})}},activityTypes:["finding","action","conclusion"],selectedClinicalActivityType:void 0,selectedResearchActivityType:void 0,clinicalActivityContent:null,researchActivityContent:null,selectedClinicalTag:"finding",selectedResearchTag:"finding",clinicalActivities:function(){var e;return e={context:"family",context_id:this.get("id"),category:"clinical",ecosystem:this.get("instituteId")},App.Activity.find(e)}.property("id","instituteId"),selectedClinicalActivities:function(){var e,t;return e=this.get("clinicalActivities"),t=this.get("selectedClinicalActivityType"),t&&"undefined"!==t?e.filterProperty("firstTag",t):e}.property("clinicalActivities.@each","selectedClinicalActivityType"),researchActivities:function(){var e;return e={context:"family",context_id:this.get("id"),category:"research",ecosystem:this.get("instituteId")},App.Activity.find(e)}.property("id","instituteId"),selectedResearchActivities:function(){var e,t;return e=this.get("researchActivities"),t=this.get("selectedResearchActivityType"),t&&"undefined"!==t?e.filterProperty("firstTag",t):e}.property("researchActivities.@each","selectedResearchActivityType")})}),require.register("controllers/index",function(e,t,s){s.exports=App.IndexController=Ember.ObjectController.extend()}),require.register("controllers/institute",function(e,t,s){s.exports=App.InstituteController=Ember.ObjectController.extend({needs:["application"],currentPathBinding:"controllers.application.currentPath",actions:{hideFamily:function(e){return e.get("model").hide()}},openFamilies:function(){return this.get("content").filterProperty("status","open")}.property("content"),familyIsLoaded:function(){return this.get("currentPath")?this.get("currentPath").match(/family/)?!0:!1:!0}.property("currentPath")})}),require.register("controllers/institute/index",function(e,t,s){s.exports=App.InstituteIndexController=Ember.Controller.extend()}),require.register("controllers/issues/new",function(e,t,s){s.exports=App.IssuesNewController=Ember.ObjectController.extend({needs:["application"],userBinding:"controllers.application.model",isConfirmingSubmit:!1,actions:{saveIssue:function(){var e=this;return this.set("isConfirmingSubmit",!1),this.get("model").save().then(function(t){return e.transitionToRoute("issue",t)})}}})}),require.register("controllers/settings",function(e,t,s){s.exports=App.SettingsController=Ember.Controller.extend({actions:{resetHidden:function(e){return Ember.ls.deleteAll(e)},resetItem:function(e,t){return Ember.ls["delete"](e,t),!1}},hiddenFamiles:function(){return Ember.ls.findAll("family")}.property("Ember.ls.length"),hiddenVariants:function(){return Ember.ls.findAll("variant")}.property("Ember.ls.length")})}),require.register("controllers/variant",function(e,t,s){s.exports=App.VariantController=Ember.ObjectController.extend({needs:["application","variants"],userBinding:"controllers.application.model",instituteIdBinding:"controllers.variants.instituteId",familyIdBinding:"controllers.variants.familyId",databaseIdBinding:"controllers.variants.database",isShowingActivity:!0,hasActivityObserver:function(){return this.get("hasActivity")?this.set("isShowingActivity",!0):void 0}.observes("hasActivity"),activityContent:void 0,logActivityContent:void 0,actions:{postActivity:function(){var e,t=this;return e=App.Activity.create({activityId:"comment",context:"variant",contextId:this.get("uniqueId"),ecosystem:this.get("instituteId"),userId:this.get("user._id"),caption:""+this.get("user.firstName")+" commented on <a class='activity-caption-link' href='/"+window.location.hash+"'>"+this.get("id")+"</a>",content:this.get("activityContent")}),e.save().then(function(e){return t.get("activities").pushObject(e)})},postLogActivity:function(){var e,t=this;return e=App.Activity.create({activityId:"comment",context:"family",contextId:this.get("familyId"),ecosystem:this.get("instituteId"),userId:this.get("user._id"),caption:""+this.get("user.firstName")+" commented on family "+this.get("familyId"),content:this.get("logActivityContent")}),e.save().then(function(e){return t.get("logActivities").pushObject(e)})},deleteActivity:function(e){return this.get("activities").removeObject(e),e.deleteRecord()},submitSangerForm:function(e,t){var s,a=this;return s={message:this.get("sangerEmailBody"),hgnc_symbol:this.get("hgncSymbol")},t.returnValue=$.post("/api/v1/sanger",s).then(function(){var e,s,n;return n=""+a.get("user.firstName")+" ordered Sanger for "+a.get("hgncSymbol")+" <a class='activity-caption-link' href='/"+window.location.hash+"'>"+a.get("uniqueId")+"</a>",s={activityId:"sanger",context:"variant",contextId:a.get("uniqueId"),ecosystem:a.get("instituteId"),userId:a.get("user._id"),caption:n,content:n},e=App.Activity.create(s),t.returnValue=e.save().then(function(e){var n;return a.get("activities").pushObject(e),s.context="family",s.contextId=a.get("familyId"),s.tags=["action"],s.category=a.get("logActivityType").toLowerCase(),n=App.Activity.create(s),t.returnValue=n.save().then(function(e){return a.get("logActivities").pushObject(e)})})})},hideInList:function(){return this.get("model").hide()},unHideInList:function(){return this.get("model").unhide(),null}},gtString:function(){var e,t,s,a,n;for(t=[],n=this.get("gtcalls.content"),s=0,a=n.length;a>s;s++)e=n[s],t.push(""+e.get("idn")+": "+e.get("gt"));return t}.property("gtcalls.@each.idn","gtcalls.@each.gt"),sangerEmailBody:function(){var e,t,s,a,n;return s=function(){var e,s,a,n;for(a=this.get("variantFunctions"),n=[],e=0,s=a.length;s>e;e++)t=a[e],n.push("<li>"+t+"</li>");return n}.call(this),n=function(){var e,t,s,n;for(s=this.get("gtString"),n=[],e=0,t=s.length;t>e;e++)a=s[e],n.push("<li>"+a+"</li>");return n}.call(this),e="<p>Case "+this.get("familyId")+": <a class='activity-caption-link' href='/"+document.URL+"'>"+this.get("uniqueId")+"</a></p>\n\n<p>HGNC symbol: "+this.get("hgncSymbol")+"</p>\n\n<p>Database: "+this.get("databaseId")+"</p>\n\n<p>\n  Chr position: <br>\n  "+this.get("chromosomePositionString")+"\n</p>\n\n<p>\n  Amino acid change(s): <br>\n  <ul>"+(s.join("")||"<li>No protein changes</li>")+"</ul>\n</p>\n\n<p>\n  GT-call: <br>\n  <ul>"+n.join("")+"</ul>\n</p>\n\n<p>Ordered by: "+this.get("user.name")+"</p>"}.property("familyId","uniqueId","hgncSymbol","chromosomePositionString","variantFunctions","gtString","databaseId","user.name"),predictions:function(){var e;return function(){var t,s,a,n;for(a=["cScores","severities","frequencies","conservations"],n=[],t=0,s=a.length;s>t;t++)e=a[t],n.push({name:e.capitalize(),values:this.get(e)});return n}.call(this)}.property("cScores","severities","frequencies","conservations"),activities:function(){return App.Activity.find({context:"variant",context_id:this.get("uniqueId"),ecosystem:this.get("instituteId")})}.property("uniqueId","instituteId"),logActivities:function(){return App.Activity.find({context:"family",context_id:this.get("familyId"),category:this.get("logActivityType").toLowerCase(),ecosystem:this.get("instituteId")})}.property("familyId","logActivityType","instituteId"),hasActivity:function(){return this.get("activities.content.length")>0?!0:!1}.property("activities"),logActivityType:function(){return"research"===this.get("databaseId")?"Research":"Clinical"}.property("databaseId"),omim:function(){return this.get("hgncSymbol")?App.Omim.find(this.get("hgncSymbol")):void 0}.property("hgncSymbol"),ensemblLink:function(){return"http://www.ensembl.org/Homo_sapiens/Gene/Summary?g="+this.get("ensemblGeneid")}.property("ensemblGeneid"),hpaLink:function(){return"http://www.proteinatlas.org/search/"+this.get("ensemblGeneid")}.property("ensemblGeneid"),stringLink:function(){return"http://string-db.org/newstring_cgi/show_network_section.pl?identifier="+this.get("ensemblGeneid")}.property("ensemblGeneid"),ucscLink:function(){return"http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position="+this.get("chr")+":"+this.get("startBp")+"-"+this.get("stopBp")+"&dgv=pack&knownGene=pack&omimGene=pack"}.property("chr","startBp","stopBp"),entrezLink:function(){return"http://www.ncbi.nlm.nih.gov/sites/gquery/?term="+this.get("hgncSymbol")}.property("hgncSymbol"),idsLink:function(){return"http://databases.scilifelab.se:8080/idLookup?data="+this.get("ensemblGeneid")}.property("ensemblGeneid"),omimLink:function(){return"http://www.omim.org/entry/"+this.get("omim.OMIM_ID")}.property("omim.OMIM_ID"),igvLink:function(){return"https://clinical-db.scilifelab.se:8081/api/v1/variants/"+this.get("id")+"/igv.xml"}.property("id"),hgmdLink:function(){return"http://www.hgmd.cf.ac.uk/ac/gene.php?gene="+this.get("hgncSymbol")+"&accession="+this.get("hgmdAccession")}.property("hgncSymbol","hgmdAccession")})}),require.register("controllers/variants",function(e,t,s){s.exports=App.VariantsController=Ember.ArrayController.extend({needs:["application"],queryParams:["database","relation","hbvdb","thousand_g","dbsnp129","dbsnp132","esp6500","gene_name","priority","inheritence_models_AR_hom","inheritence_models_AR_compound","inheritence_models_AR_hom_denovo","inheritence_models_AR_denovo","inheritence_models_Na","inheritence_models_X","inheritence_models_X_dn","functional_annotations_-","functional_annotations_frameshift deletion","functional_annotations_frameshift insertion","functional_annotations_nonframeshift deletion","functional_annotations_nonframeshift insertion","functional_annotations_nonsynonymous SNV","functional_annotations_stopgain SNV","functional_annotations_stoploss SNV","functional_annotations_synonymous SNV","functional_annotations_unknown","gene_annotations_downstream","gene_annotations_exonic","gene_annotations_intergenic","gene_annotations_intronic","gene_annotations_ncRNA_exonic","gene_annotations_ncRNA_intronic","gene_annotations_ncRNA_splicing","gene_annotations_ncRNA_UTR3","gene_annotations_ncRNA_UTR5","gene_annotations_splicing","gene_annotations_upstream","gene_annotations_UTR3","gene_annotations_UTR5","offset"],currentPathBinding:"controllers.application.currentPath",isShowingFilters:!0,relation:"LESSER",familyId:null,offset:0,loadedVariants:100,filterObj:Ember.Object.extend({id:null,property:!1,name:null,self:null,propertyChanged:Em.observer("property",function(){return this.get("self").set(this.get("id"),this.get("property"))})}),actions:{doFilter:function(){return this.get("target").send("filtersWhereUpdated")},doClearFilters:function(){var e,t,s,a,n,i,r,o,l,h,u,c;for(this.set("offset",0),h=this.get("filterGroups"),a=0,r=h.length;r>a;a++)for(s=h[a],u=s.filters,n=0,o=u.length;o>n;n++)e=u[n],e.set("property");for(t=["relation","thousand_g","dbsnp129","dbsnp132","esp6500","gene_name","priority","hbvdb"],c=[],i=0,l=t.length;l>i;i++)e=t[i],c.push(this.set(e));return c},doFilterClinically:function(){var e,t,s,a,n,i,r;for(this.setProperties({thousand_g:.01,relation:"LESSER"}),t={"functional_annotations_-":!0,"functional_annotations_frameshift deletion":!0,"functional_annotations_frameshift insertion":!0,"functional_annotations_nonframeshift deletion":!0,"functional_annotations_nonframeshift insertion":!0,"functional_annotations_nonsynonymous SNV":!0,"functional_annotations_stopgain SNV":!0,"functional_annotations_stoploss SNV":!0,gene_annotations_exonic:!0,gene_annotations_splicing:!0},i=this.get("filterGroups"),r=[],a=0,n=i.length;n>a;a++)s=i[a],r.push(function(){var a,n,i,r;for(i=s.filters,r=[],a=0,n=i.length;n>a;a++)e=i[a],r.push(e.id in t?e.set("property",!0):void 0);return r}());return r},loadMore:function(){var e,t;return t=jQuery.extend({},this.get("latestQueryParams")),t.offset=parseInt(this.get("offset"))+this.get("loadedVariants"),e=App.Variant.find({family_id:this.get("familyId"),queryParams:t}),e.addObserver("isLoaded",this,this.loadMoreVariants)},hideVariant:function(e){return e.hide()}},loadMoreVariants:function(e){var t;return t=this.get("model").pushObjects(e.content),this.incrementProperty("loadedVariants",100),e.removeObserver("isLoaded",this,this.loadMoreVariants)},researchMode:function(){return"research"===(this.get("database")||"").toLowerCase()}.property("database"),filter:function(){return this.get("familyId")?App.Filter.find(""+this.get("familyId")+","+this.get("instituteId")):void 0}.property("familyId","instituteId"),variantIsLoaded:function(){return this.get("currentPath")?this.get("currentPath").match(/variants.variant/)?!0:!1:!0}.property("currentPath"),filterGroups:function(){var e,t,s,a,n,i,r,o,l,h,u;if(n=Em.A(),this.get("filter.groups"))for(h=this.get("filter.groups"),i=0,o=h.length;o>i;i++){for(a=h[i],s=Em.A(),u=this.get("filter."+a.id)||[],r=0,l=u.length;l>r;r++)e=u[r],t=this.get("filterObj").create({id:e,property:this.get(e),name:e.replace(""+a.id+"_",""),self:this}),s.pushObject(t);n.pushObject(Em.Object.create({id:a.id,name:a.name,filters:s}))}return n}.property("filter.functional_annotations.@each","filter.gene_annotations.@each","filter.inheritence_models.@each")})}),require.register("helpers/capitalize",function(){Ember.Handlebars.registerBoundHelper("capitalize",function(e){return e?e.capitalize():"Undefined"})}),require.register("helpers/fallback",function(){Ember.Handlebars.registerBoundHelper("fallback",function(e,t){var s;return e?(s=Math.round(1e3*e)/1e3,isNaN(s)?e:s):t.fallback||"null"})}),require.register("helpers/from-now",function(){Ember.Handlebars.registerBoundHelper("fromNow",function(e){return e.fromNow()})}),require.register("helpers/moment-date",function(e,t,s){s.exports={deserialize:function(e){return moment(e)},serialize:function(e){return e.toJSON()}}}),require.register("helpers/replace-null",function(e,t,s){s.exports={deserialize:function(e){return"Na"===e||"-"===e?null:e}}}),require.register("helpers/zip",function(e,t,s){var a;s.exports=a=function(){var e,t,s,a,n,i;for(a=function(){var t,s,a;for(a=[],t=0,s=arguments.length;s>t;t++)e=arguments[t],a.push(e.length);return a}.apply(this,arguments),s=Math.min.apply(Math,a),i=[],t=n=0;s>=0?s>n:n>s;t=s>=0?++n:--n)i.push(function(){var s,a,n;for(n=[],s=0,a=arguments.length;a>s;s++)e=arguments[s],n.push(e[t]);return n}.apply(this,arguments));return i}}),require.register("initialize",function(e,t){var s;window.App=t("config/app"),t("config/router"),Ember.TextField.reopen({attributeBindings:["autofocus","required","step"]}),s=["initializers","utils","mixins","adapters","serializers","routes","models","views","controllers","helpers","templates","components"],s.forEach(function(e){return window.require.list().filter(function(t){return new RegExp("^"+e+"/").test(t)}).forEach(function(e){return t(e)})})}),require.register("initializers/environment",function(e,t,s){var a;a=t("config/environment"),s.exports=Ember.Application.initializer({name:"environment",initialize:function(e,t){return t.register("environment:main",a,{instantiate:!1,singleton:!0}),t.inject("controller","env","environment:main")}})}),require.register("models/activity",function(e,t,s){var a,n;n=t("adapters/new-rest"),a=t("helpers/moment-date"),App.Activity=Ember.Model.extend({_id:Em.attr(),activityId:Em.attr(),category:Em.attr(),context:Em.attr(),contextId:Em.attr(),ecosystem:Em.attr(),userId:Em.attr(),createdAt:Em.attr(a),updatedAt:Em.attr(a),title:Em.attr(),caption:Em.attr(),content:Em.attr(),tags:Em.attr(),firstTag:function(){return this.get("tags.0")}.property("tags"),entypoIcon:function(){var e;return e=this.get("firstTag"),"finding"===e?"search":"action"===e?"new":"conclusion"===e?"check":void 0}.property("firstTag")}),App.Activity.camelizeKeys=!0,App.Activity.primaryKey="_id",App.Activity.collectionKey="activities",App.Activity.url="/api/v1/activities",App.Activity.adapter=n.create(),s.exports=App.Activity}),require.register("models/compounds",function(e,t,s){var a,n;a=t("adapters/new-rest"),n=t("helpers/zip"),App.Compound=Ember.Model.extend({variant:Em.attr(),idn:Em.attr(),samples:function(){return(this.get("idn")||"").split(",")}.property("idn"),gt:Em.attr(),gts:function(){return(this.get("gt")||"").split(",")}.property("gt"),gtcalls:function(){var e,t,s,a,i;for(e=Em.A(),i=n(this.get("samples"),this.get("gts")),s=0,a=i.length;a>s;s++)t=i[s],e.pushObject(Em.Object.create({sampleId:t[0],genotype:t[1]}));return e.sortBy("sampleId")}.property("samples","gts"),rankScore:Em.attr(),combinedScore:Em.attr(),functionalAnnotation:Em.attr(),geneAnnotation:Em.attr({defaultValue:""}),geneAnnotations:function(){return this.get("geneAnnotation").split(";")}.property("geneAnnotation"),geneModel:Em.attr({defaultValue:""}),geneModels:function(){return this.get("geneModel").split(";")}.property("geneModel")}),App.Compound.camelizeKeys=!0,App.Compound.primaryKey="variant",App.Compound.collectionKey="compounds",App.Compound.url="/api/v1/compounds",App.Compound.adapter=a.create(),s.exports=App.Compound}),require.register("models/family",function(e,t,s){var a,n,i=[].indexOf||function(e){for(var t=0,s=this.length;s>t;t++)if(t in this&&this[t]===e)return t;return-1};n=t("adapters/new-rest"),a=t("helpers/moment-date"),App.Family=Ember.Model.extend({id:Em.attr(),family_id:Em.attr(),familyId:function(){return parseInt(this.get("id"))}.property("id"),updateDate:Em.attr(a),updateDateRaw:function(){return this.get("updateDate").toDate()}.property("updateDate"),database:Em.attr(),databases:function(){return(this.get("database")||"").split(",")}.property("database"),firstDatabase:function(){return this.get("databases.0")}.property("databases"),samples:Em.attr(),isResearch:function(){return i.call(this.get("databases")||"","research")>=0}.property("databases"),hide:function(){var e=this;return this.set("isDirtyHidden",!0),Ember.run.later(this,function(){return e.set("isDirtyHidden",!1)},1),Ember.ls.save("family",this.get("id"),moment().format("YYYY-MM-DD"))},unhide:function(){var e=this;return this.set("isDirtyHidden",!0),Ember.run.later(this,function(){return e.set("isDirtyHidden",!1)},1),Ember.ls["delete"]("family",this.get("id"))},isDirtyHidden:!1,isHidden:function(){return Ember.ls.exists("family",this.get("id"))}.property("id","hide","unhide","isDirtyHidden"),hiddenAt:function(){return Ember.ls.find("family",this.get("id"))}.property("id")}),App.Family.camelizeKeys=!0,App.Family.primaryKey="id",App.Family.url="/api/v1/families",App.Family.adapter=n.create(),s.exports=App.Family}),require.register("models/filter",function(e,t,s){var a;a=t("adapters/filter"),App.Filter=Ember.Model.extend({id:Em.attr(),clinical_db_gene_annotation:Em.attr(),functional_annotations:Em.attr(),gene_annotations:Em.attr(),inheritence_models:Em.attr(),groups:[{id:"functional_annotations",name:"Functional annotations"},{id:"gene_annotations",name:"Gene annotations"},{id:"inheritence_models",name:"Inheritence models"}]}),App.Filter.adapter=a.create(),s.exports=App.Filter}),require.register("models/gt-call",function(e,t,s){var a;a=t("adapters/new-rest"),App.GtCall=Ember.Model.extend({pk:Em.attr(),variantid:Em.attr(),variantId:function(){return this.get("variantid")}.property("variantid"),idn:Em.attr({defaultValue:""}),sampleId:function(){return this.get("idn")}.property("idn"),filter:Em.attr(),gt:Em.attr(),gq:Em.attr(),dp:Em.attr(),pl:Em.attr({defaultValue:""}),pls:function(){return this.get("pl").split(",")}.property("pl"),ad:Em.attr({defaultValue:""}),ads:function(){return this.get("ad").split(",")}.property("ad"),ok:function(){return"PASS"===this.get("filter")?!0:!1}.property("filter"),gender:function(){var e;return e=this.get("idn").split("-")[2].slice(0,-1),e%2===0?"female":"male"}.property("idn"),memberType:function(){var e,t;return t=this.get("idn").split("-")[1],e=this.get("gender"),1===t?"male"===e?"boy":"girl":2===t?"male"===e?"father":"mother":"unknown"}.property("idn","gender")}),App.GtCall.camelizeKeys=!0,App.GtCall.primaryKey="pk",App.GtCall.collectionKey="gtcalls",App.GtCall.url="/api/v1/gtcalls",App.GtCall.adapter=a.create(),s.exports=App.GtCall}),require.register("models/issue",function(e,t,s){var a,n;n=t("adapters/new-rest"),a=t("helpers/moment-date"),App.Issue=Ember.Model.extend({id:Em.attr(),title:Em.attr(),body:Em.attr(),html:Em.attr(),createdAt:Em.attr(a),url:Em.attr()}),App.Issue.camelizeKeys=!0,App.Issue.collectionKey="issues",App.Issue.url="/api/v1/issues",App.Issue.adapter=n.create(),s.exports=App.Issue}),require.register("models/omim",function(e,t,s){var a;a=t("adapters/omim"),App.Omim=Ember.Model.extend({CHR:Em.attr(),NT_START:Em.attr(),NT_STOP:Em.attr(),OMIM_ID:Em.attr(),OMIM_TITLE:Em.attr(),SYNDROMS:Em.attr()}),App.Omim.adapter=a.create(),s.exports=App.Omim}),require.register("models/other-family",function(e,t,s){var a;a=t("adapters/new-rest"),App.OtherFamily=Ember.Model.extend({pk:Em.attr(),family:Em.attr(),id:function(){return this.get("family")}.property("family")}),App.OtherFamily.camelizeKeys=!0,App.OtherFamily.collectionKey="other_families",App.OtherFamily.url="/api/v1/other_families",App.OtherFamily.adapter=a.create(),s.exports=App.OtherFamily}),require.register("models/user",function(e,t,s){var a,n;n=t("adapters/new-rest"),a=t("helpers/moment-date"),App.User=Ember.Model.extend({id:Em.attr(),_id:Em.attr(),givenName:Em.attr(),familyName:Em.attr(),name:Em.attr(),locale:Em.attr(),email:Em.attr(),createdAt:Em.attr(a),loggedInAt:Em.attr(a),googleId:Em.attr(),institutes:Em.attr(),accessToken:Em.attr(),firstName:function(){var e;return e=this.get("email"),e.slice(0,e.indexOf(".")).capitalize()}.property("email")}),App.User.camelizeKeys=!0,App.User.primaryKey="_id",App.User.collectionKey="users",App.User.url="/api/v1/users",App.User.adapter=n.create(),s.exports=App.User}),require.register("models/variant",function(e,t,s){var a,n,i=[].indexOf||function(e){for(var t=0,s=this.length;s>t;t++)if(t in this&&this[t]===e)return t;return-1};n=t("adapters/variant"),a=t("helpers/replace-null"),App.Variant=Ember.Model.extend({id:Em.attr(),individualRankScore:Em.attr(),rankScore:Em.attr(),GTCallFilter:Em.attr(),clinicalDbGeneAnnotation:Em.attr(),chr:Em.attr({defaultValue:""}),chromosome:function(){return(this.get("chr")||"").replace("chr","")}.property("chr"),chromosomePositionString:function(){return""+this.get("chr")+": "+this.get("startBp")+"-"+this.get("stopBp")
-}.property("chr","startBp","stopBp"),startBp:Em.attr(),stopBp:Em.attr(),isMultiBase:function(){return this.get("startBp")!==this.get("stopBp")}.property("startBp","stopBp"),refNt:Em.attr(),altNt:Em.attr(),uniqueId:function(){return""+this.get("chr")+"-"+this.get("startBp")+"-"+this.get("stopBp")+"-"+this.get("altNt")}.property("chr","startBp","stopBp","altNt"),hgncSymbol:Em.attr(),hgncSynonyms:Em.attr({defaultValue:""}),hgncSynonymsString:function(){return(this.get("hgncSynonyms")||"").split(";").slice(0,-1).join(", ")}.property("hgncSynonyms"),hgncApprovedName:Em.attr(),ensemblGeneid:Em.attr({defaultValue:""}),ensemblGeneIdString:function(){return(this.get("ensemblGeneid")||"").split(";").join(", ")}.property("ensemblGeneid"),hgncTranscriptId:Em.attr({defaultValue:""}),variantFunctions:function(){return(this.get("hgncTranscriptId")||"").split(",").slice(0,-1)}.property("hgncTranscriptId"),siftWholeExome:Em.attr(),polyphenDivHuman:Em.attr(),gerpWholeExome:Em.attr(),mutationTaster:Em.attr(),severities:function(){var e,t,s,a,n;for(s=[],e=["siftWholeExome","polyphenDivHuman","gerpWholeExome","mutationTaster"],a=0,n=e.length;n>a;a++)t=e[a],this.get(t)&&s.push({id:t,name:t.capitalize(),value:this.get(t)});return s}.property("siftWholeExome","polyphenDivHuman","gerpWholeExome","mutationTaster"),scaledCscoreThousandG:Em.attr(),unscaledCscoreThousandG:Em.attr(),unscaledCscoreSnv:Em.attr(),scaledCscoreSnv:Em.attr(),cScores:function(){var e,t,s,a,n;for(s=[],e=["unscaledCscoreThousandG","scaledCscoreThousandG","unscaledCscoreSnv","scaledCscoreSnv"],a=0,n=e.length;n>a;a++)t=e[a],this.get(t)&&s.push({id:t,name:t.capitalize(),value:this.get(t)});return s}.property("unscaledCscoreThousandG","scaledCscoreThousandG","unscaledCscoreSnv","scaledCscoreSnv"),thousandG:Em.attr(),dbsnpId:Em.attr(),dbsnp:Em.attr({defaultValue:""}),dbsnpFlag:function(){return(this.get("dbsnp")||"").replace("snp137","")}.property("dbsnp"),dbsnp129:Em.attr(),dbsnp132:Em.attr(),esp6500:Em.attr(),variantCount:Em.attr(),hbvdb:Em.attr(),hbvdbHuman:function(){var e;return e=this.get("variantCount"),e?e>10?"is-common":"is-found":"is-not-found"}.property("variantCount"),frequencies:function(){var e,t,s,a,n;for(e=[],n=["thousandG","esp6500","dbsnp129","variantCount"],s=0,a=n.length;a>s;s++)t=n[s],this.get(t)&&e.push({id:t,name:t.capitalize(),value:this.get(t)});return e}.property("thousandG","esp6500","dbsnp129","variantCount"),phylopWholeExome:Em.attr(),lrtWholeExome:Em.attr(),phastConstElements:Em.attr(),phastConstElementsScore:function(){return parseInt((this.get("phastConstElements")||"").split(";")[0].replace(/Score=/,""))}.property("phastConstElements"),gerpElement:Em.attr(),polyphenVarHuman:Em.attr(),conservations:function(){var e,t,s,a,n;for(e=[],n=["phylopWholeExome","lrtWholeExome","phastConstElementsScore","gerpElement","polyphenVarHuman"],s=0,a=n.length;a>s;s++)t=n[s],this.get(t)&&e.push({id:t,name:t.capitalize(),value:this.get(t)});return e}.property("phylopWholeExome","lrtWholeExome","phastConstElementsScore","gerpElement","polyphenVarHuman"),hgmd:Em.attr(a),hgmdAccession:Em.attr(),hgmdVariantType:Em.attr(),hgmdVariantPmid:Em.attr({defaultValue:""}),hgmdVariantPmidLinks:function(){var e,t,s,a,n;for(e=Em.A(),n=(this.get("hgmdVariantPmid")||"").split(";").slice(0,-1),s=0,a=n.length;a>s;s++)t=n[s],e.pushObject({id:t,link:"http://www.ncbi.nlm.nih.gov/pubmed/"+t});return e}.property("hgmdVariantPmid"),omimGeneDesc:Em.attr(),diseaseGroup:Em.attr(),geneModel:Em.attr(a),hasCompounds:function(){return-1!==(this.get("geneModel")||"").indexOf("compound")}.property("geneModel"),geneModels:function(){var e,t,s;return t=this.get("geneModel"),t?(e=":",s=10,i.call(t,";")>=0&&(e=";",s=-1),t.split(e).slice(0,s)):[]}.property("geneModel"),geneModelString:function(){return this.get("geneModels").join(" – ")}.property("geneModels"),diseaseGeneModel:Em.attr({defaultValue:""}),diseaseGeneModels:function(){return(this.get("diseaseGeneModel")||"").split(",")}.property("diseaseGeneModel"),otherFamilies:function(){return this.get("isFoundInOtherFamilies")?App.OtherFamily.find({variant_id:this.get("id")}):Em.A()}.property("id","isFoundInOtherFamilies"),isFoundInOtherFamilies:function(){return this.get("variantCount")>1}.property("variantCount"),otherFamiliesCount:function(){return this.get("variantCount")-1}.property("variantCount"),gtcalls:function(){return App.GtCall.find({variant_id:this.get("id")})}.property("id"),gtcallsBySampleId:function(){return this.get("gtcalls").sortBy("sampleId")}.property("gtcalls.@each.id"),gtData:function(){var e,t;return t=Em.A(),this.get("gtcallsBySampleId").forEach(function(e){return t.pushObject(e.get("gt"))}),e={combinedScore:"-",rankScore:this.get("rankScore"),gtcalls:t,geneModel:this.get("geneModel"),geneAnnotation:this.get("geneAnnotation"),functionalAnnotation:this.get("functionalAnnotation")}}.property("gtcalls.length","rankScore","geneModel","geneAnnotation","functionalAnnotation"),compounds:function(){return App.Compound.find({variant_id:this.get("id")})}.property("id"),locationReliability:Em.attr(),functionalAnnotation:Em.attr(a),snornaMirnaAnnotation:Em.attr(),pseudogene:Em.attr(),mainLocation:Em.attr(),geneAnnotation:Em.attr(),isProbablyBenign:function(){return"intronic"===this.get("geneAnnotation")}.property("geneAnnotation"),otherLocation:Em.attr(),gwasCatalog:Em.attr(),expressionType:Em.attr(),genomicSuperDups:Em.attr(),hide:function(){var e=this;return this.set("isDirtyHidden",!0),Ember.run.later(this,function(){return e.set("isDirtyHidden",!1)},1),Ember.ls.save("variant",this.get("id"),this.get("uniqueId"))},unhide:function(){var e=this;return this.set("isDirtyHidden",!0),Ember.run.later(this,function(){return e.set("isDirtyHidden",!1)},1),Ember.ls["delete"]("variant",this.get("id"))},isDirtyHidden:!1,isHidden:function(){return Ember.ls.exists("variant",this.get("id"))}.property("id","hide","unhide","isDirtyHidden"),hiddenAt:function(){return Ember.ls.find("variant",this.get("id"))}.property("id")}),App.Variant.camelizeKeys=!0,App.Variant.adapter=n.create(),s.exports=App.Variant}),require.register("routes/application",function(e,t,s){s.exports=App.ApplicationRoute=Ember.Route.extend({model:function(){return App.User.find("current")}})}),require.register("routes/families",function(e,t,s){s.exports=App.FamiliesRoute=Ember.Route.extend({model:function(e){return App.Family.find({institute:e.institute_id})}})}),require.register("routes/familiy",function(e,t,s){s.exports=App.FamilyRoute=Ember.Route.extend({model:function(e){return App.Family.find(e.family_id)},redirect:function(){var e;return e=this.controllerFor("family"),e.get("content")?e.setProperties({clinicalActivityContent:null,researchActivityContent:null}):void 0}})}),require.register("routes/index",function(e,t,s){s.exports=App.IndexRoute=Ember.Route.extend({model:function(){return App.User.find("current")},afterModel:function(e){var t=this;return e.addObserver("isLoaded",this,function(){var e;return e=t.model().get("institutes"),1===e.get("length")?t.transitionTo("institute",e[0]):void 0})}})}),require.register("routes/institute",function(e,t,s){s.exports=App.InstituteRoute=Ember.Route.extend({model:function(e){return{id:e.institute_id}},renderTemplate:function(){return this.render("institute"),this.render("families",{into:"institute",outlet:"second-panel"})}})}),require.register("routes/issue",function(e,t,s){s.exports=App.IssueRoute=Ember.Route.extend({model:function(e){return App.Issue.find(e.issue_id)}})}),require.register("routes/issues",function(e,t,s){s.exports=App.IssuesRoute=Ember.Route.extend({model:function(){return App.Issue.find()}})}),require.register("routes/issues/new",function(e,t,s){s.exports=App.IssuesNewRoute=Ember.Route.extend({model:function(){return App.Issue.create()}})}),require.register("routes/variant",function(e,t,s){s.exports=App.VariantRoute=Ember.Route.extend({model:function(e){return App.Variant.find(e.variant_id)},redirect:function(){var e;return e=this.controllerFor("variant"),e.get("content")?e.setProperties({activityContent:null,logActivityContent:null}):void 0}})}),require.register("routes/variants",function(e,t,s){s.exports=App.VariantsRoute=Ember.Route.extend({beforeModel:function(e){var t,s;return s=this.controllerFor("variants"),t=e.params.variants.family_id,(s.get("familyId")||t)!==t?s.send("doClearFilters"):void 0},model:function(e){var t,s,a;return this.set("params",e),a=this.controllerFor("variants"),t=e.family_id,s=(a.get("familyId")||t)!==t?{}:jQuery.extend({},e),$.extend(s,{institute_id:e.institute_id,institute:e.institute_id,family_id:null,database:e.database_id,database_id:null}),App.Variant.find({family_id:e.family_id,queryParams:s})},setupController:function(e,t){return this._super(e,t),e.setProperties({instituteId:this.get("params.institute_id"),familyId:this.get("params.family_id"),database:this.get("params.database_id")})},actions:{filtersWhereUpdated:function(){return this.refresh()}}})}),require.register("templates/application",function(e,t,s){s.exports=Ember.TEMPLATES.application=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){t.buffer.push('\n        <div class="a-button__body">Institutes</div>\n      ')}function r(e,t){t.buffer.push('\n        <div class="a-button__body">Issues</div>\n      ')}function o(e,t){var a,n,i,r,o,h="";return t.buffer.push("\n      "),i={classNames:e},r={classNames:"STRING"},o={hash:{classNames:"a-button"},inverse:x.noop,fn:x.program(6,l,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-menu-trigger"]||e&&e["ic-menu-trigger"],n=a?a.call(e,o):I.call(e,"ic-menu-trigger",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n\n      "),i={classNames:e},r={classNames:"STRING"},o={hash:{classNames:"expand-right"},inverse:x.noop,fn:x.program(11,c,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-menu-list"]||e&&e["ic-menu-list"],n=a?a.call(e,o):I.call(e,"ic-menu-list",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n    "),h}function l(e,t){var a,n,i,r="";return t.buffer.push('\n        <div class="a-button__icon entypo user a-icon"></div>\n        <div class="a-button__body">\n          '),n={},i={},a=s["if"].call(e,"model.name",{hash:{},inverse:x.program(9,u,t),fn:x.program(7,h,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n        </div>\n      "),r}function h(e,t){var a,n,i="";return t.buffer.push("\n            "),a={},n={},t.buffer.push(_(s._triageMustache.call(e,"model.name",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n          "),i}function u(e,t){t.buffer.push("\n            Login\n          ")}function c(e,t){var a,n,i,r,o,l="";return t.buffer.push("\n        "),i={"on-select":e},r={"on-select":"STRING"},o={hash:{"on-select":"goToSettings"},inverse:x.noop,fn:x.program(12,p,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-menu-item"]||e&&e["ic-menu-item"],n=a?a.call(e,o):I.call(e,"ic-menu-item",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n        "),i={"on-select":e},r={"on-select":"STRING"},o={hash:{"on-select":"logout"},inverse:x.noop,fn:x.program(14,d,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-menu-item"]||e&&e["ic-menu-item"],n=a?a.call(e,o):I.call(e,"ic-menu-item",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n      "),l}function p(e,t){t.buffer.push("Settings")}function d(e,t){t.buffer.push('<a href="/logout">Logout</a>')}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var f,m,b,v,y,g="",_=this.escapeExpression,x=this,I=s.helperMissing,T="function",C=s.blockHelperMissing;return n.buffer.push('<div class="a-layout--vertical">\n  <header class="a-toolbar slim bb">\n    <nav class="a-toolbar__group a-button__group">\n      '),b={classNames:t},v={classNames:"STRING"},y={hash:{classNames:"a-button"},inverse:x.noop,fn:x.program(1,i,n),contexts:[t],types:["STRING"],hashContexts:b,hashTypes:v,data:n},f=s["link-to"]||t&&t["link-to"],m=f?f.call(t,"index",y):I.call(t,"link-to","index",y),(m||0===m)&&n.buffer.push(m),n.buffer.push("\n      "),b={classNames:t},v={classNames:"STRING"},y={hash:{classNames:"a-button"},inverse:x.noop,fn:x.program(3,r,n),contexts:[t],types:["STRING"],hashContexts:b,hashTypes:v,data:n},f=s["link-to"]||t&&t["link-to"],m=f?f.call(t,"issues",y):I.call(t,"link-to","issues",y),(m||0===m)&&n.buffer.push(m),n.buffer.push('\n    </nav>\n\n    <div class="logo">Scout</div>\n\n    '),y={hash:{},inverse:x.noop,fn:x.program(5,o,n),contexts:[],types:[],hashContexts:b,hashTypes:v,data:n},(m=s["ic-menu"])?m=m.call(t,y):(m=t&&t["ic-menu"],m=typeof m===T?m.call(t,y):m),v={},b={},s["ic-menu"]||(m=C.call(t,"ic-menu",y)),(m||0===m)&&n.buffer.push(m),n.buffer.push("\n  </header>\n\n  "),v={},b={},n.buffer.push(_(s._triageMustache.call(t,"outlet",{hash:{},contexts:[t],types:["ID"],hashContexts:b,hashTypes:v,data:n}))),n.buffer.push("\n\n</div>\n"),g})}),require.register("templates/components/a-popover",function(e,t,s){s.exports=Ember.TEMPLATES["components/a-popover"]=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){var a,n,i="";return t.buffer.push('\n<div class="ui-popover__content">\n  '),a={},n={},t.buffer.push(u(s._triageMustache.call(e,"yield",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n</div>\n"),i}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var r,o,l,h="",u=this.escapeExpression,c=this;return o={},l={},r=s["if"].call(t,"isVisible",{hash:{},inverse:c.noop,fn:c.program(1,i,n),contexts:[t],types:["ID"],hashContexts:l,hashTypes:o,data:n}),(r||0===r)&&n.buffer.push(r),n.buffer.push("\n"),h})}),require.register("templates/components/activity-form",function(e,t,s){s.exports=Ember.TEMPLATES["components/activity-form"]=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){var a,n,i="";return t.buffer.push("\n      "),a={content:e,valueBinding:e},n={content:"ID",valueBinding:"STRING"},t.buffer.push(p(s.view.call(e,"Ember.Select",{hash:{content:"tagOptions",valueBinding:"selectedTag"},contexts:[e],types:["ID"],hashContexts:a,hashTypes:n,data:t}))),t.buffer.push("\n    "),i}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var r,o,l,h,u,c="",p=this.escapeExpression,d=s.helperMissing,f=this;return n.buffer.push("<form "),l={on:t},h={on:"STRING"},n.buffer.push(p(s.action.call(t,"submit",{hash:{on:"submit"},contexts:[t],types:["STRING"],hashContexts:l,hashTypes:h,data:n}))),n.buffer.push(' class="a-activity__form">\n  '),l={valueBinding:t,placeholder:t,classNames:t,classBinding:t},h={valueBinding:"STRING",placeholder:"ID",classNames:"STRING",classBinding:"STRING"},u={hash:{valueBinding:"content",placeholder:"writePrompt",classNames:"a-textarea",classBinding:"isFailing"},contexts:[],types:[],hashContexts:l,hashTypes:h,data:n},n.buffer.push(p((r=s.textarea||t&&t.textarea,r?r.call(t,u):d.call(t,"textarea",u)))),n.buffer.push('\n\n  <div class="a-bar--space-between">\n    <button class="a-button mr--listed" type="submit">\n      <span class="a-button__icon a-icon">&#59160;</span>\n      '),h={},l={},n.buffer.push(p(s._triageMustache.call(t,"submitPrompt",{hash:{},contexts:[t],types:["ID"],hashContexts:l,hashTypes:h,data:n}))),n.buffer.push("\n    </button>\n    \n    "),h={},l={},o=s["if"].call(t,"tagOptions",{hash:{},inverse:f.noop,fn:f.program(1,i,n),contexts:[t],types:["ID"],hashContexts:l,hashTypes:h,data:n}),(o||0===o)&&n.buffer.push(o),n.buffer.push("\n  </div>\n</form>\n"),c})}),require.register("templates/families",function(e,t,s){s.exports=Ember.TEMPLATES.families=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){var a,n,i,o="";return t.buffer.push("\n        \n        "),n={},i={},a=s.unless.call(e,"family.isHidden",{hash:{},inverse:I.noop,fn:I.program(2,r,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n\n      "),o}function r(e,t){var a,n,i,r,c,p="";return t.buffer.push('\n\n          <div class="a-card a-bar--space-between regular mb">\n          '),i={classNames:e},r={classNames:"STRING"},c={hash:{classNames:"a-bar__item"},inverse:I.noop,fn:I.program(3,o,t),contexts:[e,e],types:["STRING","ID"],hashContexts:i,hashTypes:r,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"family","family",c):x.call(e,"link-to","family","family",c),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n\n          "),i={classNames:e},r={classNames:"STRING"},c={hash:{classNames:"a-bar__item"},inverse:I.noop,fn:I.program(5,l,t),contexts:[e,e,e,e],types:["STRING","ID","ID","ID"],hashContexts:i,hashTypes:r,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"variants","instituteId","family.id","family.firstDatabase",c):x.call(e,"link-to","variants","instituteId","family.id","family.firstDatabase",c),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n\n          <div "),i={"class":e},r={"class":"STRING"},c={hash:{"class":"familyIsLoaded:a-bar__item--half:a-bar__item familyIsLoaded:a-bar--end:a-bar--space-between :stretch-self"},contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},t.buffer.push(_((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,c):x.call(e,"bind-attr",c)))),t.buffer.push(">\n            "),r={},i={},n=s.unless.call(e,"familyIsLoaded",{hash:{},inverse:I.noop,fn:I.program(7,h,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n\n            "),i={classNames:e},r={classNames:"STRING"},c={hash:{classNames:"a-button--naked"},inverse:I.noop,fn:I.program(9,u,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-menu"]||e&&e["ic-menu"],n=a?a.call(e,c):x.call(e,"ic-menu",c),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n          </div>\n          </div>\n\n        "),p}function o(e,t){var a,n,i="";return t.buffer.push("\n            "),a={},n={},t.buffer.push(_(s._triageMustache.call(e,"family.id",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n          "),i}function l(e,t){t.buffer.push("\n            Variants\n          ")}function h(e,t){var a,n,i,r,o="";return t.buffer.push('\n              <div class="a-button--naked mr">\n                <small>'),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(_((a=s.fromNow||e&&e.fromNow,a?a.call(e,"family.updateDate",r):x.call(e,"fromNow","family.updateDate",r)))),t.buffer.push("</small>\n              </div>\n            "),o}function u(e,t){var a,n,i,r,o,l="";return t.buffer.push("\n              "),i={classNames:e},r={classNames:"STRING"},o={hash:{classNames:"a-button__icon entypo three-dots a-icon"},inverse:I.noop,fn:I.program(10,c,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-menu-trigger"]||e&&e["ic-menu-trigger"],n=a?a.call(e,o):x.call(e,"ic-menu-trigger",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n              "),i={classNames:e},r={classNames:"STRING"},o={hash:{classNames:"expand-right"},inverse:I.noop,fn:I.program(12,p,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-menu-list"]||e&&e["ic-menu-list"],n=a?a.call(e,o):x.call(e,"ic-menu-list",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n            "),l}function c(){var e="";return e}function p(e,t){var a,n,i,r,o,l="";return t.buffer.push("\n                "),i={"on-select":e,model:e},r={"on-select":"STRING",model:"ID"},o={hash:{"on-select":"hideFamily",model:"family"},inverse:I.noop,fn:I.program(13,d,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-menu-item"]||e&&e["ic-menu-item"],n=a?a.call(e,o):x.call(e,"ic-menu-item",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                "),i={"on-select":e,model:e},r={"on-select":"STRING",model:"ID"},o={hash:{"on-select":"moveFamily",model:"family"},inverse:I.noop,fn:I.program(15,f,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-menu-item"]||e&&e["ic-menu-item"],n=a?a.call(e,o):x.call(e,"ic-menu-item",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                "),i={"on-select":e,model:e},r={"on-select":"STRING",model:"ID"},o={hash:{"on-select":"closeFamily",model:"family"},inverse:I.noop,fn:I.program(17,m,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-menu-item"]||e&&e["ic-menu-item"],n=a?a.call(e,o):x.call(e,"ic-menu-item",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n              "),l}function d(e,t){t.buffer.push("\n                  Archive\n                ")}function f(e,t){t.buffer.push("\n                  Move to research\n                ")}function m(e,t){t.buffer.push("\n                  Mark as closed\n                ")}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var b,v,y,g="",_=this.escapeExpression,x=s.helperMissing,I=this;return n.buffer.push('<div class="a-layout__wrapper a-layout__panel--full br--listed">\n\n  <div class="a-layout--vertical">\n\n    <div class="header-style slim bb text-center">Open cases</div>\n    \n    <div class="a-layout__panel--full is-scrollable loose">\n      '),v={},y={},b=s.each.call(t,"family","in","controller",{hash:{},inverse:I.noop,fn:I.program(1,i,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:y,hashTypes:v,data:n}),(b||0===b)&&n.buffer.push(b),n.buffer.push("\n    </div>\n\n  </div>\n\n</div>"),g})}),require.register("templates/family",function(e,t,s){s.exports=Ember.TEMPLATES.family=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){t.buffer.push("\n              Go to variants\n            ")}function r(e,t){var a,n,i="";return t.buffer.push('\n            <div class="a-list__item mr--listed">\n              <div class="a-card a-list">\n                <div class="a-list__item--header slim">'),a={},n={},t.buffer.push(y(s._triageMustache.call(e,"sample.idn",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push('</div>\n                <div class="a-list__item small slim">Sex: '),a={},n={},t.buffer.push(y(s._triageMustache.call(e,"sample.sex",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push('</div>\n                <div class="a-list__item small slim">\n                  Phenotype: '),a={},n={},t.buffer.push(y(s._triageMustache.call(e,"sample.phenotype",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push('\n                </div>\n                <div class="a-list__item small slim">\n                  Inheritance models: '),a={},n={},t.buffer.push(y(s._triageMustache.call(e,"sample.inheritance_model",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n                </div>\n              </div>\n            </div>\n          "),i}function o(e,t){var a,n,i,r="";return t.buffer.push('\n                    <div class="a-activity__feed mb--big">\n                      '),n={},i={},a=s.each.call(e,"activity","in","selectedClinicalActivities",{hash:{},inverse:_.noop,fn:_.program(6,l,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n                    </div>\n                  "),r}function l(e,t){var a,n,i,r,o="";return t.buffer.push('\n                        <div class="a-activity__divider">\n                          <div class="a-activity__divider__time">\n                            '),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(y((a=s.fromNow||e&&e.fromNow,a?a.call(e,"activity.createdAt",r):g.call(e,"fromNow","activity.createdAt",r)))),t.buffer.push('\n                          </div>\n                        </div>\n\n                        <div class="a-activity__wrapper">\n                          <div class="a-activity">\n                            <div class="full-width">\n                              <div class="a-bar--space-between regular--stretched">\n                                <div class="a-activity__caption">\n                                  '),i={unescaped:e},n={unescaped:"STRING"},t.buffer.push(y(s._triageMustache.call(e,"activity.caption",{hash:{unescaped:"true"},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("\n                                </div>\n\n                                <div "),i={"class":e,title:e},n={"class":"STRING",title:"STRING"},r={hash:{"class":":a-icon :entypo activity.entypoIcon",title:"activity.firstTag"},contexts:[],types:[],hashContexts:i,hashTypes:n,data:t},t.buffer.push(y((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,r):g.call(e,"bind-attr",r)))),t.buffer.push("></div>\n\n                                <div "),n={},i={},t.buffer.push(y(s.action.call(e,"deleteActivity","clinical","activity",{hash:{},contexts:[e,e,e],types:["ID","STRING","ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push(' class="a-button--naked">\n                                  <div class="a-button__icon entypo circled-cross a-icon"></div>\n                                </div>\n                              </div>\n\n                              <div class="a-activity__body regular">\n                                '),i={unescaped:e},n={unescaped:"STRING"},t.buffer.push(y(s._triageMustache.call(e,"activity.content",{hash:{unescaped:"true"},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("\n                              </div>\n                            </div>\n                          </div>\n                        </div>\n                      "),o}function h(e,t){var a,n,i,r,o="";return t.buffer.push('\n          <div class="a-layout__panel--full a-layout__wrapper br--listed">\n            <div class="a-layout--vertical">\n              <div class="a-layout__panel a-toolbar header-style slim">\n                <div>Research activity</div>\n                <div>\n                  <small>Show only</small>\n                  '),n={prompt:e,content:e,valueBinding:e},i={prompt:"STRING",content:"ID",valueBinding:"STRING"},t.buffer.push(y(s.view.call(e,"Ember.Select",{hash:{prompt:"Select activity type",content:"activityTypes",valueBinding:"selectedResearchActivityType"},contexts:[e],types:["ID"],hashContexts:n,hashTypes:i,data:t}))),t.buffer.push('</div>\n              </div>\n\n              <div class="a-layout__wrapper a-layout__panel--full">\n  \n                <div class="a-layout--vertical">\n\n                  <div class="a-layout__panel--full is-scrollable bb">\n                    '),i={},n={},a=s["if"].call(e,"selectedResearchActivities",{hash:{},inverse:_.noop,fn:_.program(9,u,t),contexts:[e],types:["ID"],hashContexts:n,hashTypes:i,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push('\n                  </div>\n\n                  <div class="a-layout__panel is-fixed regular">\n                    '),n={contentBinding:e,onSubmit:e,tagOptions:e,selectedTagBinding:e},i={contentBinding:"STRING",onSubmit:"STRING",tagOptions:"ID",selectedTagBinding:"STRING"},r={hash:{contentBinding:"researchActivityContent",onSubmit:"postResearchActivity",tagOptions:"activityTypes",selectedTagBinding:"selectedResearchTag"},contexts:[],types:[],hashContexts:n,hashTypes:i,data:t},t.buffer.push(y((a=s["activity-form"]||e&&e["activity-form"],a?a.call(e,r):g.call(e,"activity-form",r)))),t.buffer.push("\n                  </div>\n\n                </div>\n\n              </div>\n\n            </div>\n          </div>\n        "),o}function u(e,t){var a,n,i,r="";return t.buffer.push('\n                      <div class="a-activity__feed mb--big">\n                        '),n={},i={},a=s.each.call(e,"activity","in","selectedResearchActivities",{hash:{},inverse:_.noop,fn:_.program(10,c,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n                      </div>\n                    "),r}function c(e,t){var a,n,i,r,o="";return t.buffer.push('\n                          <div class="a-activity__divider">\n                            <div class="a-activity__divider__time">\n                              '),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(y((a=s.fromNow||e&&e.fromNow,a?a.call(e,"activity.createdAt",r):g.call(e,"fromNow","activity.createdAt",r)))),t.buffer.push('\n                            </div>\n                          </div>\n\n                          <div class="a-activity__wrapper">\n                            <div class="a-activity">\n                              <div class="full-width">\n                                <div class="a-bar--space-between regular--stretched">\n                                  <div class="a-activity__caption">\n                                    '),i={unescaped:e},n={unescaped:"STRING"},t.buffer.push(y(s._triageMustache.call(e,"activity.caption",{hash:{unescaped:"true"},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("\n                                  </div>\n\n                                  <div "),i={"class":e,title:e},n={"class":"STRING",title:"STRING"},r={hash:{"class":":a-icon :entypo activity.entypoIcon",title:"activity.firstTag"},contexts:[],types:[],hashContexts:i,hashTypes:n,data:t},t.buffer.push(y((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,r):g.call(e,"bind-attr",r)))),t.buffer.push("></div>\n\n                                  <div "),n={},i={},t.buffer.push(y(s.action.call(e,"deleteActivity","research","activity",{hash:{},contexts:[e,e,e],types:["ID","STRING","ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push(' class="a-button--naked">\n                                    <div class="a-button__icon entypo circled-cross a-icon"></div>\n                                  </div>\n                                </div>\n\n                                <div class="a-activity__body regular">\n                                  '),i={unescaped:e},n={unescaped:"STRING"},t.buffer.push(y(s._triageMustache.call(e,"activity.content",{hash:{unescaped:"true"},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("\n                                </div>\n                              </div>\n                            </div>\n                          </div>\n                        "),o}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var p,d,f,m,b,v="",y=this.escapeExpression,g=s.helperMissing,_=this;return n.buffer.push('<div class="a-layout__panel--double a-layout__wrapper">\n  <div class="a-layout--vertical">\n    <div class="a-layout__panel--full bb">\n      <div class="variant-page-wrapper">\n        <div class="a-toolbar header-style slim b">\n          <div class="a-button">\n            <div class="a-button__icon entypo pencil a-icon"></div>\n            Edit case\n          </div>\n\n          <div class="a-button">\n            <div class="a-button__icon entypo add-user a-icon"></div>\n            <div>Add sample</div>\n          </div>\n\n          <div class="a-button">\n            <div class="a-button__icon entypo archive a-icon"></div>\n            <div>Archive case</div>\n          </div>\n        </div>\n\n        <div class="a-card a-bar--space-between mb--big">\n          <div class="a-bar__item br--listed center__wrapper regular">\n            <span class="a-icon entypo users mr--slim"></span>\n            Case '),f={},m={},n.buffer.push(y(s._triageMustache.call(t,"familyId",{hash:{},contexts:[t],types:["ID"],hashContexts:m,hashTypes:f,data:n}))),n.buffer.push('\n          </div>\n\n          <div class="a-bar__item br--listed center__wrapper regular">\n            <span class="a-icon entypo clock mr--slim"></span>\n            Last updated '),f={},m={},b={hash:{},contexts:[t],types:["ID"],hashContexts:m,hashTypes:f,data:n},n.buffer.push(y((p=s.fromNow||t&&t.fromNow,p?p.call(t,"updateDate",b):g.call(t,"fromNow","updateDate",b)))),n.buffer.push('\n          </div>\n\n          <div class="a-bar__item br--listed center__wrapper regular">\n            <span class="a-icon entypo numbered-list mr--slim"></span>\n            '),f={},m={},b={hash:{},inverse:_.noop,fn:_.program(1,i,n),contexts:[t,t,t,t],types:["STRING","ID","ID","ID"],hashContexts:m,hashTypes:f,data:n},p=s["link-to"]||t&&t["link-to"],d=p?p.call(t,"variants","instituteId","model.id","model.firstDatabase",b):g.call(t,"link-to","variants","instituteId","model.id","model.firstDatabase",b),(d||0===d)&&n.buffer.push(d),n.buffer.push('\n          </div>\n        </div>\n\n        <div class="a-list--horizontal a-well regular mb--big">\n          '),f={},m={},d=s.each.call(t,"sample","in","samples",{hash:{},inverse:_.noop,fn:_.program(3,r,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:m,hashTypes:f,data:n}),(d||0===d)&&n.buffer.push(d),n.buffer.push('\n        </div>\n      </div>\n    </div>\n\n    <div class="a-layout__panel--full a-layout__wrapper">\n      <div class="a-layout">\n        <div class="a-layout__panel--full a-layout__wrapper br--listed">\n          <div class="a-layout--vertical">\n            <div class="a-layout__panel a-toolbar header-style slim">\n              <div>Clinical activity</div>\n              <div>\n                <small>Show only</small>\n                '),m={prompt:t,content:t,valueBinding:t},f={prompt:"STRING",content:"ID",valueBinding:"STRING"},n.buffer.push(y(s.view.call(t,"Ember.Select",{hash:{prompt:"Select activity type",content:"activityTypes",valueBinding:"selectedClinicalActivityType"},contexts:[t],types:["ID"],hashContexts:m,hashTypes:f,data:n}))),n.buffer.push('</div>\n            </div>\n\n            <div class="a-layout__wrapper a-layout__panel--full">\n  \n              <div class="a-layout--vertical">\n\n                <div class="a-layout__panel--full is-scrollable bb">\n                  '),f={},m={},d=s["if"].call(t,"selectedClinicalActivities",{hash:{},inverse:_.noop,fn:_.program(5,o,n),contexts:[t],types:["ID"],hashContexts:m,hashTypes:f,data:n}),(d||0===d)&&n.buffer.push(d),n.buffer.push('\n                </div>\n\n                <div class="a-layout__panel is-fixed regular">\n                  '),m={contentBinding:t,onSubmit:t,tagOptions:t,selectedTagBinding:t},f={contentBinding:"STRING",onSubmit:"STRING",tagOptions:"ID",selectedTagBinding:"STRING"},b={hash:{contentBinding:"clinicalActivityContent",onSubmit:"postClinicalActivity",tagOptions:"activityTypes",selectedTagBinding:"selectedClinicalTag"},contexts:[],types:[],hashContexts:m,hashTypes:f,data:n},n.buffer.push(y((p=s["activity-form"]||t&&t["activity-form"],p?p.call(t,b):g.call(t,"activity-form",b)))),n.buffer.push("\n                </div>\n\n              </div>\n\n            </div>\n\n          </div>\n        </div>\n        \n        "),f={},m={},d=s["if"].call(t,"isResearch",{hash:{},inverse:_.noop,fn:_.program(8,h,n),contexts:[t],types:["ID"],hashContexts:m,hashTypes:f,data:n}),(d||0===d)&&n.buffer.push(d),n.buffer.push("\n      </div>\n    </div>\n  </div>\n</div>\n"),v
-})}),require.register("templates/index",function(e,t,s){s.exports=Ember.TEMPLATES.index=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){var a,n,i,o,l,h="";return t.buffer.push("\n    "),i={classNames:e},o={classNames:"STRING"},l={hash:{classNames:"a-card is-clickable loose mr--listed"},inverse:p.noop,fn:p.program(2,r,t),contexts:[e,e],types:["STRING","ID"],hashContexts:i,hashTypes:o,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"institute","institute",l):d.call(e,"link-to","institute","institute",l),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n  "),h}function r(e,t){var a,n,i="";return t.buffer.push('\n      <div class="mb">'),a={},n={},t.buffer.push(c(s._triageMustache.call(e,"institute",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push('</div>\n      <div class="a-progress">\n        <div class="a-progress__bar" style="width: 0%">0%</div>\n      </div>\n    '),i}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var o,l,h,u="",c=this.escapeExpression,p=this,d=s.helperMissing;return n.buffer.push('<main class="a-layout__panel--full center__wrapper">\n  '),l={},h={},o=s.each.call(t,"institute","in","model.institutes",{hash:{},inverse:p.noop,fn:p.program(1,i,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:h,hashTypes:l,data:n}),(o||0===o)&&n.buffer.push(o),n.buffer.push("\n</main>\n"),u})}),require.register("templates/institute",function(e,t,s){s.exports=Ember.TEMPLATES.institute=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){var a,n,i="";return t.buffer.push('\n        <div class="mb">'),a={},n={},t.buffer.push(d(s._triageMustache.call(e,"id",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</div>\n      "),i}function r(e,t){var a,n,i="";return t.buffer.push('\n      <div class="a-progress mb">\n        <div class="a-progress__bar" style="width: 0%">0%</div>\n      </div>\n\n      <div '),a={},n={},t.buffer.push(d(s.action.call(e,"createFamily",{hash:{},contexts:[e],types:["STRING"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push(' class="a-button regular">\n        <div class="a-button__icon entypo plus a-icon"></div>\n        <div class="a-button__body">Open new case</div>\n      </div>\n      '),i}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var o,l,h,u,c,p="",d=this.escapeExpression,f=s.helperMissing,m=this;return n.buffer.push('<div class="a-layout__wrapper a-layout__panel--full">\n\n  <div class="a-layout">\n\n    <div '),h={"class":t},u={"class":"STRING"},c={hash:{"class":"familyIsLoaded:a-layout__panel--minimal:a-layout__panel--full :loose :br--listed"},contexts:[],types:[],hashContexts:h,hashTypes:u,data:n},n.buffer.push(d((o=s["bind-attr"]||t&&t["bind-attr"],o?o.call(t,c):f.call(t,"bind-attr",c)))),n.buffer.push(">\n      "),u={},h={},c={hash:{},inverse:m.noop,fn:m.program(1,i,n),contexts:[t,t],types:["STRING","ID"],hashContexts:h,hashTypes:u,data:n},o=s["link-to"]||t&&t["link-to"],l=o?o.call(t,"institute","id",c):f.call(t,"link-to","institute","id",c),(l||0===l)&&n.buffer.push(l),n.buffer.push("\n\n      "),u={},h={},l=s.unless.call(t,"familyIsLoaded",{hash:{},inverse:m.noop,fn:m.program(3,r,n),contexts:[t],types:["ID"],hashContexts:h,hashTypes:u,data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("\n    </div>\n\n    "),u={},h={},c={hash:{},contexts:[t],types:["STRING"],hashContexts:h,hashTypes:u,data:n},n.buffer.push(d((o=s.outlet||t&&t.outlet,o?o.call(t,"second-panel",c):f.call(t,"outlet","second-panel",c)))),n.buffer.push("\n\n    "),u={},h={},n.buffer.push(d(s._triageMustache.call(t,"outlet",{hash:{},contexts:[t],types:["ID"],hashContexts:h,hashTypes:u,data:n}))),n.buffer.push("\n\n  </div>\n\n</div>\n"),p})}),require.register("templates/issue",function(e,t,s){s.exports=Ember.TEMPLATES.issue=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){t.buffer.push('\n    <div class="center__wrapper">\n      <img src="/static/img/loader.gif">\n    </div>\n  ')}function r(e,t){var a,n,i,r,o="";return t.buffer.push("\n    <h2>\n      <a "),n={href:e},i={href:"STRING"},r={hash:{href:"url"},contexts:[],types:[],hashContexts:n,hashTypes:i,data:t},t.buffer.push(p((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,r):c.call(e,"bind-attr",r)))),t.buffer.push(">"),i={},n={},t.buffer.push(p(s._triageMustache.call(e,"title",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:i,data:t}))),t.buffer.push("</a>\n      <small>"),i={},n={},r={hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:i,data:t},t.buffer.push(p((a=s.fromNow||e&&e.fromNow,a?a.call(e,"createdAt",r):c.call(e,"fromNow","createdAt",r)))),t.buffer.push("</small>\n    </h2>\n    "),n={unescaped:e},i={unescaped:"STRING"},t.buffer.push(p(s._triageMustache.call(e,"html",{hash:{unescaped:"true"},contexts:[e],types:["ID"],hashContexts:n,hashTypes:i,data:t}))),t.buffer.push("\n  "),o}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var o,l,h,u="",c=s.helperMissing,p=this.escapeExpression,d=this;return n.buffer.push('<div class="issue-box">\n  '),l={},h={},o=s["if"].call(t,"model.isLoading",{hash:{},inverse:d.program(3,r,n),fn:d.program(1,i,n),contexts:[t],types:["ID"],hashContexts:h,hashTypes:l,data:n}),(o||0===o)&&n.buffer.push(o),n.buffer.push("\n</div>"),u})}),require.register("templates/issues",function(e,t,s){s.exports=Ember.TEMPLATES.issues=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){t.buffer.push('\n            <div class="a-button__body">Submit new issue</div>\n          ')}function r(e,t){var a,n,i,r,l,h="";return t.buffer.push("\n            "),i={classNames:e},r={classNames:"STRING"},l={hash:{classNames:"a-list__item regular"},inverse:b.noop,fn:b.program(4,o,t),contexts:[e,e],types:["STRING","ID"],hashContexts:i,hashTypes:r,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"issue","issue.id",l):m.call(e,"link-to","issue","issue.id",l),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n          "),h}function o(e,t){var a,n,i,r,o="";return t.buffer.push("\n              "),n={},i={},t.buffer.push(f(s._triageMustache.call(e,"issue.title",{hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("\n              <small>"),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(f((a=s.fromNow||e&&e.fromNow,a?a.call(e,"issue.createdAt",r):m.call(e,"fromNow","issue.createdAt",r)))),t.buffer.push("</small>\n            "),o}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var l,h,u,c,p,d="",f=this.escapeExpression,m=s.helperMissing,b=this;return n.buffer.push('<div class="a-layout__panel--full a-layout__panel__wrapper">\n  <div class="a-layout">\n    <div class="a-layout__panel--full a-layout__wrapper br--listed">\n      \n      <div class="a-layout--vertical">\n        <div class="a-layout__panel slim header-style bb">\n          '),u={classNames:t},c={classNames:"STRING"},p={hash:{classNames:"a-button"},inverse:b.noop,fn:b.program(1,i,n),contexts:[t],types:["STRING"],hashContexts:u,hashTypes:c,data:n},l=s["link-to"]||t&&t["link-to"],h=l?l.call(t,"issues.new",p):m.call(t,"link-to","issues.new",p),(h||0===h)&&n.buffer.push(h),n.buffer.push('\n        </div>\n\n        <div class="a-layout__panel--full a-list">\n          '),c={},u={},h=s.each.call(t,"issue","in","model",{hash:{},inverse:b.noop,fn:b.program(3,r,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:u,hashTypes:c,data:n}),(h||0===h)&&n.buffer.push(h),n.buffer.push('\n        </div>\n      </div>\n    </div>\n    \n    <div class="a-layout__panel--double is-scrollable">\n      '),c={},u={},n.buffer.push(f(s._triageMustache.call(t,"outlet",{hash:{},contexts:[t],types:["ID"],hashContexts:u,hashTypes:c,data:n}))),n.buffer.push("\n    </div>\n  </div>\n</div>\n"),d})}),require.register("templates/issues/new",function(e,t,s){s.exports=Ember.TEMPLATES["issues/new"]=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){t.buffer.push('\n      <button type="submit" class="a-button">\n        <div class="a-button__icon a-icon">&#59140;</div>\n        <div class="a-button__body">Are you sure?</div>\n      </button>\n    ')}function r(e,t){var a,n,i="";return t.buffer.push("\n      <button "),a={},n={},t.buffer.push(d(s.action.call(e,"toggleProperty","isConfirmingSubmit",{hash:{},contexts:[e,e],types:["STRING","STRING"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push(' class="a-button">\n        <div class="a-button__icon a-icon">&#128319;</div>\n        <div class="a-button__body">Send</div>\n      </button>\n    '),i}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var o,l,h,u,c,p="",d=this.escapeExpression,f=s.helperMissing,m=this;return n.buffer.push('<div class="issue-box center__wrapper">\n  <form '),h={on:t},u={on:"STRING"},n.buffer.push(d(s.action.call(t,"saveIssue",{hash:{on:"submit"},contexts:[t],types:["STRING"],hashContexts:h,hashTypes:u,data:n}))),n.buffer.push(">\n    <h2>Submit new issue</h2>\n    "),h={valueBinding:t,placeholder:t,classNames:t,required:t},u={valueBinding:"STRING",placeholder:"STRING",classNames:"STRING",required:"STRING"},c={hash:{valueBinding:"model.title",placeholder:"Title",classNames:"a-form__input mb",required:""},contexts:[],types:[],hashContexts:h,hashTypes:u,data:n},n.buffer.push(d((o=s.input||t&&t.input,o?o.call(t,c):f.call(t,"input",c)))),n.buffer.push("\n    "),h={valueBinding:t,placeholder:t,classNames:t},u={valueBinding:"STRING",placeholder:"STRING",classNames:"STRING"},c={hash:{valueBinding:"model.body",placeholder:"Describe your problem/request",classNames:"a-textarea mb"},contexts:[],types:[],hashContexts:h,hashTypes:u,data:n},n.buffer.push(d((o=s.textarea||t&&t.textarea,o?o.call(t,c):f.call(t,"textarea",c)))),n.buffer.push("\n\n    "),u={},h={},l=s["if"].call(t,"isConfirmingSubmit",{hash:{},inverse:m.program(3,r,n),fn:m.program(1,i,n),contexts:[t],types:["ID"],hashContexts:h,hashTypes:u,data:n}),(l||0===l)&&n.buffer.push(l),n.buffer.push("\n  </form>\n</div>"),p})}),require.register("templates/settings",function(e,t,s){s.exports=Ember.TEMPLATES.settings=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){var a,n,i,r,o="";return t.buffer.push('\n        <div class="a-list__item a-bar--space-between bb loose">\n\n          <div>Case '),n={},i={},t.buffer.push(c(s._triageMustache.call(e,"family.id",{hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("</div>\n\n          <div>"),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(c((a=s.fromNow||e&&e.fromNow,a?a.call(e,"family.value",r):p.call(e,"fromNow","family.value",r)))),t.buffer.push('</div>\n\n          <div class="a-button" '),n={},i={},t.buffer.push(c(s.action.call(e,"resetItem","family","family.id",{hash:{},contexts:[e,e,e],types:["STRING","STRING","ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push(">\n            Unarchive\n          </div>\n\n        </div>\n      "),o}function r(e,t){var a,n,i="";return t.buffer.push('\n        <div class="a-list__item a-bar--space-between bb loose">\n\n          <div>Variant '),a={},n={},t.buffer.push(c(s._triageMustache.call(e,"variant.value",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push('</div>\n\n          <div class="a-button" '),a={},n={},t.buffer.push(c(s.action.call(e,"resetItem","variant","variant.id",{hash:{},contexts:[e,e,e],types:["STRING","STRING","ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push(">\n            Unarchive\n          </div>\n\n        </div>\n      "),i}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var o,l,h,u="",c=this.escapeExpression,p=s.helperMissing,d=this;return n.buffer.push('<div class="a-layout__panel--full a-layout__wrapper">\n  <div class="a-layout">\n\n    <div class="a-layout__panel--full a-list br">\n\n      <div class="a-list__item header-style bb slim text-center">\n        Archived families\n      </div>\n\n      '),l={},h={},o=s.each.call(t,"family","in","hiddenFamiles",{hash:{},inverse:d.noop,fn:d.program(1,i,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:h,hashTypes:l,data:n}),(o||0===o)&&n.buffer.push(o),n.buffer.push('\n\n      <div class="a-list__item a-bar--center loose">\n        <div '),l={},h={},n.buffer.push(c(s.action.call(t,"resetHidden","family",{hash:{},contexts:[t,t],types:["STRING","STRING"],hashContexts:h,hashTypes:l,data:n}))),n.buffer.push(' class="a-button">\n          <div class="a-button__body">Unarchive all families</div>\n        </div>\n      </div>\n\n      <div class="a-list__item text-center bb slim">\n        <small>You might have to reload the browser for the unarchived items to return.</small>\n      </div>\n\n    </div>\n\n    <div class="a-layout__panel--full a-list br">\n\n      <div class="a-list__item header-style bb slim text-center">\n        Archived variants\n      </div>\n\n      '),l={},h={},o=s.each.call(t,"variant","in","hiddenVariants",{hash:{},inverse:d.noop,fn:d.program(3,r,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:h,hashTypes:l,data:n}),(o||0===o)&&n.buffer.push(o),n.buffer.push('\n\n      <div class="a-list__item a-bar--center loose">\n        <div '),l={},h={},n.buffer.push(c(s.action.call(t,"resetHidden","variant",{hash:{},contexts:[t,t],types:["STRING","STRING"],hashContexts:h,hashTypes:l,data:n}))),n.buffer.push(' class="a-button">\n          <div class="a-button__body">Unarchive all variants</div>\n        </div>\n      </div>\n\n      <div class="a-list__item text-center bb slim">\n        <small>You might have to reload the browser for the unarchived items to return.</small>\n      </div>\n\n    </div>\n\n  </div>\n</div>'),u})}),require.register("templates/variant",function(e,t,s){s.exports=Ember.TEMPLATES.variant=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){t.buffer.push("\n            <div>Variants</div>\n          ")}function r(e,t){var a,n,i="";return t.buffer.push("\n          <div "),a={},n={},t.buffer.push(tt(s.action.call(e,"unHideInList",{hash:{},contexts:[e],types:["STRING"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push(' class="a-button">\n            <div class="a-button__icon a-icon entypo archive"></div>\n            <div class="a-button__body">Unarchive</div>\n          </div>\n        '),i}function o(e,t){var a,n,i="";return t.buffer.push("\n          <div "),a={},n={},t.buffer.push(tt(s.action.call(e,"hideInList",{hash:{},contexts:[e],types:["STRING"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push(' class="a-button">\n            <div class="a-button__icon a-icon entypo archive"></div>\n            <div class="a-button__body">Archive</div>\n          </div>\n        '),i}function l(e,t){t.buffer.push('\n          <div class="a-button__icon a-icon entypo cart"></div>\n          <div class="a-button__body">Sanger</div>\n        ')}function h(e,t){t.buffer.push("\n              Hide\n            ")}function u(e,t){t.buffer.push("\n              Show\n            ")}function c(e,t){var a,n,i="";return t.buffer.push("-"),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"stopBp",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),i}function p(e,t){var a,n,i,r,o="";return t.buffer.push("\n          "),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(tt((a=s.capitalize||e&&e.capitalize,a?a.call(e,"functionalAnnotation",r):st.call(e,"capitalize","functionalAnnotation",r)))),t.buffer.push("\n        "),o}function d(e,t){t.buffer.push("\n          No functional annotation\n        ")}function f(e,t){var a,n,i="";return t.buffer.push('\n              <strong class="big-font">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"hgncSymbol",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</strong> <small>"),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"hgncSynonymsString",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</small>\n            "),i}function m(e,t){var a,n,i,r,o="";return t.buffer.push("\n              "),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(tt((a=s.capitalize||e&&e.capitalize,a?a.call(e,"hgncApprovedName",r):st.call(e,"capitalize","hgncApprovedName",r)))),t.buffer.push("\n            "),o}function b(e,t){var a,n,i,r="";return t.buffer.push('\n          <div class="a-list__item--header center__wrapper slim">\n            <span class="entypo users"></span>\n            Other familes\n          </div>\n          <div class="max-height-135 is-scrollable">\n            '),n={},i={},a=s.each.call(e,"family","in","otherFamilies",{hash:{},inverse:at.noop,fn:at.program(24,v,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n          </div>\n        "),r}function v(e,t){var a,n,i,r,o,l="";return t.buffer.push('\n              <div class="a-list__item slim">\n                '),i={},r={},o={hash:{},inverse:at.noop,fn:at.program(25,y,t),contexts:[e,e],types:["STRING","ID"],hashContexts:r,hashTypes:i,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"variant","family.pk",o):st.call(e,"link-to","variant","family.pk",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n              </div>\n            "),l}function y(e,t){var a,n,i="";return t.buffer.push(" "),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"family.id",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push(" "),i}function g(e,t){var a,n,i="";return t.buffer.push('\n          <div class="a-list__item slim">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"item",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</div>\n        "),i}function _(e,t){t.buffer.push('\n          <div class="a-list__item slim">No predicted protein changes.</div>\n        ')}function x(e,t){var a,n,i="";return t.buffer.push('\n          <div class="a-list__item--header text-center slim">Disease group:</div>\n          <div class="a-list__item slim">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"diseaseGroup",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</div>\n        "),i}function I(e,t){var a,n,i,r="";return t.buffer.push('\n          <div class="a-list__item--header text-center logo--omim slim">OMIM</div>\n          <div class="max-height-135 is-scrollable">\n            '),n={},i={},a=s.each.call(e,"syndrome","in","omim.SYNDROMS",{hash:{},inverse:at.noop,fn:at.program(34,T,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n          </div>\n        "),r}function T(e,t){var a,n,i="";return t.buffer.push('\n              <div class="a-list__item slim">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"syndrome",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</div>\n            "),i}function C(e,t){var a,n,i,r="";return t.buffer.push('\n          <div class="a-list__item--header text-center slim">HGMD</div>\n          '),n={},i={},a=s.each.call(e,"link","in","hgmdVariantPmidLinks",{hash:{},inverse:at.noop,fn:at.program(37,N,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n        "),r}function N(e,t){var a,n,i,r,o="";return t.buffer.push("\n            <a "),n={href:e},i={href:"ID"},r={hash:{href:"link.link"},contexts:[],types:[],hashContexts:n,hashTypes:i,data:t},t.buffer.push(tt((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,r):st.call(e,"bind-attr",r)))),t.buffer.push(' class="a-list__item is-clickable slim" target="_blank">\n              '),i={},n={},t.buffer.push(tt(s._triageMustache.call(e,"link.id",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:i,data:t}))),t.buffer.push("\n            </a>\n          "),o}function S(e,t){var a,n,i,r="";return t.buffer.push('\n        <div class="a-bar__item mr--listed">\n          <div class="a-card a-list">\n            <div class="a-list__item--header text-center slim">\n              '),n={},i={},t.buffer.push(tt(s._triageMustache.call(e,"prediction.name",{hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("\n            </div>\n\n            "),n={},i={},a=s.each.call(e,"property","in","prediction.values",{hash:{},inverse:at.program(43,A,t),fn:at.program(40,E,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n          </div>\n        </div>\n      "),r}function E(e,t){var a,n,i,r="";return t.buffer.push("\n              "),n={},i={},a=s["if"].call(e,"property.value",{hash:{},inverse:at.noop,fn:at.program(41,D,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n            "),r}function D(e,t){var a,n,i,r,o="";return t.buffer.push('\n                <div class="a-list__item a-bar--space-between">\n                  <div class="slim mr dotdotdot">\n                    '),n={},i={},t.buffer.push(tt(s._triageMustache.call(e,"property.name",{hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push('\n                  </div>\n                  <div class="slim">'),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(tt((a=s.fallback||e&&e.fallback,a?a.call(e,"property.value",r):st.call(e,"fallback","property.value",r)))),t.buffer.push("</div>\n                </div>\n              "),o}function A(e,t){t.buffer.push('\n              <div class="a-list__item slim">\n                <span class="mr">No predictions.</span>\n              </div>\n            ')}function R(e,t){var a,n,i="";return t.buffer.push('\n              <tr class="a-table__row">\n                <td class="a-table__cell">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"gtcall.idn",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push('</td>\n                <td class="a-table__cell">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"gtcall.gt",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push('</td>\n                <td class="a-table__cell">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"gtcall.ad",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push('</td>\n                <td class="a-table__cell">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"gtcall.pl",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push('</td>\n                <td class="a-table__cell">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"gtcall.gq",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</td>\n              </tr>\n            "),i}function G(e,t){var a,n,i="";return t.buffer.push('\n          <div class="a-list__item slim">\n            <div class="dotdotdot big-font">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"model",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</div>\n          </div>\n        "),i}function w(e,t){t.buffer.push('\n          <div class="a-list__item slim">No models.</div>\n        ')}function k(e,t){var a,n,i="";return t.buffer.push('\n          <div class="a-list__item slim">\n            <div class="dotdotdot">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"model",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</div>\n          </div>\n        "),i}function M(e,t){var a,n,i,r="";return t.buffer.push('\n      <table class="a-table small mb--big">\n        <thead class="a-table__head">\n          <tr class="a-table__row">\n            <th class="a-table__cell--header">Combined score</th>\n            <th class="a-table__cell--header">Rank score</th>\n            '),n={},i={},a=s.each.call(e,"gtcall","in","compounds.content.0.gtcalls",{hash:{},inverse:at.noop,fn:at.program(54,B,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push('\n            <th class="a-table__cell--header">Inheritance models</th>\n            <th class="a-table__cell--header">Gene annotations</th>\n            <th class="a-table__cell--header">Functional annotation</th>\n          </tr>\n        </thead>\n\n        <tbody class="a-table__body">\n          '),n={},i={},a=s.each.call(e,"compound","in","compounds",{hash:{},inverse:at.noop,fn:at.program(56,q,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n        </tbody>\n      </table>\n    "),r}function B(e,t){var a,n,i="";return t.buffer.push('\n              <th class="a-table__cell--header">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"gtcall.sampleId",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</th>\n            "),i}function q(e,t){var a,n,i,r,o,l="";return t.buffer.push('\n            <tr class="a-table__row">\n              <td class="a-table__cell text-center">\n                '),i={},r={},t.buffer.push(tt(s._triageMustache.call(e,"compound.combinedScore",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('\n              </td>\n              <td class="text-center">\n                '),i={},r={},o={hash:{},inverse:at.noop,fn:at.program(57,O,t),contexts:[e,e],types:["STRING","ID"],hashContexts:r,hashTypes:i,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"variant","compound.variant",o):st.call(e,"link-to","variant","compound.variant",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n              </td>\n              "),i={},r={},n=s.each.call(e,"gtcall","in","compound.gtcalls",{hash:{},inverse:at.noop,fn:at.program(59,F,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:r,hashTypes:i,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push('\n              <td class="a-table__cell">'),i={},r={},t.buffer.push(tt(s._triageMustache.call(e,"compound.geneModel",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('</td>\n              <td class="a-table__cell">'),i={},r={},t.buffer.push(tt(s._triageMustache.call(e,"compound.geneAnnotation",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('</td>\n              <td class="a-table__cell">'),i={},r={},t.buffer.push(tt(s._triageMustache.call(e,"compound.functionalAnnotation",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push("</td>\n            </tr>\n          "),l}function O(e,t){var a,n,i="";return t.buffer.push("\n                  "),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"compound.rankScore",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n                "),i}function F(e,t){var a,n,i="";return t.buffer.push('\n                <td class="a-table__cell text-center">'),a={},n={},t.buffer.push(tt(s._triageMustache.call(e,"gtcall.genotype",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</td>\n              "),i}function P(e,t){var a,n,i,r,o,l="";return t.buffer.push("\n  "),i={classNames:e},r={classNames:"STRING"},o={hash:{classNames:"mb"},inverse:at.noop,fn:at.program(62,L,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-modal-title"]||e&&e["ic-modal-title"],n=a?a.call(e,o):st.call(e,"ic-modal-title",o),(n||0===n)&&t.buffer.push(n),t.buffer.push('\n  \n  <div class="email__wrapper mb">\n    '),i={unescaped:e},r={unescaped:"STRING"},t.buffer.push(tt(s._triageMustache.call(e,"sangerEmailBody",{hash:{unescaped:"true"},contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}))),t.buffer.push('\n  </div>\n\n  <div class="center__wrapper">\n    '),r={},i={},n=s["if"].call(e,"saving",{hash:{},inverse:at.program(66,H,t),fn:at.program(64,V,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n  </div>\n"),l}function L(e,t){t.buffer.push("Order Sanger sequencing")}function V(e,t){t.buffer.push("\n      sending ...\n    ")}function H(e,t){var a,n,i,r,o,l="";return t.buffer.push('\n      <div class="a-button__group">\n        '),i={classNames:e},r={classNames:"STRING"},o={hash:{classNames:"a-button"},inverse:at.noop,fn:at.program(67,j,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["ic-modal-trigger"]||e&&e["ic-modal-trigger"],n=a?a.call(e,o):st.call(e,"ic-modal-trigger",o),(n||0===n)&&t.buffer.push(n),t.buffer.push('\n        <button type="submit" class="a-button">\n          <div class="a-button__icon a-icon entypo paper-plane"></div>\n          <div class="a-button__body">Send</div>\n        </button>\n      </div>\n    '),l}function j(e,t){t.buffer.push('\n          <div class="a-button__icon a-icon entypo circled-cross"></div>\n          <div class="a-button__body">Cancel</div>\n        ')}function z(e,t){var a,n,i,r,o,l="";return t.buffer.push('\n  <div class="a-layout__panel--full a-layout__wrapper">\n    <div class="a-layout--vertical">\n\n      <div class="a-layout__panel is-fixed slim header-style text-center bb">\n        Variant Activity\n      </div>\n\n      <div class="a-layout__panel--full is-scrollable small loose bb">\n        '),i={},r={},a=s["if"].call(e,"activities",{hash:{},inverse:at.noop,fn:at.program(70,U,t),contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n\n        "),r={content:e,onSubmit:e},i={content:"ID",onSubmit:"STRING"},o={hash:{content:"activityContent",onSubmit:"postActivity"},contexts:[],types:[],hashContexts:r,hashTypes:i,data:t},t.buffer.push(tt((a=s["activity-form"]||e&&e["activity-form"],a?a.call(e,o):st.call(e,"activity-form",o)))),t.buffer.push('\n      </div>\n\n      <div class="a-layout__panel is-fixed slim header-style text-center bb">\n         '),i={},r={},t.buffer.push(tt(s._triageMustache.call(e,"logActivityType",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push(' Activity\n      </div>\n\n      <div class="a-layout__panel--full is-scrollable small loose">\n        '),i={},r={},n=s["if"].call(e,"logActivities",{hash:{},inverse:at.noop,fn:at.program(73,K,t),contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n\n        "),r={content:e,onSubmit:e},i={content:"ID",onSubmit:"STRING"},o={hash:{content:"logActivityContent",onSubmit:"postLogActivity"},contexts:[],types:[],hashContexts:r,hashTypes:i,data:t},t.buffer.push(tt((a=s["activity-form"]||e&&e["activity-form"],a?a.call(e,o):st.call(e,"activity-form",o)))),t.buffer.push("\n      </div>      \n\n    </div>\n  </div>\n"),l}function U(e,t){var a,n,i,r="";return t.buffer.push('\n          <div class="a-activity__feed mb--big">\n            '),n={},i={},a=s.each.call(e,"activity","in","activities",{hash:{},inverse:at.noop,fn:at.program(71,$,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n          </div>\n        "),r}function $(e,t){var a,n,i,r,o="";return t.buffer.push('\n\n              <div class="a-activity__divider">\n                <div class="a-activity__divider__time">\n                  '),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(tt((a=s.fromNow||e&&e.fromNow,a?a.call(e,"activity.createdAt",r):st.call(e,"fromNow","activity.createdAt",r)))),t.buffer.push('\n                </div>\n              </div>\n\n              <div class="a-activity__wrapper">\n                <div class="a-activity">\n                  <div class="full-width">\n                    <div class="a-bar--space-between regular--stretched">\n                      <div class="a-activity__caption">\n                        '),i={unescaped:e},n={unescaped:"STRING"},t.buffer.push(tt(s._triageMustache.call(e,"activity.caption",{hash:{unescaped:"true"},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("\n                      </div>\n\n                      <div "),n={},i={},t.buffer.push(tt(s.action.call(e,"deleteActivity","activity",{hash:{},contexts:[e,e],types:["STRING","ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push(' class="a-button--naked">\n                        <div class="a-button__icon entypo circled-cross a-icon"></div>\n                      </div>\n                    </div>\n\n                    <div class="a-activity__body regular">\n                      '),i={unescaped:e},n={unescaped:"STRING"},t.buffer.push(tt(s._triageMustache.call(e,"activity.content",{hash:{unescaped:"true"},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("\n                    </div>\n                  </div>\n                </div>\n              </div>\n\n            "),o
-}function K(e,t){var a,n,i,r="";return t.buffer.push('\n\n          <div class="a-activity__feed mb--big">\n            '),n={},i={},a=s.each.call(e,"activity","in","logActivities",{hash:{},inverse:at.noop,fn:at.program(74,W,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n          </div>\n\n        "),r}function W(e,t){var a,n,i,r,o="";return t.buffer.push('\n\n              <div class="a-activity__divider">\n                <div class="a-activity__divider__time">\n                  '),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(tt((a=s.fromNow||e&&e.fromNow,a?a.call(e,"activity.createdAt",r):st.call(e,"fromNow","activity.createdAt",r)))),t.buffer.push('\n                </div>\n              </div>\n\n              <div class="a-activity__wrapper">\n                <div class="a-activity">\n                  <div class="full-width">\n                    <div class="a-bar--space-between regular--stretched">\n                      <div class="a-activity__caption">\n                        '),i={unescaped:e},n={unescaped:"STRING"},t.buffer.push(tt(s._triageMustache.call(e,"activity.caption",{hash:{unescaped:"true"},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push('\n                      </div>\n                    </div>\n\n                    <div class="a-activity__body regular">\n                      '),i={unescaped:e},n={unescaped:"STRING"},t.buffer.push(tt(s._triageMustache.call(e,"activity.content",{hash:{unescaped:"true"},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("\n                    </div>\n                  </div>\n                </div>\n              </div>\n\n            "),o}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var Y,Q,J,X,Z,et="",tt=this.escapeExpression,st=s.helperMissing,at=this;return n.buffer.push('<div class="variant-page a-layout__panel--double is-scrollable br--listed">\n  <div class="variant-page-wrapper">\n    <div class="a-toolbar header-style slim b">\n      <div class="a-toolbar__group a-button__group">\n        <div class="a-button">\n          <div class="a-button__icon a-icon entypo chevron-left"></div>\n          '),J={title:t},X={title:"STRING"},Z={hash:{title:"Back to all variants"},inverse:at.noop,fn:at.program(1,i,n),contexts:[t,t,t,t],types:["STRING","ID","ID","ID"],hashContexts:J,hashTypes:X,data:n},Y=s["link-to"]||t&&t["link-to"],Q=Y?Y.call(t,"variants","instituteId","familyId","databaseId",Z):st.call(t,"link-to","variants","instituteId","familyId","databaseId",Z),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push("\n        </div>\n\n        "),X={},J={},Q=s["if"].call(t,"isHidden",{hash:{},inverse:at.program(5,o,n),fn:at.program(3,r,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n      </div>\n\n      <div class="center__wrapper big-font" title="rank score">\n        <span class="a-icon entypo network mr--slim"></span>'),X={},J={},n.buffer.push(tt(s._triageMustache.call(t,"rankScore",{hash:{},contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}))),n.buffer.push("\n\n        (Family "),X={},J={},n.buffer.push(tt(s._triageMustache.call(t,"familyId",{hash:{},contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}))),n.buffer.push(')\n      </div>\n\n      <div class="a-toolbar__group a-button__group">\n        '),J={controls:t,tagName:t,classNames:t},X={controls:"STRING",tagName:"STRING",classNames:"STRING"},Z={hash:{controls:"order-sanger-form",tagName:"div",classNames:"a-button"},inverse:at.noop,fn:at.program(7,l,n),contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},Y=s["ic-modal-trigger"]||t&&t["ic-modal-trigger"],Q=Y?Y.call(t,Z):st.call(t,"ic-modal-trigger",Z),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push("\n\n        <div "),X={},J={},n.buffer.push(tt(s.action.call(t,"toggleProperty","isShowingActivity",{hash:{},contexts:[t,t],types:["STRING","STRING"],hashContexts:J,hashTypes:X,data:n}))),n.buffer.push(' class="a-button" title="Toggle activity panel">\n          <div '),J={"class":t},X={"class":"STRING"},Z={hash:{"class":":a-button__icon :a-icon :entypo :chat hasActivity:is-notifying"},contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s["bind-attr"]||t&&t["bind-attr"],Y?Y.call(t,Z):st.call(t,"bind-attr",Z)))),n.buffer.push('></div>\n          <div class="a-button__body">\n            '),X={},J={},Q=s["if"].call(t,"isShowingActivity",{hash:{},inverse:at.program(11,u,n),fn:at.program(9,h,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n            Activity\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class="a-card a-bar--space-between mb--big">\n      <div class="a-bar__item br center__wrapper regular" title="chromosome + position">\n        <span class="a-icon entypo location mr--slim"></span>\n        <span '),J={"class":t},X={"class":"STRING"},Z={hash:{"class":"isMultiBase:small"},contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s["bind-attr"]||t&&t["bind-attr"],Y?Y.call(t,Z):st.call(t,"bind-attr",Z)))),n.buffer.push(">\n          Chr"),X={},J={},n.buffer.push(tt(s._triageMustache.call(t,"chromosome",{hash:{},contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}))),n.buffer.push("-"),X={},J={},n.buffer.push(tt(s._triageMustache.call(t,"startBp",{hash:{},contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}))),X={},J={},Q=s["if"].call(t,"isMultiBase",{hash:{},inverse:at.noop,fn:at.program(13,c,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n        </span>\n      </div>\n\n      <div class="a-bar__item br center__wrapper regular" title="change">\n        <span class="a-icon entypo shuffle mr--slim"></span>\n        '),X={},J={},n.buffer.push(tt(s._triageMustache.call(t,"refNt",{hash:{},contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}))),n.buffer.push(" &rarr; "),X={},J={},n.buffer.push(tt(s._triageMustache.call(t,"altNt",{hash:{},contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}))),n.buffer.push('\n      </div>\n\n      <div class="a-bar__item br center__wrapper regular" title="annotations">\n        <span '),J={"class":t},X={"class":"STRING"},Z={hash:{"class":":a-icon :entypo isProbablyBenign:circled-info:warning :mr--slim"},contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s["bind-attr"]||t&&t["bind-attr"],Y?Y.call(t,Z):st.call(t,"bind-attr",Z)))),n.buffer.push("></span>\n        "),X={},J={},Z={hash:{},contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s.capitalize||t&&t.capitalize,Y?Y.call(t,"geneAnnotation",Z):st.call(t,"capitalize","geneAnnotation",Z)))),n.buffer.push('\n      </div>\n\n      <div class="a-bar__item center__wrapper regular" title="annotations">\n        <span class="a-icon entypo tools mr--slim"></span>\n        '),X={},J={},Q=s["if"].call(t,"functionalAnnotation",{hash:{},inverse:at.program(17,d,n),fn:at.program(15,p,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n      </div>\n    </div>\n\n    <div class="a-bar flex-start small mb--big">\n      <div class="a-bar__item a-card a-list br mr">\n        <div class="a-list__item--header text-center slim">General</div>\n        <div '),X={},J={},n.buffer.push(tt(s.action.call(t,"toggleProperty","isShowingFullGeneName",{hash:{},contexts:[t,t],types:["STRING","STRING"],hashContexts:J,hashTypes:X,data:n}))),n.buffer.push(' class="a-list__item a-bar--space-between slim dotdotdot is-clickable">\n          <div>\n            '),X={},J={},Q=s.unless.call(t,"isShowingFullGeneName",{hash:{},inverse:at.program(21,m,n),fn:at.program(19,f,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n          </div>\n\n          <div class="a-icon--small entypo cycle"></div>\n        </div>\n\n        <div class="a-list__item slim">'),X={},J={},n.buffer.push(tt(s._triageMustache.call(t,"ensemblGeneIdString",{hash:{},contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}))),n.buffer.push("</div>\n\n        "),X={},J={},Q=s["if"].call(t,"isFoundInOtherFamilies",{hash:{},inverse:at.noop,fn:at.program(23,b,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n      </div>\n\n      <div class="a-bar__item a-card a-list br mr">\n        <div class="a-list__item--header text-center slim">Predicted protein changes</div>\n        '),X={},J={},Q=s.each.call(t,"item","in","variantFunctions",{hash:{},inverse:at.program(29,_,n),fn:at.program(27,g,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n      </div>\n\n      <div class="a-bar__item a-card a-list">\n        '),X={},J={},Q=s["if"].call(t,"diseaseGroup",{hash:{},inverse:at.noop,fn:at.program(31,x,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push("\n\n        "),X={},J={},Q=s["if"].call(t,"omim",{hash:{},inverse:at.noop,fn:at.program(33,I,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push("\n\n        "),X={},J={},Q=s["if"].call(t,"hgmdAccession",{hash:{},inverse:at.noop,fn:at.program(36,C,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('      \n      </div>\n    </div>\n\n    <div class="a-bar--space-between flex-start small mb--big">\n      '),X={},J={},Q=s.each.call(t,"prediction","in","predictions",{hash:{},inverse:at.noop,fn:at.program(39,S,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n    </div>\n\n    <div class="a-bar flex-start small mb--big">\n      <div class="a-bar__item--double mr">\n        <table class="a-table">\n          <thead class="a-table__head">\n            <tr class="a-table__row">\n              <th class="a-table__cell--header">Sample</th>\n              <th class="a-table__cell--header">GT</th>\n              <th class="a-table__cell--header">AD</th>\n              <th class="a-table__cell--header">PL</th>\n              <th class="a-table__cell--header">GQ</th>\n            </tr>\n          </thead>\n          <tbody class="a-table__body">\n            '),X={},J={},Q=s.each.call(t,"gtcall","in","gtcallsBySampleId",{hash:{},inverse:at.noop,fn:at.program(45,R,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n          </tbody>\n        </table>\n      </div>\n    \n      <div class="a-bar__item a-card a-list mr">\n        <div class="a-list__item--header text-center slim dotdotdot">\n          <strong>Disease gene models</strong>\n        </div>\n\n        '),X={},J={},Q=s.each.call(t,"model","in","diseaseGeneModels",{hash:{},inverse:at.program(49,w,n),fn:at.program(47,G,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n      </div>\n\n      <div class="a-bar__item a-card a-list">\n        <div class="a-list__item--header text-center slim">\n          Inheritance models\n        </div>\n\n        '),X={},J={},Q=s.each.call(t,"model","in","geneModels",{hash:{},inverse:at.program(49,w,n),fn:at.program(51,k,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push("\n      </div>\n    </div>\n\n    "),X={},J={},Q=s["if"].call(t,"hasCompounds",{hash:{},inverse:at.noop,fn:at.program(53,M,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push('\n  \n    \n    <div class="a-bar--space-between external-links">\n      <a '),J={href:t},X={href:"STRING"},Z={hash:{href:"ensemblLink"},contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s["bind-attr"]||t&&t["bind-attr"],Y?Y.call(t,Z):st.call(t,"bind-attr",Z)))),n.buffer.push(' class="a-button" target="_blank">\n        <div class="a-button__body">Ensembl</div>\n      </a>\n\n      <a '),J={href:t},X={href:"STRING"},Z={hash:{href:"hpaLink"},contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s["bind-attr"]||t&&t["bind-attr"],Y?Y.call(t,Z):st.call(t,"bind-attr",Z)))),n.buffer.push(' class="a-button" target="_blank">\n        <div class="a-button__icon a-icon entypo map"></div>\n        <div class="a-button__body">HPA</div>\n      </a>\n\n      <a '),J={href:t},X={href:"STRING"},Z={hash:{href:"stringLink"},contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s["bind-attr"]||t&&t["bind-attr"],Y?Y.call(t,Z):st.call(t,"bind-attr",Z)))),n.buffer.push(' class="a-button" target="_blank">\n        <div class="a-button__body">STRING</div>\n      </a>\n\n      <a '),J={href:t},X={href:"STRING"},Z={hash:{href:"ucscLink"},contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s["bind-attr"]||t&&t["bind-attr"],Y?Y.call(t,Z):st.call(t,"bind-attr",Z)))),n.buffer.push(' class="a-button" target="_blank">\n        <div class="a-button__body">UCSC</div>\n      </a>\n\n      <a '),J={href:t},X={href:"STRING"},Z={hash:{href:"entrezLink"},contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s["bind-attr"]||t&&t["bind-attr"],Y?Y.call(t,Z):st.call(t,"bind-attr",Z)))),n.buffer.push(' class="a-button" target="_blank">\n        <div class="a-button__body">Entrez</div>\n      </a>\n\n      <a '),J={href:t},X={href:"STRING"},Z={hash:{href:"idsLink"},contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s["bind-attr"]||t&&t["bind-attr"],Y?Y.call(t,Z):st.call(t,"bind-attr",Z)))),n.buffer.push(' class="a-button" target="_blank">\n        <div class="a-button__body">IDs</div>\n      </a>\n\n      <a '),J={href:t},X={href:"STRING"},Z={hash:{href:"igvLink"},contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},n.buffer.push(tt((Y=s["bind-attr"]||t&&t["bind-attr"],Y?Y.call(t,Z):st.call(t,"bind-attr",Z)))),n.buffer.push(' class="a-button" target="_blank">\n        <div class="a-button__icon a-icon entypo open-book"></div>\n        <div class="a-button__body">IGV</div>\n      </a>\n    </div>\n\n  </div>\n</div>\n\n'),J={id:t,"on-submit":t,"awaiting-return-value":t},X={id:"STRING","on-submit":"STRING","awaiting-return-value":"ID"},Z={hash:{id:"order-sanger-form","on-submit":"submitSangerForm","awaiting-return-value":"saving"},inverse:at.noop,fn:at.program(61,P,n),contexts:[],types:[],hashContexts:J,hashTypes:X,data:n},Y=s["ic-modal-form"]||t&&t["ic-modal-form"],Q=Y?Y.call(t,Z):st.call(t,"ic-modal-form",Z),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push("\n\n"),X={},J={},Q=s["if"].call(t,"isShowingActivity",{hash:{},inverse:at.noop,fn:at.program(69,z,n),contexts:[t],types:["ID"],hashContexts:J,hashTypes:X,data:n}),(Q||0===Q)&&n.buffer.push(Q),n.buffer.push("\n"),et})}),require.register("templates/variants",function(e,t,s){s.exports=Ember.TEMPLATES.variants=Ember.Handlebars.template(function(e,t,s,a,n){function i(e,t){var a,n,i,o="";return t.buffer.push('\n              <div class="dotdotdot slim a-bar__item--half br--listed">1000 Genomes</div>\n              <div class="dotdotdot slim a-bar__item--half br--listed">PolyPhen</div>\n              <div class="dotdotdot slim a-bar__item br--listed">Gene annotation</div>\n              <div class="dotdotdot slim a-bar__item br--listed">Func. annotation</div>\n              '),n={},i={},a=s.unless.call(e,"researchMode",{hash:{},inverse:$.noop,fn:$.program(2,r,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push('\n              <div class="dotdotdot slim a-bar__item--double br--listed">Inheritance models</div>\n              <div class="dotdotdot slim a-bar__item--half br--listed">HGMD</div>\n              <div class="dotdotdot slim a-bar__item--half br--listed">Archive</div>\n            '),o}function r(e,t){t.buffer.push('\n                <div class="dotdotdot slim a-bar__item--double br--listed">Disease group</div>\n                <div class="dotdotdot slim a-bar__item--half br--listed">Disease gene model</div>\n              ')}function o(e,t){var a,n,i,r="";return t.buffer.push("\n            "),n={},i={},a=s.unless.call(e,"variant.isHidden",{hash:{},inverse:$.noop,fn:$.program(5,l,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n          "),r}function l(e,t){var a,n,i,r,o,l="";return t.buffer.push('\n            <div class="a-list__item a-bar--space-between variant-list-item">\n              \n              '),i={classNames:e},r={classNames:"STRING"},o={hash:{classNames:"dotdotdot slim a-bar__item--half a-bar--space-around rank-score-column br"},inverse:$.noop,fn:$.program(6,h,t),contexts:[e,e],types:["STRING","ID"],hashContexts:i,hashTypes:r,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"variant","variant",o):W.call(e,"link-to","variant","variant",o),(n||0===n)&&t.buffer.push(n),t.buffer.push('\n              \n              \n              <div class="dotdotdot slim a-bar__item--half br--listed">\n                '),r={},i={},t.buffer.push(K(s._triageMustache.call(e,"variant.hgncSymbol",{hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}))),t.buffer.push("\n              </div>\n              \n              "),r={},i={},n=s.unless.call(e,"variantIsLoaded",{hash:{},inverse:$.noop,fn:$.program(11,p,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n            </div>\n            "),l}function h(e,t){var a,n,i,r="";return t.buffer.push("\n                <div>"),n={},i={},t.buffer.push(K(s._triageMustache.call(e,"variant.rankScore",{hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("</div>\n\n                "),n={},i={},a=s["if"].call(e,"variant.hasCompounds",{hash:{},inverse:$.program(9,c,t),fn:$.program(7,u,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n              "),r}function u(e,t){var a,n,i="";return t.buffer.push('\n                  <div class="a-notify">\n                    '),a={},n={},t.buffer.push(K(s._triageMustache.call(e,"variant.individualRankScore",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n                  </div>\n                "),i}function c(e,t){var s="";return t.buffer.push('\n                  \n                  <div class="a-notify--fake"></div>\n                '),s}function p(e,t){var a,n,i,r,o,l="";return t.buffer.push("\n                \n                <div "),i={"class":e},r={"class":"STRING"},o={hash:{"class":":slim :a-bar__item--half variant.isFoundInOtherFamilies:a-bar--space-between variant.thousandG::undef :br--listed"},contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},t.buffer.push(K((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,o):W.call(e,"bind-attr",o)))),t.buffer.push(">\n                  "),r={},i={},n=s["if"].call(e,"variant.isFoundInOtherFamilies",{hash:{},inverse:$.noop,fn:$.program(12,d,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push('\n\n                  <div class="text-right">\n                    '),r={},i={},o={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t},t.buffer.push(K((a=s.fallback||e&&e.fallback,a?a.call(e,"variant.thousandG",o):W.call(e,"fallback","variant.thousandG",o)))),t.buffer.push("\n                  </div>\n\n                  "),r={},i={},n=s["if"].call(e,"variant.frequencies",{hash:{},inverse:$.noop,fn:$.program(14,f,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                </div>\n\n                \n                <div "),i={"class":e},r={"class":"STRING"},o={hash:{"class":":slim :a-bar__item--half variant.polyphenDivHuman::undef :br--listed"},contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},t.buffer.push(K((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,o):W.call(e,"bind-attr",o)))),t.buffer.push('>\n                  <div class="text-right">\n                    '),r={},i={},o={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t},t.buffer.push(K((a=s.fallback||e&&e.fallback,a?a.call(e,"variant.polyphenDivHuman",o):W.call(e,"fallback","variant.polyphenDivHuman",o)))),t.buffer.push("\n                  </div>\n\n                  "),r={},i={},n=s["if"].call(e,"variant.severities",{hash:{},inverse:$.noop,fn:$.program(18,v,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                </div>\n\n                \n                <div "),i={"class":e},r={"class":"STRING"},o={hash:{"class":":dotdotdot :slim :a-bar__item variant.geneAnnotation::undef :br--listed"},contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},t.buffer.push(K((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,o):W.call(e,"bind-attr",o)))),t.buffer.push(">\n                  "),r={},i={},o={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t},t.buffer.push(K((a=s.fallback||e&&e.fallback,a?a.call(e,"variant.geneAnnotation",o):W.call(e,"fallback","variant.geneAnnotation",o)))),t.buffer.push("\n                </div>\n\n                \n                <div "),i={"class":e},r={"class":"STRING"},o={hash:{"class":":dotdotdot :slim :a-bar__item variant.functionalAnnotation::undef :br--listed"},contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},t.buffer.push(K((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,o):W.call(e,"bind-attr",o)))),t.buffer.push(">\n                  "),r={},i={},o={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t},t.buffer.push(K((a=s.fallback||e&&e.fallback,a?a.call(e,"variant.functionalAnnotation",o):W.call(e,"fallback","variant.functionalAnnotation",o)))),t.buffer.push("\n                </div>\n\n                "),r={},i={},n=s.unless.call(e,"researchMode",{hash:{},inverse:$.noop,fn:$.program(21,g,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push('\n\n                \n                <div class="a-bar__item--double slim--squashed a-bar br--listed">\n                  '),r={},i={},n=s.each.call(e,"model","in","variant.geneModels",{hash:{},inverse:$.noop,fn:$.program(23,_,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:r,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n\n                  "),r={},i={},n=s["if"].call(e,"variant.hasCompounds",{hash:{},inverse:$.noop,fn:$.program(25,x,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                </div>\n\n                \n                <div "),i={"class":e},r={"class":"STRING"},o={hash:{"class":":dotdotdot :slim :a-bar__item--half variant.hgmdVariantType::undef :br--listed"},contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},t.buffer.push(K((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,o):W.call(e,"bind-attr",o)))),t.buffer.push(">\n                  "),r={},i={},o={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t},t.buffer.push(K((a=s.fallback||e&&e.fallback,a?a.call(e,"variant.hgmdVariantType",o):W.call(e,"fallback","variant.hgmdVariantType",o)))),t.buffer.push("\n                </div>        \n\n                \n                <div "),r={},i={},t.buffer.push(K(s.action.call(e,"hideVariant","variant",{hash:{},contexts:[e,e],types:["STRING","ID"],hashContexts:i,hashTypes:r,data:t}))),t.buffer.push(' class="a-bar__item--half a-bar--center slim--squashed br--listed is-clickable">\n                  <div class="a-icon entypo archive"></div>\n                </div>\n              '),l}function d(e,t){var a,n,i,r,o="";return t.buffer.push("\n                    <div "),n={"class":e},i={"class":"STRING"},r={hash:{"class":":a-notify--bubble variant.hbvdbHuman"},contexts:[],types:[],hashContexts:n,hashTypes:i,data:t},t.buffer.push(K((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,r):W.call(e,"bind-attr",r)))),t.buffer.push(">\n                      &nbsp;\n                    </div>\n                  "),o}function f(e,t){var a,n,i,r,o,l="";return t.buffer.push("\n                    "),i={triggerdBy:e,direction:e,classNames:e},r={triggerdBy:"STRING",direction:"STRING",classNames:"STRING"},o={hash:{triggerdBy:"hover",direction:"right",classNames:"slim"},inverse:$.noop,fn:$.program(15,m,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["a-popover"]||e&&e["a-popover"],n=a?a.call(e,o):W.call(e,"a-popover",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                  "),l}function m(e,t){var a,n,i,r="";return t.buffer.push('\n                      <div class="always-visible-text">\n                        '),n={},i={},a=s.each.call(e,"property","in","variant.frequencies",{hash:{},inverse:$.noop,fn:$.program(16,b,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n                      </div>\n                    "),r}function b(e,t){var a,n,i,r,o="";return t.buffer.push('\n                          <div class="a-bar--space-between">\n                            <div class="dotdotdot slim">\n                              <strong>'),n={},i={},t.buffer.push(K(s._triageMustache.call(e,"property.name",{hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push('</strong>\n                            </div>\n                            <div class="slim text-right">\n                              '),n={},i={},r={hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t},t.buffer.push(K((a=s.fallback||e&&e.fallback,a?a.call(e,"property.value",r):W.call(e,"fallback","property.value",r)))),t.buffer.push("\n                            </div>\n                          </div>\n                        "),o}function v(e,t){var a,n,i,r,o,l="";return t.buffer.push("\n                    "),i={triggerdBy:e,direction:e,classNames:e},r={triggerdBy:"STRING",direction:"STRING",classNames:"STRING"},o={hash:{triggerdBy:"hover",direction:"right",classNames:"slim"},inverse:$.noop,fn:$.program(19,y,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["a-popover"]||e&&e["a-popover"],n=a?a.call(e,o):W.call(e,"a-popover",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                  "),l}function y(e,t){var a,n,i,r="";return t.buffer.push('\n                      <div class="always-visible-text">\n                        '),n={},i={},a=s.each.call(e,"property","in","variant.severities",{hash:{},inverse:$.noop,fn:$.program(16,b,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n                      </div>\n                    "),r}function g(e,t){var a,n,i,r,o="";return t.buffer.push("\n                  \n                  <div "),n={"class":e},i={"class":"STRING"},r={hash:{"class":":dotdotdot :slim :a-bar__item--double :br--listed variant.diseaseGroup::undef"},contexts:[],types:[],hashContexts:n,hashTypes:i,data:t},t.buffer.push(K((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,r):W.call(e,"bind-attr",r)))),t.buffer.push(">\n                    "),i={},n={},r={hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:i,data:t},t.buffer.push(K((a=s.fallback||e&&e.fallback,a?a.call(e,"variant.diseaseGroup",r):W.call(e,"fallback","variant.diseaseGroup",r)))),t.buffer.push('\n                  </div>\n\n                  \n                  <div class="dotdotdot slim a-bar__item--half br--listed">\n                    '),i={},n={},t.buffer.push(K(s._triageMustache.call(e,"variant.diseaseGeneModel",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:i,data:t}))),t.buffer.push("\n                  </div>\n                "),o}function _(e,t){var a,n,i,r,o="";return t.buffer.push("\n                    <div "),n={title:e},i={title:"STRING"},r={hash:{title:"model"},contexts:[],types:[],hashContexts:n,hashTypes:i,data:t},t.buffer.push(K((a=s["bind-attr"]||e&&e["bind-attr"],a?a.call(e,r):W.call(e,"bind-attr",r)))),t.buffer.push(' class="dotdotdot br--listed slim">'),i={},n={},t.buffer.push(K(s._triageMustache.call(e,"model",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:i,data:t}))),t.buffer.push("</div>\n                  "),o}function x(e,t){var a,n,i,r,o,l="";return t.buffer.push("\n                    "),i={triggerdBy:e,direction:e,classNames:e},r={triggerdBy:"STRING",direction:"STRING",classNames:"STRING"},o={hash:{triggerdBy:"hover",direction:"left",classNames:"slim"},inverse:$.noop,fn:$.program(26,I,t),contexts:[],types:[],hashContexts:i,hashTypes:r,data:t},a=s["a-popover"]||e&&e["a-popover"],n=a?a.call(e,o):W.call(e,"a-popover",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                  "),l}function I(e,t){var a,n,i,r,o,l="";return t.buffer.push('\n                      <table class="a-table">\n                        <thead class="a-table__head">\n                          <tr class="a-table__row">\n                            <th class="a-table__cell--header">\n                              Combined score\n                            </th>\n                            <th class="a-table__cell--header">Rank score</th>\n                            '),i={},r={},a=s.each.call(e,"sample","in","variant.compounds.content.0.samples",{hash:{},inverse:$.noop,fn:$.program(27,T,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:r,hashTypes:i,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push('\n                            <th class="a-table__cell--header">\n                              Inheritance models\n                            </th>\n                            <th class="a-table__cell--header">\n                              Gene annotations\n                            </th>\n                            <th class="a-table__cell--header">\n                              Functional annotation\n                            </th>\n                          </tr>\n                        </thead>\n\n                        <tbody class="a-table__body">\n                          <tr class="a-table__row is-highlighted">\n                            <td class="a-table__cell dotdotdot">\n                              '),i={},r={},t.buffer.push(K(s._triageMustache.call(e,"variant.gtData.combinedScore",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('\n                            </td>\n\n                            <td class="a-table__cell dotdotdot">\n                              '),i={},r={},o={hash:{},inverse:$.noop,fn:$.program(29,C,t),contexts:[e,e],types:["STRING","ID"],hashContexts:r,hashTypes:i,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"variant","variant.gtData.variant",o):W.call(e,"link-to","variant","variant.gtData.variant",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                            </td>\n                            \n                            "),i={},r={},n=s.each.call(e,"gtcall","in","variant.gtData.gtcalls",{hash:{},inverse:$.noop,fn:$.program(31,N,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:r,hashTypes:i,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push('\n\n                            <td class="a-table__cell dotdotdot">\n                              '),i={},r={},t.buffer.push(K(s._triageMustache.call(e,"variant.gtData.geneModel",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('\n                            </td>\n\n                            <td class="a-table__cell dotdotdot">\n                              '),i={},r={},t.buffer.push(K(s._triageMustache.call(e,"variant.gtData.geneAnnotation",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('\n                            </td>\n\n                            <td class="a-table__cell dotdotdot">\n                              '),i={},r={},t.buffer.push(K(s._triageMustache.call(e,"variant.gtData.functionalAnnotation",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push("\n                            </td>\n                          </tr>\n\n                          "),i={},r={},n=s.each.call(e,"compound","in","variant.compounds",{hash:{},inverse:$.noop,fn:$.program(33,S,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:r,hashTypes:i,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                        </tbody>\n                      </table>\n                    "),l
-}function T(e,t){var a,n,i="";return t.buffer.push('\n                              <th class="a-table__cell--header dotdotdot">\n                                '),a={},n={},t.buffer.push(K(s._triageMustache.call(e,"sample",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n                              </th>\n                            "),i}function C(e,t){var a,n,i="";return t.buffer.push("\n                                "),a={},n={},t.buffer.push(K(s._triageMustache.call(e,"variant.gtData.rankScore",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n                              "),i}function N(e,t){var a,n,i="";return t.buffer.push('\n                              <td class="a-table__cell dotdotdot text-center">\n                                '),a={},n={},t.buffer.push(K(s._triageMustache.call(e,"gtcall",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n                              </td>\n                            "),i}function S(e,t){var a,n,i,r,o,l="";return t.buffer.push('\n                            <tr class="a-table__row">\n                              <td class="a-table__cell dotdotdot">\n                                '),i={},r={},t.buffer.push(K(s._triageMustache.call(e,"compound.combinedScore",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('\n                              </td>\n\n                              <td class="a-table__cell dotdotdot">\n                                '),i={},r={},o={hash:{},inverse:$.noop,fn:$.program(34,E,t),contexts:[e,e],types:["STRING","ID"],hashContexts:r,hashTypes:i,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"variant","compound.variant",o):W.call(e,"link-to","variant","compound.variant",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                              </td>\n\n                              "),i={},r={},n=s.each.call(e,"gtcall","in","compound.gtcalls",{hash:{},inverse:$.noop,fn:$.program(36,D,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:r,hashTypes:i,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push('\n\n                              <td class="a-table__cell dotdotdot">\n                                '),i={},r={},t.buffer.push(K(s._triageMustache.call(e,"compound.geneModel",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('\n                              </td>\n\n                              <td class="a-table__cell dotdotdot">\n                                '),i={},r={},t.buffer.push(K(s._triageMustache.call(e,"compound.geneAnnotation",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('\n                              </td>\n\n                              <td class="a-table__cell dotdotdot">\n                                '),i={},r={},t.buffer.push(K(s._triageMustache.call(e,"compound.functionalAnnotation",{hash:{},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push("\n                              </td>                              \n                            </tr>\n                          "),l}function E(e,t){var a,n,i="";return t.buffer.push("\n                                  "),a={},n={},t.buffer.push(K(s._triageMustache.call(e,"compound.rankScore",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n                                "),i}function D(e,t){var a,n,i="";return t.buffer.push('\n                                <td class="a-table__cell dotdotdot text-center">\n                                  '),a={},n={},t.buffer.push(K(s._triageMustache.call(e,"gtcall.genotype",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n                                </td>\n                              "),i}function A(e,t){var a,n,i,r,o,l="";return t.buffer.push('\n          \n          <div class="a-layout__footer a-toolbar slim bt">\n            <div class="a-button__group">\n              '),i={classNames:e},r={classNames:"STRING"},o={hash:{classNames:"a-button"},inverse:$.noop,fn:$.program(39,R,t),contexts:[e,e],types:["STRING","ID"],hashContexts:i,hashTypes:r,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"institute","instituteId",o):W.call(e,"link-to","institute","instituteId",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n\n              "),i={classNames:e},r={classNames:"STRING"},o={hash:{classNames:"a-button"},inverse:$.noop,fn:$.program(41,G,t),contexts:[e,e,e],types:["STRING","ID","ID"],hashContexts:i,hashTypes:r,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"family","instituteId","familyId",o):W.call(e,"link-to","family","instituteId","familyId",o),(n||0===n)&&t.buffer.push(n),t.buffer.push('\n            </div>\n\n            <div class="center__wrapper">Database: '),r={},i={},t.buffer.push(K(s._triageMustache.call(e,"database",{hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}))),t.buffer.push('</div>\n\n            <div class="a-button__group">\n              <div '),r={},i={},t.buffer.push(K(s.action.call(e,"doFilter",{hash:{},contexts:[e],types:["STRING"],hashContexts:i,hashTypes:r,data:t}))),t.buffer.push(' class="a-button">\n                <div class="a-button__icon a-icon entypo ccw"></div>\n                <div class="a-button__body">Update variants</div>\n              </div>\n\n              <div '),r={},i={},t.buffer.push(K(s.action.call(e,"toggleProperty","isShowingFilters",{hash:{},contexts:[e,e],types:["STRING","STRING"],hashContexts:i,hashTypes:r,data:t}))),t.buffer.push(' class="a-button">\n                <div class="a-button__icon a-icon entypo hair-cross"></div>\n                <div class="a-button__body">\n                  '),r={},i={},n=s.unless.call(e,"isShowingFilters",{hash:{},inverse:$.program(45,k,t),fn:$.program(43,w,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:r,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n                  filters\n                </div>\n              </div>\n            </div>\n          </div>\n        "),l}function R(e,t){var a,n,i="";return t.buffer.push('\n                <div class="a-button__body">\n                  Institue: '),a={},n={},t.buffer.push(K(s._triageMustache.call(e,"instituteId",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n                </div>\n              "),i}function G(e,t){var a,n,i="";return t.buffer.push('\n                <div class="a-button__body">Case: '),a={},n={},t.buffer.push(K(s._triageMustache.call(e,"familyId",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("</div>\n              "),i}function w(e,t){t.buffer.push(" Show ")}function k(e,t){t.buffer.push(" Hide ")}function M(e,t){var a,n,i,r="";return t.buffer.push("\n      \n      "),n={},i={},a=s["if"].call(e,"isShowingFilters",{hash:{},inverse:$.noop,fn:$.program(48,B,t),contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n    "),r}function B(e,t){var a,n,i,r,o,l="";return t.buffer.push('\n        <div class="filter-panel a-layout__panel--quarter a-list br--listed">\n          <div class="a-bar--space-between slim bb">\n            <div '),i={},r={},t.buffer.push(K(s.action.call(e,"doFilterClinically",{hash:{},contexts:[e],types:["STRING"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push(' class="a-button">\n              <div class="a-button__icon a-icon entypo lifebuoy"></div>\n              <div class="a-button__body">Clinical filter</div>\n            </div>\n\n            <div '),i={},r={},t.buffer.push(K(s.action.call(e,"doClearFilters",{hash:{},contexts:[e],types:["STRING"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push(' class="a-button">\n              <div class="a-button__icon a-icon entypo circled-cross"></div>\n              <div class="a-button__body">Clear</div>\n            </div>\n          </div>\n          <form '),r={on:e},i={on:"STRING"},t.buffer.push(K(s.action.call(e,"submitdiv",{hash:{on:"submit"},contexts:[e],types:["STRING"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('>\n            <div class="a-list__item--header slim text-center">\n              Frequency cutoffs\n            </div>\n\n            <div class="a-list__item a-choice__wrapper regular">\n              <div class="a-choice">\n                '),r={name:e,selectionBinding:e,value:e},i={name:"STRING",selectionBinding:"STRING",value:"STRING"},t.buffer.push(K(s.view.call(e,"Ember.RadioButton",{hash:{name:"relation",selectionBinding:"relation",value:"LESSER"},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('\n                <div class="a-choice__label">Less than</div>\n              </div>\n\n              <div class="a-choice">\n                '),r={name:e,selectionBinding:e,value:e},i={name:"STRING",selectionBinding:"STRING",value:"STRING"},t.buffer.push(K(s.view.call(e,"Ember.RadioButton",{hash:{name:"relation",selectionBinding:"relation",value:"GREATER"},contexts:[e],types:["ID"],hashContexts:r,hashTypes:i,data:t}))),t.buffer.push('\n                <div class="a-choice__label">Greater than</div>\n              </div>\n            </div>\n\n            <div class="regular">\n              '),r={id:e,type:e,step:e,valueBinding:e,placeholder:e,classNames:e,required:e},i={id:"STRING",type:"STRING",step:"STRING",valueBinding:"STRING",placeholder:"STRING",classNames:"STRING",required:"STRING"},o={hash:{id:"hbvdb",type:"number",step:"0.01",valueBinding:"hbvdb",placeholder:"HBVdb",classNames:"a-form__input",required:""},contexts:[],types:[],hashContexts:r,hashTypes:i,data:t},t.buffer.push(K((a=s.input||e&&e.input,a?a.call(e,o):W.call(e,"input",o)))),t.buffer.push('\n            </div>\n\n            <div class="regular">\n              '),r={id:e,type:e,step:e,valueBinding:e,placeholder:e,classNames:e,required:e},i={id:"STRING",type:"STRING",step:"STRING",valueBinding:"STRING",placeholder:"STRING",classNames:"STRING",required:"STRING"},o={hash:{id:"genomes",type:"number",step:"0.01",valueBinding:"thousand_g",placeholder:"1000 Genomes",classNames:"a-form__input",required:""},contexts:[],types:[],hashContexts:r,hashTypes:i,data:t},t.buffer.push(K((a=s.input||e&&e.input,a?a.call(e,o):W.call(e,"input",o)))),t.buffer.push('\n            </div>\n\n            <div class="regular">\n              '),r={id:e,type:e,step:e,valueBinding:e,placeholder:e,classNames:e,required:e},i={id:"STRING",type:"STRING",step:"STRING",valueBinding:"STRING",placeholder:"STRING",classNames:"STRING",required:"STRING"},o={hash:{id:"dbSNP129",type:"number",step:"0.01",valueBinding:"dbsnp129",placeholder:"dbSNP 129",classNames:"a-form__input",required:""},contexts:[],types:[],hashContexts:r,hashTypes:i,data:t},t.buffer.push(K((a=s.input||e&&e.input,a?a.call(e,o):W.call(e,"input",o)))),t.buffer.push('\n            </div>\n\n            <div class="regular">\n              '),r={id:e,type:e,step:e,valueBinding:e,placeholder:e,classNames:e,required:e},i={id:"STRING",type:"STRING",step:"STRING",valueBinding:"STRING",placeholder:"STRING",classNames:"STRING",required:"STRING"},o={hash:{id:"dbSNP132",type:"number",step:"0.01",valueBinding:"dbsnp132",placeholder:"dbSNP 132",classNames:"a-form__input",required:""},contexts:[],types:[],hashContexts:r,hashTypes:i,data:t},t.buffer.push(K((a=s.input||e&&e.input,a?a.call(e,o):W.call(e,"input",o)))),t.buffer.push('\n            </div>\n\n            <div class="regular">\n              '),r={id:e,type:e,step:e,valueBinding:e,placeholder:e,classNames:e,required:e},i={id:"STRING",type:"STRING",step:"STRING",valueBinding:"STRING",placeholder:"STRING",classNames:"STRING",required:"STRING"},o={hash:{id:"esp6500",type:"number",step:"0.01",valueBinding:"esp6500",placeholder:"esp6500",classNames:"a-form__input",required:""},contexts:[],types:[],hashContexts:r,hashTypes:i,data:t},t.buffer.push(K((a=s.input||e&&e.input,a?a.call(e,o):W.call(e,"input",o)))),t.buffer.push('\n            </div>\n\n            <div class="a-list__item--header bt slim text-center">\n              Database and gene search\n            </div>\n\n            <div class="a-list__item a-bar--space-between">\n              '),i={},r={},n=s.each.call(e,"db","in","filter.clinical_db_gene_annotation",{hash:{},inverse:$.noop,fn:$.program(49,q,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:r,hashTypes:i,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push('\n            </div>\n\n            <div class="regular">\n              '),r={id:e,type:e,valueBinding:e,placeholder:e,classNames:e,required:e},i={id:"STRING",type:"STRING",valueBinding:"STRING",placeholder:"STRING",classNames:"STRING",required:"STRING"},o={hash:{id:"gene-name",type:"text",valueBinding:"gene_name",placeholder:"HGNC gene symbol",classNames:"a-form__input",required:""},contexts:[],types:[],hashContexts:r,hashTypes:i,data:t},t.buffer.push(K((a=s.input||e&&e.input,a?a.call(e,o):W.call(e,"input",o)))),t.buffer.push('\n            </div>\n\n            <div class="regular">\n              '),r={id:e,type:e,valueBinding:e,classNames:e,placeholder:e,required:e},i={id:"STRING",type:"STRING",valueBinding:"STRING",classNames:"STRING",placeholder:"STRING",required:"STRING"},o={hash:{id:"offset",type:"number",valueBinding:"offset",classNames:"a-form__input",placeholder:"Skip first...",required:""},contexts:[],types:[],hashContexts:r,hashTypes:i,data:t},t.buffer.push(K((a=s.input||e&&e.input,a?a.call(e,o):W.call(e,"input",o)))),t.buffer.push("\n            </div>\n\n            \n            "),i={},r={},n=s.each.call(e,"group","in","filterGroups",{hash:{},inverse:$.noop,fn:$.program(52,F,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:r,hashTypes:i,data:t}),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n\n          </form>\n        </div>\n      "),l}function q(e,t){var a,n,i,r,o,l="";return t.buffer.push("\n                "),i={classNames:e},r={classNames:"STRING"},o={hash:{classNames:"a-bar__item regular br--listed"},inverse:$.noop,fn:$.program(50,O,t),contexts:[e,e,e,e],types:["STRING","ID","ID","ID"],hashContexts:i,hashTypes:r,data:t},a=s["link-to"]||e&&e["link-to"],n=a?a.call(e,"variants","instituteId","familyId","db",o):W.call(e,"link-to","variants","instituteId","familyId","db",o),(n||0===n)&&t.buffer.push(n),t.buffer.push("\n              "),l}function O(e,t){var a,n,i="";return t.buffer.push("\n                  "),a={},n={},t.buffer.push(K(s._triageMustache.call(e,"db",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:a,data:t}))),t.buffer.push("\n                "),i}function F(e,t){var a,n,i,r="";return t.buffer.push('\n              <div class="a-list__item--header bt slim text-center">\n                '),n={},i={},t.buffer.push(K(s._triageMustache.call(e,"group.name",{hash:{},contexts:[e],types:["ID"],hashContexts:i,hashTypes:n,data:t}))),t.buffer.push("\n              </div>\n\n              "),n={},i={},a=s.each.call(e,"filter","in","group.filters",{hash:{},inverse:$.noop,fn:$.program(53,P,t),contexts:[e,e,e],types:["ID","ID","ID"],hashContexts:i,hashTypes:n,data:t}),(a||0===a)&&t.buffer.push(a),t.buffer.push("\n            "),r}function P(e,t){var a,n,i,r,o="";return t.buffer.push('\n                <div class="regular">\n                  <div class="a-checkbox__wrapper">\n                    <div class="a-checkbox__box">\n                      '),n={type:e,checkedBinding:e,classNames:e},i={type:"STRING",checkedBinding:"STRING",classNames:"STRING"},r={hash:{type:"checkbox",checkedBinding:"filter.property",classNames:"toggle-slider__input"},contexts:[],types:[],hashContexts:n,hashTypes:i,data:t},t.buffer.push(K((a=s.input||e&&e.input,a?a.call(e,r):W.call(e,"input",r)))),t.buffer.push('\n                    </div>\n                    <div class="a-checkbox__caption dotdotdot">\n                      '),i={},n={},t.buffer.push(K(s._triageMustache.call(e,"filter.name",{hash:{},contexts:[e],types:["ID"],hashContexts:n,hashTypes:i,data:t}))),t.buffer.push("\n                    </div>\n                  </div>\n                </div>\n              "),o}this.compilerInfo=[4,">= 1.0.0"],s=this.merge(s,Ember.Handlebars.helpers),n=n||{};var L,V,H,j,z,U="",$=this,K=this.escapeExpression,W=s.helperMissing;return n.buffer.push('<div class="a-layout__wrapper a-layout__panel--full">\n\n  <div class="a-layout">\n    <div '),H={"class":t},j={"class":"STRING"},z={hash:{"class":":a-layout__wrapper variantIsLoaded:a-layout__panel--quarter:a-layout__panel--full :a-floater__wrapper :br--listed"},contexts:[],types:[],hashContexts:H,hashTypes:j,data:n},n.buffer.push(K((L=s["bind-attr"]||t&&t["bind-attr"],L?L.call(t,z):W.call(t,"bind-attr",z)))),n.buffer.push('>\n      <div class="a-layout--vertical">\n\n        \n        <div class="variants-header a-list__item--header bb">\n\n          <div class="a-bar--space-between">\n            <div class="dotdotdot slim a-bar__item--half br--listed">Rank score</div>\n            <div class="dotdotdot slim a-bar__item--half br--listed">Gene</div>\n\n            '),j={},H={},V=s.unless.call(t,"variantIsLoaded",{hash:{},inverse:$.noop,fn:$.program(1,i,n),contexts:[t],types:["ID"],hashContexts:H,hashTypes:j,data:n}),(V||0===V)&&n.buffer.push(V),n.buffer.push('\n          </div>\n        </div>\n\n        <div class="a-layout__panel--full is-scrollable variants-main">\n          '),j={},H={},V=s.each.call(t,"variant","in","model",{hash:{},inverse:$.noop,fn:$.program(4,o,n),contexts:[t,t,t],types:["ID","ID","ID"],hashContexts:H,hashTypes:j,data:n}),(V||0===V)&&n.buffer.push(V),n.buffer.push('\n\n          <div class="a-list__item slim">\n            <div '),j={},H={},n.buffer.push(K(s.action.call(t,"loadMore",{hash:{},contexts:[t],types:["STRING"],hashContexts:H,hashTypes:j,data:n}))),n.buffer.push(' class="a-button center__wrapper">\n              <div class="a-button__icon a-icon entypo infinity"></div>\n              <div class="a-button__body big-font">Load more...</div>\n            </div>\n          </div>\n        </div>\n        \n        '),j={},H={},V=s.unless.call(t,"variantIsLoaded",{hash:{},inverse:$.noop,fn:$.program(38,A,n),contexts:[t],types:["ID"],hashContexts:H,hashTypes:j,data:n}),(V||0===V)&&n.buffer.push(V),n.buffer.push("\n      </div>\n\n    </div>\n\n    "),j={},H={},V=s.unless.call(t,"variantIsLoaded",{hash:{},inverse:$.noop,fn:$.program(47,M,n),contexts:[t],types:["ID"],hashContexts:H,hashTypes:j,data:n}),(V||0===V)&&n.buffer.push(V),n.buffer.push("\n\n    "),j={},H={},n.buffer.push(K(s._triageMustache.call(t,"outlet",{hash:{},contexts:[t],types:["ID"],hashContexts:H,hashTypes:j,data:n}))),n.buffer.push("\n  </div>\n\n</div>\n"),U})}),require.register("views/application",function(e,t,s){s.exports=App.ApplicationView=Ember.View.extend({classNames:["wrapper"]})}),require.register("views/radio-button",function(e,t,s){s.exports=Ember.RadioButton=Ember.View.extend({tagName:"input",type:"radio",attributeBindings:["name","type","value","checked:checked:"],click:function(){return this.set("selection",this.$().val())},checked:function(){return this.get("value")===this.get("selection")}.property()})}),require.register("config/environments/production",function(){window.TAPAS_ENV={name:"production"}});
+(function(/*! Brunch !*/) {
+  'use strict';
+
+  var globals = typeof window !== 'undefined' ? window : global;
+  if (typeof globals.require === 'function') return;
+
+  var modules = {};
+  var cache = {};
+
+  var has = function(object, name) {
+    return ({}).hasOwnProperty.call(object, name);
+  };
+
+  var expand = function(root, name) {
+    var results = [], parts, part;
+    if (/^\.\.?(\/|$)/.test(name)) {
+      parts = [root, name].join('/').split('/');
+    } else {
+      parts = name.split('/');
+    }
+    for (var i = 0, length = parts.length; i < length; i++) {
+      part = parts[i];
+      if (part === '..') {
+        results.pop();
+      } else if (part !== '.' && part !== '') {
+        results.push(part);
+      }
+    }
+    return results.join('/');
+  };
+
+  var dirname = function(path) {
+    return path.split('/').slice(0, -1).join('/');
+  };
+
+  var localRequire = function(path) {
+    return function(name) {
+      var dir = dirname(path);
+      var absolute = expand(dir, name);
+      return globals.require(absolute, path);
+    };
+  };
+
+  var initModule = function(name, definition) {
+    var module = {id: name, exports: {}};
+    cache[name] = module;
+    definition(module.exports, localRequire(name), module);
+    return module.exports;
+  };
+
+  var require = function(name, loaderPath) {
+    var path = expand(name, '.');
+    if (loaderPath == null) loaderPath = '/';
+
+    if (has(cache, path)) return cache[path].exports;
+    if (has(modules, path)) return initModule(path, modules[path]);
+
+    var dirIndex = expand(path, './index');
+    if (has(cache, dirIndex)) return cache[dirIndex].exports;
+    if (has(modules, dirIndex)) return initModule(dirIndex, modules[dirIndex]);
+
+    throw new Error('Cannot find module "' + name + '" from '+ '"' + loaderPath + '"');
+  };
+
+  var define = function(bundle, fn) {
+    if (typeof bundle === 'object') {
+      for (var key in bundle) {
+        if (has(bundle, key)) {
+          modules[key] = bundle[key];
+        }
+      }
+    } else {
+      modules[bundle] = fn;
+    }
+  };
+
+  var list = function() {
+    var result = [];
+    for (var item in modules) {
+      if (has(modules, item)) {
+        result.push(item);
+      }
+    }
+    return result;
+  };
+
+  globals.require = require;
+  globals.require.define = define;
+  globals.require.register = define;
+  globals.require.list = list;
+  globals.require.brunch = true;
+})();
+require.register("adapters/filter", function(exports, require, module) {
+module.exports = Ember.FilterAdapter = Ember.Adapter.extend({
+  host: '/api/v1',
+  find: function(record, id) {
+    var familyId, institute, parts, url;
+    parts = id.split(',');
+    familyId = parts[0];
+    institute = parts[1];
+    url = "" + (this.get('host')) + "/families/" + familyId + "/filter?institute=" + institute;
+    return $.getJSON(url).then(function(data) {
+      var filter, filters, type, _i, _j, _len, _len1, _ref, _ref1;
+      if (id) {
+        _ref = ['functional_annotations', 'gene_annotations', 'inheritence_models'];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          type = _ref[_i];
+          filters = [];
+          _ref1 = data[type];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            filter = _ref1[_j];
+            filters.push("" + type + "_" + filter);
+          }
+          data[type] = filters;
+        }
+      }
+      return record.load(id, data);
+    });
+  }
+});
+});
+
+;require.register("adapters/local-storage", function(exports, require, module) {
+var keyMaker;
+
+keyMaker = function(klass, id) {
+  return "" + klass + "-" + id;
+};
+
+module.exports = Ember.LocalStorage = Ember.Object.extend({
+  init: function() {
+    return this.set('length', localStorage.length);
+  },
+  exists: function(klass, id) {
+    return keyMaker(klass, id) in localStorage;
+  },
+  find: function(klass, id) {
+    var date, value;
+    value = localStorage.getItem(keyMaker(klass, id));
+    date = moment(value);
+    if (date.isValid()) {
+      return date;
+    } else {
+      return value;
+    }
+  },
+  findAll: function(klass) {
+    var index, key, results, value, _i, _ref;
+    results = Em.A();
+    for (index = _i = 0, _ref = localStorage.length; 0 <= _ref ? _i <= _ref : _i >= _ref; index = 0 <= _ref ? ++_i : --_i) {
+      key = localStorage.key(index);
+      if ((key || '').startsWith(klass)) {
+        value = moment(localStorage.getItem(key));
+        if (!value.isValid()) {
+          value = localStorage.getItem(key);
+        }
+        results.pushObject(Em.Object.create({
+          id: key.split('-')[1],
+          value: value
+        }));
+      }
+    }
+    return results;
+  },
+  deleteAll: function(klass) {
+    var key, _, _results;
+    _results = [];
+    for (key in localStorage) {
+      _ = localStorage[key];
+      if (key.substring(0, klass.length) === klass) {
+        _results.push(delete localStorage[key]);
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  },
+  save: function(klass, id, value) {
+    localStorage[keyMaker(klass, id)] = value;
+    return this.incrementProperty('length');
+  },
+  "delete": function(klass, id) {
+    delete localStorage[keyMaker(klass, id)];
+    return this.incrementProperty('length', -1);
+  }
+});
+
+Ember.ls = Ember.LocalStorage.create();
+});
+
+;require.register("adapters/new-rest", function(exports, require, module) {
+module.exports = Ember.NewRESTAdapter = Ember.RESTAdapter.extend({
+  buildURL: function(klass, id) {
+    var urlRoot;
+    urlRoot = Ember.get(klass, 'url');
+    if (!urlRoot) {
+      throw new Error('Ember.RESTAdapter requires a `url` property to be specified');
+    }
+    if (!Ember.isEmpty(id)) {
+      return "" + urlRoot + "/" + id;
+    } else {
+      return urlRoot;
+    }
+  }
+});
+});
+
+;require.register("adapters/omim", function(exports, require, module) {
+module.exports = Ember.OmimAdapter = Ember.Adapter.extend({
+  host: '/api/v1',
+  find: function(record, id) {
+    return $.getJSON("" + (this.get('host')) + "/omim/" + id).then(function(data) {
+      var syn;
+      data.SYNDROMS = (function() {
+        var _i, _len, _ref, _results;
+        _ref = data.SYNDROMS;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          syn = _ref[_i];
+          _results.push(syn.toLowerCase().capitalize());
+        }
+        return _results;
+      })();
+      return record.load(id, data);
+    });
+  }
+});
+});
+
+;require.register("adapters/variant", function(exports, require, module) {
+module.exports = App.VariantAdapter = Ember.Adapter.extend({
+  host: '/api/v1',
+  buildQueryString: function(queryParams) {
+    var key, queryString, value;
+    queryString = '?';
+    for (key in queryParams) {
+      value = queryParams[key];
+      if (value) {
+        if (value === true) {
+          queryString += "" + key + "&";
+        } else if (value !== 'undefined') {
+          queryString += "" + key + "=" + value + "&";
+        }
+      }
+    }
+    return queryString.substring(0, queryString.length - 1);
+  },
+  find: function(record, id) {
+    return $.getJSON("" + (this.get('host')) + "/variants/" + id).then(function(data) {
+      return record.load(id, data);
+    });
+  },
+  findQuery: function(klass, records, params) {
+    var queryString, url;
+    url = "" + (this.get('host')) + "/families/" + params.family_id + "/variants";
+    if (params.queryParams) {
+      queryString = this.buildQueryString(params.queryParams);
+      url += queryString;
+    }
+    return $.getJSON(url).then(function(data) {
+      return records.load(klass, data);
+    });
+  }
+});
+});
+
+;require.register("components/a-popover", function(exports, require, module) {
+module.exports = App.APopoverComponent = Ember.Component.extend({
+  classNames: ['a-popover'],
+  classNameBindings: ['direction'],
+  triggerdBy: 'click',
+  isVisible: false,
+  didInsertElement: function() {
+    this.$menu = this.$();
+    if (this.$menu) {
+      this.$parent = this.$menu.parent(':not(script)');
+      this.$parent.addClass('a-popover__wrapper');
+      if (this.get('triggerdBy') === 'click') {
+        this.$parent.on('click', $.proxy(this.toggle, this));
+      } else if (this.get('triggerdBy') === 'hover') {
+        this.$parent.on('mouseenter', $.proxy(this.enter, this));
+        this.$parent.on('mouseleave', $.proxy(this.leave, this));
+      }
+      return this.set('inserted', true);
+    } else {
+      return Ember.run.next(this, this.didInsertElement);
+    }
+  },
+  toggle: function(event) {
+    if ($(event.target).closest('.a-popover').length === 0) {
+      return this.toggleProperty('isVisible');
+    }
+  },
+  enter: function() {
+    return this.set('isVisible', true);
+  },
+  leave: function() {
+    return this.set('isVisible', false);
+  },
+  isVisibleObserver: (function() {
+    var _this = this;
+    if (this.get('direction')) {
+      return Ember.run.scheduleOnce('afterRender', this, function() {
+        return _this.$().css(_this.get('direction'), -(_this.$menu.outerWidth()));
+      });
+    }
+  }).observes('isVisible')
+});
+});
+
+;require.register("components/activity-form", function(exports, require, module) {
+module.exports = App.ActivityFormComponent = Ember.Component.extend({
+  classNames: ['a-activity__form__wrapper'],
+  userId: null,
+  content: null,
+  currentUserId: null,
+  userHasFullAccess: (function() {
+    return (this.get('userId') || -1) === this.get('currentUserId');
+  }).property('userId', 'currentUserId'),
+  writePrompt: 'Write comment here...',
+  submitPrompt: 'Submit',
+  isEditing: false,
+  hasTags: (function() {
+    return this.get('tags.length') > 0;
+  }).property('tags'),
+  isFailingObserver: (function() {
+    if (this.get('isFailing')) {
+      this.set('writePromptBackup', this.get('writePrompt'));
+      return this.set('writePrompt', 'You need to write something here...');
+    } else {
+      if (this.get('writePromptBackup')) {
+        return this.set('writePrompt', this.get('writePromptBackup'));
+      }
+    }
+  }).observes('isFailing'),
+  clear: function() {
+    this.set('content', null);
+    return this.set('isFailing', false);
+  },
+  actions: {
+    cancel: function() {
+      this.set('content', this.get('contentBackup'));
+      return this.set('isEditing', false);
+    },
+    submit: function() {
+      if (this.get('content')) {
+        this.sendAction('onSubmit', {
+          createdAt: new Date(),
+          content: this.get('content')
+        });
+        return this.clear();
+      } else {
+        return this.set('isFailing', true);
+      }
+    },
+    startEditing: function() {
+      this.set('contentBackup', this.get('content'));
+      return this.set('isEditing', true);
+    },
+    remove: function() {
+      return this.sendAction('onRemove', this.get('activityId'));
+    }
+  }
+});
+});
+
+;require.register("config/app", function(exports, require, module) {
+var env, options;
+
+env = require('config/environment');
+
+if (env.get('isDevelopment')) {
+  options = {
+    LOG_TRANSITIONS: true,
+    LOG_TRANSITIONS_INTERNAL: false,
+    LOG_STACKTRACE_ON_DEPRECATION: true,
+    LOG_BINDINGS: true,
+    LOG_VIEW_LOOKUPS: true,
+    LOG_ACTIVE_GENERATION: true
+  };
+  Ember.RSVP.configure('onerror', function(error) {
+    var message;
+    if (Ember.typeOf(error) === 'object') {
+      message = (error != null ? error.message : void 0) || 'No error message';
+      Ember.Logger.error("RSVP Error: " + message);
+      Ember.Logger.error(error != null ? error.stack : void 0);
+      return Ember.Logger.error(error != null ? error.object : void 0);
+    } else {
+      return Ember.Logger.error('RSVP Error', error);
+    }
+  });
+  Ember.STRUCTURED_PROFILE = true;
+  Ember.Logger.debug("Running in the %c" + (env.get('name')) + "%c environment", 'color: red;', '');
+} else {
+  options = {};
+}
+
+module.exports = Ember.Application.create(options);
+});
+
+;require.register("config/environment", function(exports, require, module) {
+var Environment;
+
+window.require.list().filter(function(module) {
+  if (new RegExp("^config/environments/").test(module)) {
+    return require(module);
+  }
+});
+
+Environment = Ember.Object.extend({
+  isTest: Ember.computed.equal('name', 'test'),
+  isDevelopment: Ember.computed.equal('name', 'development'),
+  isProduction: Ember.computed.equal('name', 'production')
+});
+
+module.exports = Environment.create(window.TAPAS_ENV);
+});
+
+;require.register("config/router", function(exports, require, module) {
+module.exports = App.Router.map(function() {
+  this.resource('issues', function() {
+    this.resource('issue', {
+      path: '/:issue_id'
+    });
+    return this.route('new');
+  });
+  this.resource('settings');
+  this.resource('institutes');
+  this.resource('institute', {
+    path: '/:institute_id'
+  }, function() {
+    return this.resource('family', {
+      path: '/:family_id'
+    });
+  });
+  return this.resource('variants', {
+    path: '/variants/:institute_id/:family_id/:database_id'
+  }, function() {
+    return this.resource('variant', {
+      path: '/:variant_id'
+    });
+  });
+});
+});
+
+;require.register("controllers/application", function(exports, require, module) {
+module.exports = App.ApplicationController = Ember.ObjectController.extend({
+  actions: {
+    toggleMenu: function() {
+      this.toggleProperty('menuIsShowing');
+      return false;
+    },
+    goToSettings: function() {
+      return this.transitionToRoute('settings');
+    },
+    logout: function() {
+      return window.location.replace('/logout');
+    }
+  },
+  menuIsShowing: false
+});
+});
+
+;require.register("controllers/families", function(exports, require, module) {
+module.exports = App.FamiliesController = Ember.ArrayController.extend({
+  needs: ['institute'],
+  sortProperties: ['updateDateRaw'],
+  sortAscending: false,
+  instituteIdBinding: 'controllers.institute.id',
+  actions: {
+    hideFamily: function(family) {
+      return family.get('model').hide();
+    }
+  },
+  model: (function() {
+    return App.Family.find({
+      institute: this.get('instituteId')
+    });
+  }).property('instituteId')
+});
+});
+
+;require.register("controllers/family", function(exports, require, module) {
+module.exports = App.FamilyController = Ember.ObjectController.extend({
+  needs: ['application', 'institute'],
+  userBinding: 'controllers.application.model',
+  instituteIdBinding: 'controllers.institute.id',
+  queryParams: ['selectedClinicalActivityType', 'selectedResearchActivityType'],
+  actions: {
+    postClinicalActivity: function() {
+      var activity,
+        _this = this;
+      activity = App.Activity.create({
+        activityId: 'comment',
+        context: 'family',
+        contextId: this.get('id'),
+        ecosystem: this.get('instituteId'),
+        userId: this.get('user._id'),
+        caption: "" + (this.get('user.firstName')) + " commented on <a class='activity-caption-link' href='/" + window.location.hash + "'>case " + (this.get('id')) + "</a>",
+        content: this.get('clinicalActivityContent'),
+        category: 'clinical',
+        tags: [this.get('selectedClinicalTag')]
+      });
+      return activity.save().then(function(newObject) {
+        return _this.get('clinicalActivities').insertAt(0, newObject);
+      });
+    },
+    deleteActivity: function(category, activity) {
+      if (this.isOwner(activity.get('userId'))) {
+        this.get("" + category + "Activities").removeObject(activity);
+        return activity.deleteRecord();
+      } else {
+        return alert("You can't delete " + (activity.get('user.givenName')) + "'s comment.");
+      }
+    },
+    postResearchActivity: function() {
+      var activity,
+        _this = this;
+      activity = App.Activity.create({
+        activityId: 'comment',
+        context: 'family',
+        contextId: this.get('id'),
+        ecosystem: this.get('instituteId'),
+        userId: this.get('user._id'),
+        caption: "" + (this.get('user.firstName')) + " commented on <a class='activity-caption-link' href='/" + window.location.hash + "'>case " + (this.get('id')) + "</a>",
+        content: this.get('researchActivityContent'),
+        category: 'research',
+        tags: [this.get('selectedResearchTag')]
+      });
+      return activity.save().then(function(newObject) {
+        return _this.get('researchActivities').insertAt(0, newObject);
+      });
+    }
+  },
+  isOwner: function(commentUserId) {
+    return commentUserId === this.get('user._id');
+  },
+  activityTypes: ['finding', 'action', 'conclusion'],
+  selectedClinicalActivityType: void 0,
+  selectedResearchActivityType: void 0,
+  clinicalActivityContent: null,
+  researchActivityContent: null,
+  selectedClinicalTag: 'finding',
+  selectedResearchTag: 'finding',
+  clinicalActivities: (function() {
+    var queryParams;
+    queryParams = {
+      context: 'family',
+      context_id: this.get('id'),
+      category: 'clinical',
+      ecosystem: this.get('instituteId')
+    };
+    return App.Activity.find(queryParams);
+  }).property('id', 'instituteId'),
+  selectedClinicalActivities: (function() {
+    var activities, activityType;
+    activities = this.get('clinicalActivities');
+    activityType = this.get('selectedClinicalActivityType');
+    if (activityType && activityType !== 'undefined') {
+      return activities.filterProperty('firstTag', activityType);
+    }
+    return activities;
+  }).property('clinicalActivities.@each', 'selectedClinicalActivityType'),
+  researchActivities: (function() {
+    var queryParams;
+    queryParams = {
+      context: 'family',
+      context_id: this.get('id'),
+      category: 'research',
+      ecosystem: this.get('instituteId')
+    };
+    return App.Activity.find(queryParams);
+  }).property('id', 'instituteId'),
+  selectedResearchActivities: (function() {
+    var activities, activityType;
+    activities = this.get('researchActivities');
+    activityType = this.get('selectedResearchActivityType');
+    if (activityType && activityType !== 'undefined') {
+      return activities.filterProperty('firstTag', activityType);
+    }
+    return activities;
+  }).property('researchActivities.@each', 'selectedResearchActivityType')
+});
+});
+
+;require.register("controllers/index", function(exports, require, module) {
+module.exports = App.IndexController = Ember.ObjectController.extend();
+});
+
+;require.register("controllers/institute", function(exports, require, module) {
+module.exports = App.InstituteController = Ember.ObjectController.extend({
+  needs: ['application'],
+  currentPathBinding: 'controllers.application.currentPath',
+  actions: {
+    hideFamily: function(menuItem) {
+      return menuItem.get('model').hide();
+    }
+  },
+  openFamilies: (function() {
+    return this.get('content').filterProperty('status', 'open');
+  }).property('content'),
+  familyIsLoaded: (function() {
+    if (this.get('currentPath')) {
+      if (this.get('currentPath').match(/family/)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }).property('currentPath')
+});
+});
+
+;require.register("controllers/institute/index", function(exports, require, module) {
+module.exports = App.InstituteIndexController = Ember.Controller.extend();
+});
+
+;require.register("controllers/issues/new", function(exports, require, module) {
+module.exports = App.IssuesNewController = Ember.ObjectController.extend({
+  needs: ['application'],
+  userBinding: 'controllers.application.model',
+  isConfirmingSubmit: false,
+  actions: {
+    saveIssue: function() {
+      var _this = this;
+      this.set('isConfirmingSubmit', false);
+      return this.get('model').save().then(function(new_issue) {
+        return _this.transitionToRoute('issue', new_issue);
+      });
+    }
+  }
+});
+});
+
+;require.register("controllers/settings", function(exports, require, module) {
+module.exports = App.SettingsController = Ember.Controller.extend({
+  actions: {
+    resetHidden: function(klass) {
+      return Ember.ls.deleteAll(klass);
+    },
+    resetItem: function(klass, item_id) {
+      Ember.ls["delete"](klass, item_id);
+      return false;
+    }
+  },
+  hiddenFamiles: (function() {
+    return Ember.ls.findAll('family');
+  }).property('Ember.ls.length'),
+  hiddenVariants: (function() {
+    return Ember.ls.findAll('variant');
+  }).property('Ember.ls.length')
+});
+});
+
+;require.register("controllers/variant", function(exports, require, module) {
+module.exports = App.VariantController = Ember.ObjectController.extend({
+  needs: ['application', 'variants'],
+  userBinding: 'controllers.application.model',
+  instituteIdBinding: 'controllers.variants.instituteId',
+  familyIdBinding: 'controllers.variants.familyId',
+  databaseIdBinding: 'controllers.variants.database',
+  isShowingActivity: true,
+  hasActivityObserver: (function() {
+    if (this.get('hasActivity')) {
+      return this.set('isShowingActivity', true);
+    }
+  }).observes('hasActivity'),
+  activityContent: void 0,
+  logActivityContent: void 0,
+  actions: {
+    postActivity: function() {
+      var activity,
+        _this = this;
+      activity = App.Activity.create({
+        activityId: 'comment',
+        context: 'variant',
+        contextId: this.get('uniqueId'),
+        ecosystem: this.get('instituteId'),
+        userId: this.get('user._id'),
+        caption: "" + (this.get('user.firstName')) + " commented on <a class='activity-caption-link' href='/" + window.location.hash + "'>" + (this.get('id')) + "</a>",
+        content: this.get('activityContent')
+      });
+      return activity.save().then(function(newObject) {
+        return _this.get('activities').pushObject(newObject);
+      });
+    },
+    postLogActivity: function() {
+      var activity,
+        _this = this;
+      activity = App.Activity.create({
+        activityId: 'comment',
+        context: 'family',
+        contextId: this.get('familyId'),
+        ecosystem: this.get('instituteId'),
+        userId: this.get('user._id'),
+        caption: "" + (this.get('user.firstName')) + " commented on family " + (this.get('familyId')),
+        content: this.get('logActivityContent')
+      });
+      return activity.save().then(function(newObject) {
+        return _this.get('logActivities').pushObject(newObject);
+      });
+    },
+    deleteActivity: function(activity) {
+      this.get('activities').removeObject(activity);
+      return activity.deleteRecord();
+    },
+    submitSangerForm: function(modal, event) {
+      var payload,
+        _this = this;
+      payload = {
+        message: this.get('sangerEmailBody'),
+        hgnc_symbol: this.get('hgncSymbol')
+      };
+      return event.returnValue = $.post('/api/v1/sanger', payload).then(function(data) {
+        var activity, attributes, caption;
+        caption = "" + (_this.get('user.firstName')) + " ordered Sanger for " + (_this.get('hgncSymbol')) + " <a class='activity-caption-link' href='/" + window.location.hash + "'>" + (_this.get('uniqueId')) + "</a>";
+        attributes = {
+          activityId: 'sanger',
+          context: 'variant',
+          contextId: _this.get('uniqueId'),
+          ecosystem: _this.get('instituteId'),
+          userId: _this.get('user._id'),
+          caption: caption,
+          content: caption
+        };
+        activity = App.Activity.create(attributes);
+        return event.returnValue = activity.save().then(function(newObject) {
+          var logActivity;
+          _this.get('activities').pushObject(newObject);
+          attributes['context'] = 'family';
+          attributes['contextId'] = _this.get('familyId');
+          attributes['tags'] = ['action'];
+          attributes['category'] = _this.get('logActivityType').toLowerCase();
+          logActivity = App.Activity.create(attributes);
+          return event.returnValue = logActivity.save().then(function(newLogObject) {
+            return _this.get('logActivities').pushObject(newLogObject);
+          });
+        });
+      });
+    },
+    hideInList: function() {
+      return this.get('model').hide();
+    },
+    unHideInList: function() {
+      this.get('model').unhide();
+      return null;
+    }
+  },
+  gtString: (function() {
+    var gtcall, gtcalls, _i, _len, _ref;
+    gtcalls = [];
+    _ref = this.get('gtcalls.content');
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      gtcall = _ref[_i];
+      gtcalls.push("" + (gtcall.get('idn')) + ": " + (gtcall.get('gt')));
+    }
+    return gtcalls;
+  }).property('gtcalls.@each.idn', 'gtcalls.@each.gt'),
+  sangerEmailBody: (function() {
+    var body, func, functions, gtcall, gtcalls;
+    functions = (function() {
+      var _i, _len, _ref, _results;
+      _ref = this.get('variantFunctions');
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        func = _ref[_i];
+        _results.push("<li>" + func + "</li>");
+      }
+      return _results;
+    }).call(this);
+    gtcalls = (function() {
+      var _i, _len, _ref, _results;
+      _ref = this.get('gtString');
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        gtcall = _ref[_i];
+        _results.push("<li>" + gtcall + "</li>");
+      }
+      return _results;
+    }).call(this);
+    return body = "<p>Case " + (this.get('familyId')) + ": <a class='activity-caption-link' href='/" + document.URL + "'>" + (this.get('uniqueId')) + "</a></p>\n\n<p>HGNC symbol: " + (this.get('hgncSymbol')) + "</p>\n\n<p>Database: " + (this.get('databaseId')) + "</p>\n\n<p>\n  Chr position: <br>\n  " + (this.get('chromosomePositionString')) + "\n</p>\n\n<p>\n  Amino acid change(s): <br>\n  <ul>" + (functions.join('') || '<li>No protein changes</li>') + "</ul>\n</p>\n\n<p>\n  GT-call: <br>\n  <ul>" + (gtcalls.join('')) + "</ul>\n</p>\n\n<p>Ordered by: " + (this.get('user.name')) + "</p>";
+  }).property('familyId', 'uniqueId', 'hgncSymbol', 'chromosomePositionString', 'variantFunctions', 'gtString', 'databaseId', 'user.name'),
+  predictions: (function() {
+    var list_id;
+    return (function() {
+      var _i, _len, _ref, _results;
+      _ref = ['cScores', 'severities', 'frequencies', 'conservations'];
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        list_id = _ref[_i];
+        _results.push({
+          name: list_id.capitalize(),
+          values: this.get(list_id)
+        });
+      }
+      return _results;
+    }).call(this);
+  }).property('cScores', 'severities', 'frequencies', 'conservations'),
+  activities: (function() {
+    return App.Activity.find({
+      context: 'variant',
+      context_id: this.get('uniqueId'),
+      ecosystem: this.get('instituteId')
+    });
+  }).property('uniqueId', 'instituteId'),
+  logActivities: (function() {
+    return App.Activity.find({
+      context: 'family',
+      context_id: this.get('familyId'),
+      category: this.get('logActivityType').toLowerCase(),
+      ecosystem: this.get('instituteId')
+    });
+  }).property('familyId', 'logActivityType', 'instituteId'),
+  hasActivity: (function() {
+    if (this.get('activities.content.length') > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }).property('activities'),
+  logActivityType: (function() {
+    if (this.get('databaseId') === 'research') {
+      return 'Research';
+    } else {
+      return 'Clinical';
+    }
+  }).property('databaseId'),
+  omim: (function() {
+    if (this.get('hgncSymbol')) {
+      return App.Omim.find(this.get('hgncSymbol'));
+    }
+  }).property('hgncSymbol'),
+  ensemblLink: (function() {
+    return "http://www.ensembl.org/Homo_sapiens/Gene/Summary?g=" + (this.get('ensemblGeneid'));
+  }).property('ensemblGeneid'),
+  hpaLink: (function() {
+    return "http://www.proteinatlas.org/search/" + (this.get('ensemblGeneid'));
+  }).property('ensemblGeneid'),
+  stringLink: (function() {
+    return "http://string-db.org/newstring_cgi/show_network_section.pl?identifier=" + (this.get('ensemblGeneid'));
+  }).property('ensemblGeneid'),
+  ucscLink: (function() {
+    return "http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=" + (this.get('chr')) + ":" + (this.get('startBp')) + "-" + (this.get('stopBp')) + "&dgv=pack&knownGene=pack&omimGene=pack";
+  }).property('chr', 'startBp', 'stopBp'),
+  entrezLink: (function() {
+    return "http://www.ncbi.nlm.nih.gov/sites/gquery/?term=" + (this.get('hgncSymbol'));
+  }).property('hgncSymbol'),
+  idsLink: (function() {
+    return "http://databases.scilifelab.se:8080/idLookup?data=" + (this.get('ensemblGeneid'));
+  }).property('ensemblGeneid'),
+  omimLink: (function() {
+    return "http://www.omim.org/entry/" + (this.get('omim.OMIM_ID'));
+  }).property('omim.OMIM_ID'),
+  igvLink: (function() {
+    return "https://clinical-db.scilifelab.se:8081/api/v1/variants/" + (this.get('id')) + "/igv.xml";
+  }).property('id'),
+  hgmdLink: (function() {
+    return "http://www.hgmd.cf.ac.uk/ac/gene.php?gene=" + (this.get('hgncSymbol')) + "&accession=" + (this.get('hgmdAccession'));
+  }).property('hgncSymbol', 'hgmdAccession')
+});
+});
+
+;require.register("controllers/variants", function(exports, require, module) {
+module.exports = App.VariantsController = Ember.ArrayController.extend({
+  needs: ['application'],
+  queryParams: ['database', 'relation', 'hbvdb', 'thousand_g', 'dbsnp129', 'dbsnp132', 'esp6500', 'gene_name', 'priority', 'inheritence_models_AR_hom', 'inheritence_models_AR_compound', 'inheritence_models_AR_hom_denovo', 'inheritence_models_AR_denovo', 'inheritence_models_Na', 'inheritence_models_X', 'inheritence_models_X_dn', 'functional_annotations_-', 'functional_annotations_frameshift deletion', 'functional_annotations_frameshift insertion', 'functional_annotations_nonframeshift deletion', 'functional_annotations_nonframeshift insertion', 'functional_annotations_nonsynonymous SNV', 'functional_annotations_stopgain SNV', 'functional_annotations_stoploss SNV', 'functional_annotations_synonymous SNV', 'functional_annotations_unknown', 'gene_annotations_downstream', 'gene_annotations_exonic', 'gene_annotations_intergenic', 'gene_annotations_intronic', 'gene_annotations_ncRNA_exonic', 'gene_annotations_ncRNA_intronic', 'gene_annotations_ncRNA_splicing', 'gene_annotations_ncRNA_UTR3', 'gene_annotations_ncRNA_UTR5', 'gene_annotations_splicing', 'gene_annotations_upstream', 'gene_annotations_UTR3', 'gene_annotations_UTR5', 'offset'],
+  currentPathBinding: 'controllers.application.currentPath',
+  isShowingFilters: true,
+  relation: 'LESSER',
+  familyId: null,
+  offset: 0,
+  loadedVariants: 100,
+  filterObj: Ember.Object.extend({
+    id: null,
+    property: false,
+    name: null,
+    self: null,
+    propertyChanged: Em.observer('property', function() {
+      return this.get('self').set(this.get('id'), this.get('property'));
+    })
+  }),
+  actions: {
+    doFilter: function() {
+      return this.get('target').send('filtersWhereUpdated');
+    },
+    doClearFilters: function() {
+      var filter, filters, group, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _results;
+      this.set('offset', 0);
+      _ref = this.get('filterGroups');
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        group = _ref[_i];
+        _ref1 = group.filters;
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          filter = _ref1[_j];
+          filter.set('property');
+        }
+      }
+      filters = ['relation', 'thousand_g', 'dbsnp129', 'dbsnp132', 'esp6500', 'gene_name', 'priority', 'hbvdb'];
+      _results = [];
+      for (_k = 0, _len2 = filters.length; _k < _len2; _k++) {
+        filter = filters[_k];
+        _results.push(this.set(filter));
+      }
+      return _results;
+    },
+    doFilterClinically: function() {
+      var filter, filters, group, _i, _len, _ref, _results;
+      this.setProperties({
+        thousand_g: 0.01,
+        relation: 'LESSER'
+      });
+      filters = {
+        'functional_annotations_-': true,
+        'functional_annotations_frameshift deletion': true,
+        'functional_annotations_frameshift insertion': true,
+        'functional_annotations_nonframeshift deletion': true,
+        'functional_annotations_nonframeshift insertion': true,
+        'functional_annotations_nonsynonymous SNV': true,
+        'functional_annotations_stopgain SNV': true,
+        'functional_annotations_stoploss SNV': true,
+        'gene_annotations_exonic': true,
+        'gene_annotations_splicing': true
+      };
+      _ref = this.get('filterGroups');
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        group = _ref[_i];
+        _results.push((function() {
+          var _j, _len1, _ref1, _results1;
+          _ref1 = group.filters;
+          _results1 = [];
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            filter = _ref1[_j];
+            if (filter.id in filters) {
+              _results1.push(filter.set('property', true));
+            } else {
+              _results1.push(void 0);
+            }
+          }
+          return _results1;
+        })());
+      }
+      return _results;
+    },
+    loadMore: function() {
+      var moreVariants, queryParams;
+      queryParams = jQuery.extend({}, this.get('latestQueryParams'));
+      queryParams['offset'] = parseInt(this.get('offset')) + this.get('loadedVariants');
+      moreVariants = App.Variant.find({
+        family_id: this.get('familyId'),
+        queryParams: queryParams
+      });
+      return moreVariants.addObserver('isLoaded', this, this.loadMoreVariants);
+    },
+    hideVariant: function(variant) {
+      return variant.hide();
+    }
+  },
+  loadMoreVariants: function(moreVariants) {
+    var model;
+    model = this.get('model').pushObjects(moreVariants.content);
+    this.incrementProperty('loadedVariants', 100);
+    return moreVariants.removeObserver('isLoaded', this, this.loadMoreVariants);
+  },
+  researchMode: (function() {
+    return (this.get('database') || '').toLowerCase() === 'research';
+  }).property('database'),
+  filter: (function() {
+    if (this.get('familyId')) {
+      return App.Filter.find("" + (this.get('familyId')) + "," + (this.get('instituteId')));
+    }
+  }).property('familyId', 'instituteId'),
+  variantIsLoaded: (function() {
+    if (this.get('currentPath')) {
+      if (this.get('currentPath').match(/variants.variant/)) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  }).property('currentPath'),
+  filterGroups: (function() {
+    var filter, filterObj, filters, group, groups, _i, _j, _len, _len1, _ref, _ref1;
+    groups = Em.A();
+    if (this.get('filter.groups')) {
+      _ref = this.get('filter.groups');
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        group = _ref[_i];
+        filters = Em.A();
+        _ref1 = this.get("filter." + group.id) || [];
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          filter = _ref1[_j];
+          filterObj = this.get('filterObj').create({
+            id: filter,
+            property: this.get(filter),
+            name: filter.replace("" + group.id + "_", ""),
+            self: this
+          });
+          filters.pushObject(filterObj);
+        }
+        groups.pushObject(Em.Object.create({
+          id: group.id,
+          name: group.name,
+          filters: filters
+        }));
+      }
+    }
+    return groups;
+  }).property('filter.functional_annotations.@each', 'filter.gene_annotations.@each', 'filter.inheritence_models.@each')
+});
+});
+
+;require.register("helpers/capitalize", function(exports, require, module) {
+Ember.Handlebars.registerBoundHelper('capitalize', function(str) {
+  if (str) {
+    return str.capitalize();
+  } else {
+    return 'Undefined';
+  }
+});
+});
+
+;require.register("helpers/fallback", function(exports, require, module) {
+Ember.Handlebars.registerBoundHelper('fallback', function(obj, options) {
+  var roundedNum;
+  if (obj) {
+    roundedNum = Math.round(obj * 1000) / 1000;
+    if (isNaN(roundedNum)) {
+      return obj;
+    } else {
+      return roundedNum;
+    }
+  } else {
+    return options.fallback || 'null';
+  }
+});
+});
+
+;require.register("helpers/from-now", function(exports, require, module) {
+Ember.Handlebars.registerBoundHelper('fromNow', function(date) {
+  return date.fromNow();
+});
+});
+
+;require.register("helpers/moment-date", function(exports, require, module) {
+module.exports = {
+  deserialize: function(raw_date) {
+    return moment(raw_date);
+  },
+  serialize: function(date) {
+    return date.toJSON();
+  }
+};
+});
+
+;require.register("helpers/replace-null", function(exports, require, module) {
+module.exports = {
+  deserialize: function(value) {
+    if (value === 'Na' || value === '-') {
+      return null;
+    } else {
+      return value;
+    }
+  }
+};
+});
+
+;require.register("helpers/zip", function(exports, require, module) {
+var zip;
+
+module.exports = zip = function() {
+  var arr, i, length, lengthArray, _i, _results;
+  lengthArray = (function() {
+    var _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = arguments.length; _i < _len; _i++) {
+      arr = arguments[_i];
+      _results.push(arr.length);
+    }
+    return _results;
+  }).apply(this, arguments);
+  length = Math.min.apply(Math, lengthArray);
+  _results = [];
+  for (i = _i = 0; 0 <= length ? _i < length : _i > length; i = 0 <= length ? ++_i : --_i) {
+    _results.push((function() {
+      var _j, _len, _results1;
+      _results1 = [];
+      for (_j = 0, _len = arguments.length; _j < _len; _j++) {
+        arr = arguments[_j];
+        _results1.push(arr[i]);
+      }
+      return _results1;
+    }).apply(this, arguments));
+  }
+  return _results;
+};
+});
+
+;require.register("initialize", function(exports, require, module) {
+var folderOrder;
+
+window.App = require('config/app');
+
+require('config/router');
+
+Ember.TextField.reopen({
+  attributeBindings: ['autofocus', 'required', 'step']
+});
+
+folderOrder = ['initializers', 'utils', 'mixins', 'adapters', 'serializers', 'routes', 'models', 'views', 'controllers', 'helpers', 'templates', 'components'];
+
+folderOrder.forEach(function(folder) {
+  return window.require.list().filter(function(module) {
+    return new RegExp("^" + folder + "/").test(module);
+  }).forEach(function(module) {
+    return require(module);
+  });
+});
+});
+
+;require.register("initializers/environment", function(exports, require, module) {
+var env;
+
+env = require('config/environment');
+
+module.exports = Ember.Application.initializer({
+  name: 'environment',
+  initialize: function(container, application) {
+    application.register('environment:main', env, {
+      instantiate: false,
+      singleton: true
+    });
+    return application.inject('controller', 'env', 'environment:main');
+  }
+});
+});
+
+;require.register("models/activity", function(exports, require, module) {
+var ActivityAdapter, MomentDate, NewRESTAdapter;
+
+NewRESTAdapter = require('adapters/new-rest');
+
+MomentDate = require('helpers/moment-date');
+
+App.Activity = Ember.Model.extend({
+  _id: Em.attr(),
+  activityId: Em.attr(),
+  category: Em.attr(),
+  context: Em.attr(),
+  contextId: Em.attr(),
+  ecosystem: Em.attr(),
+  userId: Em.attr(),
+  user: Em.belongsTo('App.User', {
+    key: 'user_id'
+  }),
+  createdAt: Em.attr(MomentDate),
+  updatedAt: Em.attr(MomentDate),
+  title: Em.attr(),
+  caption: Em.attr(),
+  content: Em.attr(),
+  tags: Em.attr(),
+  firstTag: (function() {
+    return this.get('tags.0');
+  }).property('tags'),
+  entypoIcon: (function() {
+    var tag;
+    tag = this.get('firstTag');
+    if (tag === 'action') {
+      return 'new';
+    } else if (tag === 'conclusion') {
+      return 'check';
+    } else {
+      return 'search';
+    }
+  }).property('firstTag')
+});
+
+ActivityAdapter = NewRESTAdapter.extend({
+  find: function(record, id) {
+    var url,
+      _this = this;
+    url = this.buildURL(record.constructor, id);
+    return this.ajax(url).then(function(data) {
+      _this.didFind(record, id, data);
+      return record;
+    });
+  },
+  didFind: function(record, id, data) {
+    Ember.run(record, record.load, id, data.activities);
+    return Ember.run(App.User, App.User.load, data.user);
+  }
+});
+
+App.Activity.camelizeKeys = true;
+
+App.Activity.primaryKey = '_id';
+
+App.Activity.collectionKey = 'activities';
+
+App.Activity.url = '/api/v1/activities';
+
+App.Activity.adapter = ActivityAdapter.create();
+
+module.exports = App.Activity;
+});
+
+;require.register("models/compounds", function(exports, require, module) {
+var NewRESTAdapter, zip;
+
+NewRESTAdapter = require('adapters/new-rest');
+
+zip = require('helpers/zip');
+
+App.Compound = Ember.Model.extend({
+  variant: Em.attr(),
+  idn: Em.attr(),
+  samples: (function() {
+    return (this.get('idn') || '').split(',');
+  }).property('idn'),
+  gt: Em.attr(),
+  gts: (function() {
+    return (this.get('gt') || '').split(',');
+  }).property('gt'),
+  gtcalls: (function() {
+    var gtcalls, sample_gt, _i, _len, _ref;
+    gtcalls = Em.A();
+    _ref = zip(this.get('samples'), this.get('gts'));
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      sample_gt = _ref[_i];
+      gtcalls.pushObject(Em.Object.create({
+        sampleId: sample_gt[0],
+        genotype: sample_gt[1]
+      }));
+    }
+    return gtcalls.sortBy('sampleId');
+  }).property('samples', 'gts'),
+  rankScore: Em.attr(),
+  combinedScore: Em.attr(),
+  functionalAnnotation: Em.attr(),
+  geneAnnotation: Em.attr({
+    defaultValue: ''
+  }),
+  geneAnnotations: (function() {
+    return this.get('geneAnnotation').split(';');
+  }).property('geneAnnotation'),
+  geneModel: Em.attr({
+    defaultValue: ''
+  }),
+  geneModels: (function() {
+    return this.get('geneModel').split(';');
+  }).property('geneModel')
+});
+
+App.Compound.camelizeKeys = true;
+
+App.Compound.primaryKey = 'variant';
+
+App.Compound.collectionKey = 'compounds';
+
+App.Compound.url = '/api/v1/compounds';
+
+App.Compound.adapter = NewRESTAdapter.create();
+
+module.exports = App.Compound;
+});
+
+;require.register("models/family", function(exports, require, module) {
+var MomentDate, NewRESTAdapter,
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+NewRESTAdapter = require('adapters/new-rest');
+
+MomentDate = require('helpers/moment-date');
+
+App.Family = Ember.Model.extend({
+  id: Em.attr(),
+  family_id: Em.attr(),
+  familyId: (function() {
+    return parseInt(this.get('id'));
+  }).property('id'),
+  updateDate: Em.attr(MomentDate),
+  updateDateRaw: (function() {
+    return this.get('updateDate').toDate();
+  }).property('updateDate'),
+  database: Em.attr(),
+  databases: (function() {
+    return (this.get('database') || '').split(',');
+  }).property('database'),
+  firstDatabase: (function() {
+    return this.get('databases.0');
+  }).property('databases'),
+  samples: Em.attr(),
+  isResearch: (function() {
+    return __indexOf.call(this.get('databases') || '', 'research') >= 0;
+  }).property('databases'),
+  hide: function() {
+    var _this = this;
+    this.set('isDirtyHidden', true);
+    Ember.run.later(this, function() {
+      return _this.set('isDirtyHidden', false);
+    }, 1);
+    return Ember.ls.save('family', this.get('id'), moment().format('YYYY-MM-DD'));
+  },
+  unhide: function() {
+    var _this = this;
+    this.set('isDirtyHidden', true);
+    Ember.run.later(this, function() {
+      return _this.set('isDirtyHidden', false);
+    }, 1);
+    return Ember.ls["delete"]('family', this.get('id'));
+  },
+  isDirtyHidden: false,
+  isHidden: (function() {
+    return Ember.ls.exists('family', this.get('id'));
+  }).property('id', 'hide', 'unhide', 'isDirtyHidden'),
+  hiddenAt: (function() {
+    return Ember.ls.find('family', this.get('id'));
+  }).property('id')
+});
+
+App.Family.camelizeKeys = true;
+
+App.Family.primaryKey = 'id';
+
+App.Family.url = '/api/v1/families';
+
+App.Family.adapter = NewRESTAdapter.create();
+
+module.exports = App.Family;
+});
+
+;require.register("models/filter", function(exports, require, module) {
+var FilterAdapter;
+
+FilterAdapter = require('adapters/filter');
+
+App.Filter = Ember.Model.extend({
+  id: Em.attr(),
+  clinical_db_gene_annotation: Em.attr(),
+  functional_annotations: Em.attr(),
+  gene_annotations: Em.attr(),
+  inheritence_models: Em.attr(),
+  groups: [
+    {
+      id: 'functional_annotations',
+      name: 'Functional annotations'
+    }, {
+      id: 'gene_annotations',
+      name: 'Gene annotations'
+    }, {
+      id: 'inheritence_models',
+      name: 'Inheritence models'
+    }
+  ]
+});
+
+App.Filter.adapter = FilterAdapter.create();
+
+module.exports = App.Filter;
+});
+
+;require.register("models/gt-call", function(exports, require, module) {
+var NewRESTAdapter;
+
+NewRESTAdapter = require('adapters/new-rest');
+
+App.GtCall = Ember.Model.extend({
+  pk: Em.attr(),
+  variantid: Em.attr(),
+  variantId: (function() {
+    return this.get('variantid');
+  }).property('variantid'),
+  idn: Em.attr({
+    defaultValue: ''
+  }),
+  sampleId: (function() {
+    return this.get('idn');
+  }).property('idn'),
+  filter: Em.attr(),
+  gt: Em.attr(),
+  gq: Em.attr(),
+  dp: Em.attr(),
+  pl: Em.attr({
+    defaultValue: ''
+  }),
+  pls: (function() {
+    return this.get('pl').split(',');
+  }).property('pl'),
+  ad: Em.attr({
+    defaultValue: ''
+  }),
+  ads: (function() {
+    return this.get('ad').split(',');
+  }).property('ad'),
+  ok: (function() {
+    if (this.get('filter') === 'PASS') {
+      return true;
+    } else {
+      return false;
+    }
+  }).property('filter'),
+  gender: (function() {
+    var identifier;
+    identifier = this.get('idn').split('-')[2].slice(0, -1);
+    if (identifier % 2 === 0) {
+      return 'female';
+    } else {
+      return 'male';
+    }
+  }).property('idn'),
+  memberType: (function() {
+    var gender, generation;
+    generation = this.get('idn').split('-')[1];
+    gender = this.get('gender');
+    if (generation === 1) {
+      if (gender === 'male') {
+        return 'boy';
+      } else {
+        return 'girl';
+      }
+    } else if (generation === 2) {
+      if (gender === 'male') {
+        return 'father';
+      } else {
+        return 'mother';
+      }
+    } else {
+      return 'unknown';
+    }
+  }).property('idn', 'gender')
+});
+
+App.GtCall.camelizeKeys = true;
+
+App.GtCall.primaryKey = 'pk';
+
+App.GtCall.collectionKey = 'gtcalls';
+
+App.GtCall.url = '/api/v1/gtcalls';
+
+App.GtCall.adapter = NewRESTAdapter.create();
+
+module.exports = App.GtCall;
+});
+
+;require.register("models/issue", function(exports, require, module) {
+var MomentDate, NewRESTAdapter;
+
+NewRESTAdapter = require('adapters/new-rest');
+
+MomentDate = require('helpers/moment-date');
+
+App.Issue = Ember.Model.extend({
+  id: Em.attr(),
+  title: Em.attr(),
+  body: Em.attr(),
+  html: Em.attr(),
+  createdAt: Em.attr(MomentDate),
+  url: Em.attr()
+});
+
+App.Issue.camelizeKeys = true;
+
+App.Issue.collectionKey = 'issues';
+
+App.Issue.url = '/api/v1/issues';
+
+App.Issue.adapter = NewRESTAdapter.create();
+
+module.exports = App.Issue;
+});
+
+;require.register("models/omim", function(exports, require, module) {
+var OmimAdapter;
+
+OmimAdapter = require('adapters/omim');
+
+App.Omim = Ember.Model.extend({
+  CHR: Em.attr(),
+  NT_START: Em.attr(),
+  NT_STOP: Em.attr(),
+  OMIM_ID: Em.attr(),
+  OMIM_TITLE: Em.attr(),
+  SYNDROMS: Em.attr()
+});
+
+App.Omim.adapter = OmimAdapter.create();
+
+module.exports = App.Omim;
+});
+
+;require.register("models/other-family", function(exports, require, module) {
+var NewRESTAdapter;
+
+NewRESTAdapter = require('adapters/new-rest');
+
+App.OtherFamily = Ember.Model.extend({
+  pk: Em.attr(),
+  family: Em.attr(),
+  id: (function() {
+    return this.get('family');
+  }).property('family')
+});
+
+App.OtherFamily.camelizeKeys = true;
+
+App.OtherFamily.collectionKey = 'other_families';
+
+App.OtherFamily.url = '/api/v1/other_families';
+
+App.OtherFamily.adapter = NewRESTAdapter.create();
+
+module.exports = App.OtherFamily;
+});
+
+;require.register("models/user", function(exports, require, module) {
+var MomentDate, NewRESTAdapter;
+
+NewRESTAdapter = require('adapters/new-rest');
+
+MomentDate = require('helpers/moment-date');
+
+App.User = Ember.Model.extend({
+  id: Em.attr(),
+  _id: Em.attr(),
+  givenName: Em.attr(),
+  familyName: Em.attr(),
+  name: Em.attr(),
+  locale: Em.attr(),
+  email: Em.attr(),
+  createdAt: Em.attr(MomentDate),
+  loggedInAt: Em.attr(MomentDate),
+  googleId: Em.attr(),
+  institutes: Em.attr(),
+  accessToken: Em.attr(),
+  firstName: (function() {
+    var email;
+    email = this.get('email');
+    return email.slice(0, email.indexOf('.')).capitalize();
+  }).property('email')
+});
+
+App.User.camelizeKeys = true;
+
+App.User.primaryKey = '_id';
+
+App.User.collectionKey = 'users';
+
+App.User.url = '/api/v1/users';
+
+App.User.adapter = NewRESTAdapter.create();
+
+module.exports = App.User;
+});
+
+;require.register("models/variant", function(exports, require, module) {
+var ReplaceNull, VariantAdapter,
+  __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+VariantAdapter = require('adapters/variant');
+
+ReplaceNull = require('helpers/replace-null');
+
+App.Variant = Ember.Model.extend({
+  id: Em.attr(),
+  individualRankScore: Em.attr(),
+  rankScore: Em.attr(),
+  GTCallFilter: Em.attr(),
+  clinicalDbGeneAnnotation: Em.attr(),
+  chr: Em.attr({
+    defaultValue: ''
+  }),
+  chromosome: (function() {
+    return (this.get('chr') || '').replace('chr', '');
+  }).property('chr'),
+  chromosomePositionString: (function() {
+    return "" + (this.get('chr')) + ": " + (this.get('startBp')) + "-" + (this.get('stopBp'));
+  }).property('chr', 'startBp', 'stopBp'),
+  startBp: Em.attr(),
+  stopBp: Em.attr(),
+  isMultiBase: (function() {
+    return this.get('startBp') !== this.get('stopBp');
+  }).property('startBp', 'stopBp'),
+  refNt: Em.attr(),
+  altNt: Em.attr(),
+  uniqueId: (function() {
+    return "" + (this.get('chr')) + "-" + (this.get('startBp')) + "-" + (this.get('stopBp')) + "-" + (this.get('altNt'));
+  }).property('chr', 'startBp', 'stopBp', 'altNt'),
+  hgncSymbol: Em.attr(),
+  hgncSynonyms: Em.attr({
+    defaultValue: ''
+  }),
+  hgncSynonymsString: (function() {
+    return (this.get('hgncSynonyms') || '').split(';').slice(0, -1).join(', ');
+  }).property('hgncSynonyms'),
+  hgncApprovedName: Em.attr(),
+  ensemblGeneid: Em.attr({
+    defaultValue: ''
+  }),
+  ensemblGeneIdString: (function() {
+    return (this.get('ensemblGeneid') || '').split(';').join(', ');
+  }).property('ensemblGeneid'),
+  hgncTranscriptId: Em.attr({
+    defaultValue: ''
+  }),
+  variantFunctions: (function() {
+    return (this.get('hgncTranscriptId') || '').split(',').slice(0, -1);
+  }).property('hgncTranscriptId'),
+  siftWholeExome: Em.attr(),
+  polyphenDivHuman: Em.attr(),
+  gerpWholeExome: Em.attr(),
+  mutationTaster: Em.attr(),
+  severities: (function() {
+    var properties, property, severities, _i, _len;
+    severities = [];
+    properties = ['siftWholeExome', 'polyphenDivHuman', 'gerpWholeExome', 'mutationTaster'];
+    for (_i = 0, _len = properties.length; _i < _len; _i++) {
+      property = properties[_i];
+      if (this.get(property)) {
+        severities.push({
+          id: property,
+          name: property.capitalize(),
+          value: this.get(property)
+        });
+      }
+    }
+    return severities;
+  }).property('siftWholeExome', 'polyphenDivHuman', 'gerpWholeExome', 'mutationTaster'),
+  scaledCscoreThousandG: Em.attr(),
+  unscaledCscoreThousandG: Em.attr(),
+  unscaledCscoreSnv: Em.attr(),
+  scaledCscoreSnv: Em.attr(),
+  cScores: (function() {
+    var properties, property, scores, _i, _len;
+    scores = [];
+    properties = ['unscaledCscoreThousandG', 'scaledCscoreThousandG', 'unscaledCscoreSnv', 'scaledCscoreSnv'];
+    for (_i = 0, _len = properties.length; _i < _len; _i++) {
+      property = properties[_i];
+      if (this.get(property)) {
+        scores.push({
+          id: property,
+          name: property.capitalize(),
+          value: this.get(property)
+        });
+      }
+    }
+    return scores;
+  }).property('unscaledCscoreThousandG', 'scaledCscoreThousandG', 'unscaledCscoreSnv', 'scaledCscoreSnv'),
+  thousandG: Em.attr(),
+  dbsnpId: Em.attr(),
+  dbsnp: Em.attr({
+    defaultValue: ''
+  }),
+  dbsnpFlag: (function() {
+    return (this.get('dbsnp') || '').replace('snp137', '');
+  }).property('dbsnp'),
+  dbsnp129: Em.attr(),
+  dbsnp132: Em.attr(),
+  esp6500: Em.attr(),
+  variantCount: Em.attr(),
+  hbvdb: Em.attr(),
+  hbvdbHuman: (function() {
+    var freq;
+    freq = this.get('variantCount');
+    if (freq) {
+      if (freq > 10) {
+        return 'is-common';
+      }
+      return 'is-found';
+    }
+    return 'is-not-found';
+  }).property('variantCount'),
+  frequencies: (function() {
+    var frequencies, property, _i, _len, _ref;
+    frequencies = [];
+    _ref = ['thousandG', 'esp6500', 'dbsnp129', 'variantCount'];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      property = _ref[_i];
+      if (this.get(property)) {
+        frequencies.push({
+          id: property,
+          name: property.capitalize(),
+          value: this.get(property)
+        });
+      }
+    }
+    return frequencies;
+  }).property('thousandG', 'esp6500', 'dbsnp129', 'variantCount'),
+  phylopWholeExome: Em.attr(),
+  lrtWholeExome: Em.attr(),
+  phastConstElements: Em.attr(),
+  phastConstElementsScore: (function() {
+    return parseInt((this.get('phastConstElements') || '').split(';')[0].replace(/Score=/, ''));
+  }).property('phastConstElements'),
+  gerpElement: Em.attr(),
+  polyphenVarHuman: Em.attr(),
+  conservations: (function() {
+    var conservations, property, _i, _len, _ref;
+    conservations = [];
+    _ref = ['phylopWholeExome', 'lrtWholeExome', 'phastConstElementsScore', 'gerpElement', 'polyphenVarHuman'];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      property = _ref[_i];
+      if (this.get(property)) {
+        conservations.push({
+          id: property,
+          name: property.capitalize(),
+          value: this.get(property)
+        });
+      }
+    }
+    return conservations;
+  }).property('phylopWholeExome', 'lrtWholeExome', 'phastConstElementsScore', 'gerpElement', 'polyphenVarHuman'),
+  hgmd: Em.attr(ReplaceNull),
+  hgmdAccession: Em.attr(),
+  hgmdVariantType: Em.attr(),
+  hgmdVariantPmid: Em.attr({
+    defaultValue: ''
+  }),
+  hgmdVariantPmidLinks: (function() {
+    var links, pmid, _i, _len, _ref;
+    links = Em.A();
+    _ref = (this.get('hgmdVariantPmid') || '').split(';').slice(0, -1);
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      pmid = _ref[_i];
+      links.pushObject({
+        id: pmid,
+        link: "http://www.ncbi.nlm.nih.gov/pubmed/" + pmid
+      });
+    }
+    return links;
+  }).property('hgmdVariantPmid'),
+  omimGeneDesc: Em.attr(),
+  diseaseGroup: Em.attr(),
+  geneModel: Em.attr(ReplaceNull),
+  hasCompounds: (function() {
+    return (this.get('geneModel') || '').indexOf('compound') !== -1;
+  }).property('geneModel'),
+  geneModels: (function() {
+    var delimiter, modelString, sliceEnd;
+    modelString = this.get('geneModel');
+    if (modelString) {
+      delimiter = ':';
+      sliceEnd = 10;
+      if (__indexOf.call(modelString, ';') >= 0) {
+        delimiter = ';';
+        sliceEnd = -1;
+      }
+      return modelString.split(delimiter).slice(0, sliceEnd);
+    } else {
+      return [];
+    }
+  }).property('geneModel'),
+  geneModelString: (function() {
+    return this.get('geneModels').join(' – ');
+  }).property('geneModels'),
+  diseaseGeneModel: Em.attr({
+    defaultValue: ''
+  }),
+  diseaseGeneModels: (function() {
+    return (this.get('diseaseGeneModel') || '').split(',');
+  }).property('diseaseGeneModel'),
+  otherFamilies: (function() {
+    if (this.get('isFoundInOtherFamilies')) {
+      return App.OtherFamily.find({
+        variant_id: this.get('id')
+      });
+    } else {
+      return Em.A();
+    }
+  }).property('id', 'isFoundInOtherFamilies'),
+  isFoundInOtherFamilies: (function() {
+    return this.get('variantCount') > 1;
+  }).property('variantCount'),
+  otherFamiliesCount: (function() {
+    return this.get('variantCount') - 1;
+  }).property('variantCount'),
+  gtcalls: (function() {
+    return App.GtCall.find({
+      variant_id: this.get('id')
+    });
+  }).property('id'),
+  gtcallsBySampleId: (function() {
+    return this.get('gtcalls').sortBy('sampleId');
+  }).property('gtcalls.@each.id'),
+  gtData: (function() {
+    var data, gts;
+    gts = Em.A();
+    this.get('gtcallsBySampleId').forEach(function(gtcall) {
+      return gts.pushObject(gtcall.get('gt'));
+    });
+    data = {
+      combinedScore: '-',
+      rankScore: this.get('rankScore'),
+      gtcalls: gts,
+      geneModel: this.get('geneModel'),
+      geneAnnotation: this.get('geneAnnotation'),
+      functionalAnnotation: this.get('functionalAnnotation')
+    };
+    return data;
+  }).property('gtcalls.length', 'rankScore', 'geneModel', 'geneAnnotation', 'functionalAnnotation'),
+  compounds: (function() {
+    return App.Compound.find({
+      variant_id: this.get('id')
+    });
+  }).property('id'),
+  locationReliability: Em.attr(),
+  functionalAnnotation: Em.attr(ReplaceNull),
+  snornaMirnaAnnotation: Em.attr(),
+  pseudogene: Em.attr(),
+  mainLocation: Em.attr(),
+  geneAnnotation: Em.attr(),
+  isProbablyBenign: (function() {
+    return this.get('geneAnnotation') === 'intronic';
+  }).property('geneAnnotation'),
+  otherLocation: Em.attr(),
+  gwasCatalog: Em.attr(),
+  expressionType: Em.attr(),
+  genomicSuperDups: Em.attr(),
+  hide: function() {
+    var _this = this;
+    this.set('isDirtyHidden', true);
+    Ember.run.later(this, function() {
+      return _this.set('isDirtyHidden', false);
+    }, 1);
+    return Ember.ls.save('variant', this.get('id'), this.get('uniqueId'));
+  },
+  unhide: function() {
+    var _this = this;
+    this.set('isDirtyHidden', true);
+    Ember.run.later(this, function() {
+      return _this.set('isDirtyHidden', false);
+    }, 1);
+    return Ember.ls["delete"]('variant', this.get('id'));
+  },
+  isDirtyHidden: false,
+  isHidden: (function() {
+    return Ember.ls.exists('variant', this.get('id'));
+  }).property('id', 'hide', 'unhide', 'isDirtyHidden'),
+  hiddenAt: (function() {
+    return Ember.ls.find('variant', this.get('id'));
+  }).property('id')
+});
+
+App.Variant.camelizeKeys = true;
+
+App.Variant.adapter = VariantAdapter.create();
+
+module.exports = App.Variant;
+});
+
+;require.register("routes/application", function(exports, require, module) {
+module.exports = App.ApplicationRoute = Ember.Route.extend({
+  model: function(params) {
+    return App.User.find('current');
+  }
+});
+});
+
+;require.register("routes/families", function(exports, require, module) {
+module.exports = App.FamiliesRoute = Ember.Route.extend({
+  model: function(params) {
+    return App.Family.find({
+      institute: params.institute_id
+    });
+  }
+});
+});
+
+;require.register("routes/familiy", function(exports, require, module) {
+module.exports = App.FamilyRoute = Ember.Route.extend({
+  model: function(params) {
+    return App.Family.find(params.family_id);
+  },
+  redirect: function() {
+    var family;
+    family = this.controllerFor('family');
+    if (family.get('content')) {
+      return family.setProperties({
+        clinicalActivityContent: null,
+        researchActivityContent: null
+      });
+    }
+  }
+});
+});
+
+;require.register("routes/index", function(exports, require, module) {
+module.exports = App.IndexRoute = Ember.Route.extend({
+  model: function() {
+    return App.User.find('current');
+  },
+  afterModel: function(user, transition) {
+    var _this = this;
+    return user.addObserver('isLoaded', this, function() {
+      var institutes;
+      institutes = _this.model().get('institutes');
+      if (institutes.get('length') === 1) {
+        return _this.transitionTo('institute', institutes[0]);
+      }
+    });
+  }
+});
+});
+
+;require.register("routes/institute", function(exports, require, module) {
+module.exports = App.InstituteRoute = Ember.Route.extend({
+  model: function(params) {
+    return {
+      id: params.institute_id
+    };
+  },
+  renderTemplate: function() {
+    this.render('institute');
+    return this.render('families', {
+      into: 'institute',
+      outlet: 'second-panel'
+    });
+  }
+});
+});
+
+;require.register("routes/issue", function(exports, require, module) {
+module.exports = App.IssueRoute = Ember.Route.extend({
+  model: function(params) {
+    return App.Issue.find(params.issue_id);
+  }
+});
+});
+
+;require.register("routes/issues", function(exports, require, module) {
+module.exports = App.IssuesRoute = Ember.Route.extend({
+  model: function() {
+    return App.Issue.find();
+  }
+});
+});
+
+;require.register("routes/issues/new", function(exports, require, module) {
+module.exports = App.IssuesNewRoute = Ember.Route.extend({
+  model: function() {
+    return App.Issue.create();
+  }
+});
+});
+
+;require.register("routes/variant", function(exports, require, module) {
+module.exports = App.VariantRoute = Ember.Route.extend({
+  model: function(params) {
+    return App.Variant.find(params.variant_id);
+  },
+  redirect: function() {
+    var variant;
+    variant = this.controllerFor('variant');
+    if (variant.get('content')) {
+      return variant.setProperties({
+        activityContent: null,
+        logActivityContent: null
+      });
+    }
+  }
+});
+});
+
+;require.register("routes/variants", function(exports, require, module) {
+module.exports = App.VariantsRoute = Ember.Route.extend({
+  beforeModel: function(transition) {
+    var newFamilyId, variantsController;
+    variantsController = this.controllerFor('variants');
+    newFamilyId = transition.params.variants.family_id;
+    if ((variantsController.get('familyId') || newFamilyId) !== newFamilyId) {
+      return variantsController.send('doClearFilters');
+    }
+  },
+  model: function(params) {
+    var newFamilyId, queryParams, variantsController;
+    this.set('params', params);
+    variantsController = this.controllerFor('variants');
+    newFamilyId = params.family_id;
+    if ((variantsController.get('familyId') || newFamilyId) !== newFamilyId) {
+      queryParams = {};
+    } else {
+      queryParams = jQuery.extend({}, params);
+    }
+    $.extend(queryParams, {
+      institute_id: params.institute_id,
+      institute: params.institute_id,
+      family_id: null,
+      database: params.database_id,
+      database_id: null
+    });
+    return App.Variant.find({
+      family_id: params.family_id,
+      queryParams: queryParams
+    });
+  },
+  setupController: function(controller, model) {
+    this._super(controller, model);
+    return controller.setProperties({
+      instituteId: this.get('params.institute_id'),
+      familyId: this.get('params.family_id'),
+      database: this.get('params.database_id')
+    });
+  },
+  actions: {
+    filtersWhereUpdated: function() {
+      return this.refresh();
+    }
+  }
+});
+});
+
+;require.register("templates/application", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['application'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing, functionType="function", blockHelperMissing=helpers.blockHelperMissing;
+
+function program1(depth0,data) {
+  
+  
+  data.buffer.push("\n        <div class=\"a-button__body\">Institutes</div>\n      ");
+  }
+
+function program3(depth0,data) {
+  
+  
+  data.buffer.push("\n        <div class=\"a-button__body\">Issues</div>\n      ");
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n      ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-button")
+  },inverse:self.noop,fn:self.program(6, program6, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-menu-trigger'] || (depth0 && depth0['ic-menu-trigger'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-menu-trigger", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n      ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("expand-right")
+  },inverse:self.noop,fn:self.program(11, program11, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-menu-list'] || (depth0 && depth0['ic-menu-list'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-menu-list", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n    ");
+  return buffer;
+  }
+function program6(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n        <div class=\"a-button__icon entypo user a-icon\"></div>\n        <div class=\"a-button__body\">\n          ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "model.name", {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n        </div>\n      ");
+  return buffer;
+  }
+function program7(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "model.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n          ");
+  return buffer;
+  }
+
+function program9(depth0,data) {
+  
+  
+  data.buffer.push("\n            Login\n          ");
+  }
+
+function program11(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n        ");
+  hashContexts = {'on-select': depth0};
+  hashTypes = {'on-select': "STRING"};
+  options = {hash:{
+    'on-select': ("goToSettings")
+  },inverse:self.noop,fn:self.program(12, program12, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-menu-item'] || (depth0 && depth0['ic-menu-item'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-menu-item", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n        ");
+  hashContexts = {'on-select': depth0};
+  hashTypes = {'on-select': "STRING"};
+  options = {hash:{
+    'on-select': ("logout")
+  },inverse:self.noop,fn:self.program(14, program14, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-menu-item'] || (depth0 && depth0['ic-menu-item'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-menu-item", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n      ");
+  return buffer;
+  }
+function program12(depth0,data) {
+  
+  
+  data.buffer.push("Settings");
+  }
+
+function program14(depth0,data) {
+  
+  
+  data.buffer.push("<a href=\"/logout\">Logout</a>");
+  }
+
+  data.buffer.push("<div class=\"a-layout--vertical\">\n  <header class=\"a-toolbar slim bb\">\n    <nav class=\"a-toolbar__group a-button__group\">\n      ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-button")
+  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "index", options) : helperMissing.call(depth0, "link-to", "index", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n      ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-button")
+  },inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "issues", options) : helperMissing.call(depth0, "link-to", "issues", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n    </nav>\n\n    <div class=\"logo\">Scout</div>\n\n    ");
+  options = {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  if (stack2 = helpers['ic-menu']) { stack2 = stack2.call(depth0, options); }
+  else { stack2 = (depth0 && depth0['ic-menu']); stack2 = typeof stack2 === functionType ? stack2.call(depth0, options) : stack2; }
+  hashTypes = {};
+  hashContexts = {};
+  if (!helpers['ic-menu']) { stack2 = blockHelperMissing.call(depth0, 'ic-menu', options); }
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n  </header>\n\n  ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n\n</div>\n");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/components/a-popover", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['components/a-popover'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n<div class=\"ui-popover__content\">\n  ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "yield", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n</div>\n");
+  return buffer;
+  }
+
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "isVisible", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/components/activity-form", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['components/activity-form'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', hashContexts, hashTypes;
+  data.buffer.push("\n      ");
+  hashContexts = {'content': depth0,'valueBinding': depth0};
+  hashTypes = {'content': "ID",'valueBinding': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.Select", {hash:{
+    'content': ("tagOptions"),
+    'valueBinding': ("selectedTag")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n    ");
+  return buffer;
+  }
+
+  data.buffer.push("<form ");
+  hashContexts = {'on': depth0};
+  hashTypes = {'on': "STRING"};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "submit", {hash:{
+    'on': ("submit")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-activity__form\">\n  ");
+  hashContexts = {'valueBinding': depth0,'placeholder': depth0,'classNames': depth0,'classBinding': depth0};
+  hashTypes = {'valueBinding': "STRING",'placeholder': "ID",'classNames': "STRING",'classBinding': "STRING"};
+  options = {hash:{
+    'valueBinding': ("content"),
+    'placeholder': ("writePrompt"),
+    'classNames': ("a-textarea"),
+    'classBinding': ("isFailing")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
+  data.buffer.push("\n\n  <div class=\"a-bar--space-between\">\n    <button class=\"a-button mr--listed\" type=\"submit\">\n      <span class=\"a-button__icon a-icon\">&#59160;</span>\n      ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "submitPrompt", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n    </button>\n    \n    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "tagOptions", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n  </div>\n</form>\n");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/families", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['families'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n        \n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "family.isHidden", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n      ");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n\n          <div class=\"a-card a-bar--space-between regular mb\">\n          ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-bar__item")
+  },inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "family", "family", options) : helperMissing.call(depth0, "link-to", "family", "family", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n          ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-bar__item")
+  },inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0,depth0,depth0,depth0],types:["STRING","ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "variants", "instituteId", "family.id", "family.firstDatabase", options) : helperMissing.call(depth0, "link-to", "variants", "instituteId", "family.id", "family.firstDatabase", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n          <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': ("familyIsLoaded:a-bar__item--half:a-bar__item familyIsLoaded:a-bar--end:a-bar--space-between :stretch-self")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "familyIsLoaded", {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n            ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-button--naked")
+  },inverse:self.noop,fn:self.program(9, program9, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-menu'] || (depth0 && depth0['ic-menu'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-menu", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n          </div>\n          </div>\n\n        ");
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "family.id", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n          ");
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  
+  data.buffer.push("\n            Variants\n          ");
+  }
+
+function program7(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n              <div class=\"a-button--naked mr\">\n                <small>");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fromNow || (depth0 && depth0.fromNow)),stack1 ? stack1.call(depth0, "family.updateDate", options) : helperMissing.call(depth0, "fromNow", "family.updateDate", options))));
+  data.buffer.push("</small>\n              </div>\n            ");
+  return buffer;
+  }
+
+function program9(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n              ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-button__icon entypo three-dots a-icon")
+  },inverse:self.noop,fn:self.program(10, program10, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-menu-trigger'] || (depth0 && depth0['ic-menu-trigger'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-menu-trigger", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n              ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("expand-right")
+  },inverse:self.noop,fn:self.program(12, program12, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-menu-list'] || (depth0 && depth0['ic-menu-list'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-menu-list", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+function program10(depth0,data) {
+  
+  var buffer = '';
+  return buffer;
+  }
+
+function program12(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n                ");
+  hashContexts = {'on-select': depth0,'model': depth0};
+  hashTypes = {'on-select': "STRING",'model': "ID"};
+  options = {hash:{
+    'on-select': ("hideFamily"),
+    'model': ("family")
+  },inverse:self.noop,fn:self.program(13, program13, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-menu-item'] || (depth0 && depth0['ic-menu-item'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-menu-item", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                ");
+  hashContexts = {'on-select': depth0,'model': depth0};
+  hashTypes = {'on-select': "STRING",'model': "ID"};
+  options = {hash:{
+    'on-select': ("moveFamily"),
+    'model': ("family")
+  },inverse:self.noop,fn:self.program(15, program15, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-menu-item'] || (depth0 && depth0['ic-menu-item'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-menu-item", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                ");
+  hashContexts = {'on-select': depth0,'model': depth0};
+  hashTypes = {'on-select': "STRING",'model': "ID"};
+  options = {hash:{
+    'on-select': ("closeFamily"),
+    'model': ("family")
+  },inverse:self.noop,fn:self.program(17, program17, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-menu-item'] || (depth0 && depth0['ic-menu-item'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-menu-item", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n              ");
+  return buffer;
+  }
+function program13(depth0,data) {
+  
+  
+  data.buffer.push("\n                  Archive\n                ");
+  }
+
+function program15(depth0,data) {
+  
+  
+  data.buffer.push("\n                  Move to research\n                ");
+  }
+
+function program17(depth0,data) {
+  
+  
+  data.buffer.push("\n                  Mark as closed\n                ");
+  }
+
+function program19(depth0,data) {
+  
+  
+  data.buffer.push("\n        <h2 class=\"text-center\">Loading...</h2>\n      ");
+  }
+
+  data.buffer.push("<div class=\"a-layout__wrapper a-layout__panel--full br--listed\">\n\n  <div class=\"a-layout--vertical\">\n\n    <div class=\"header-style slim bb text-center\">Open cases</div>\n    \n    <div class=\"a-layout__panel--full is-scrollable loose\">\n      ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "family", "in", "controller", {hash:{},inverse:self.program(19, program19, data),fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n    </div>\n\n  </div>\n\n</div>");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/family", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['family'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  
+  data.buffer.push("\n              Go to variants\n            ");
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n            <div class=\"a-list__item mr--listed\">\n              <div class=\"a-card a-list\">\n                <div class=\"a-list__item--header slim\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "sample.idn", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n                <div class=\"a-list__item small slim\">Sex: ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "sample.sex", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n                <div class=\"a-list__item small slim\">\n                  Phenotype: ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "sample.phenotype", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                </div>\n                <div class=\"a-list__item small slim\">\n                  Inheritance models: ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "sample.inheritance_model", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                </div>\n              </div>\n            </div>\n          ");
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                    <div class=\"a-activity__feed mb--big\">\n                      ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "activity", "in", "selectedClinicalActivities", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                    </div>\n                  ");
+  return buffer;
+  }
+function program6(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                        <div class=\"a-activity__divider\">\n                          <div class=\"a-activity__divider__time\">\n                            ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fromNow || (depth0 && depth0.fromNow)),stack1 ? stack1.call(depth0, "activity.createdAt", options) : helperMissing.call(depth0, "fromNow", "activity.createdAt", options))));
+  data.buffer.push("\n                          </div>\n                        </div>\n\n                        <div class=\"a-activity__wrapper\">\n                          <div class=\"a-activity\">\n                            <div class=\"full-width\">\n                              <div class=\"a-bar--space-between regular--stretched\">\n                                <div class=\"a-activity__caption a-bar\">\n                                  <span ");
+  hashContexts = {'class': depth0,'title': depth0};
+  hashTypes = {'class': "STRING",'title': "STRING"};
+  options = {hash:{
+    'class': (":a-icon :entypo activity.entypoIcon :mr--slim"),
+    'title': ("activity.firstTag")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                                  ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "activity.user.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" commented\n                                </div>\n\n                                <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "deleteActivity", "clinical", "activity", {hash:{},contexts:[depth0,depth0,depth0],types:["ID","STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button--naked\">\n                                  <div class=\"a-button__icon entypo circled-cross a-icon\"></div>\n                                </div>\n                              </div>\n\n                              <div class=\"a-activity__body regular--stretched\">\n                                ");
+  hashContexts = {'unescaped': depth0};
+  hashTypes = {'unescaped': "STRING"};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "activity.content", {hash:{
+    'unescaped': ("true")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                              </div>\n                            </div>\n                          </div>\n                        </div>\n                      ");
+  return buffer;
+  }
+
+function program8(depth0,data) {
+  
+  
+  data.buffer.push("\n                    <p class=\"text-center\">No activity.</p>\n                  ");
+  }
+
+function program10(depth0,data) {
+  
+  var buffer = '', stack1, hashContexts, hashTypes, options;
+  data.buffer.push("\n          <div class=\"a-layout__panel--full a-layout__wrapper br--listed\">\n            <div class=\"a-layout--vertical\">\n              <div class=\"a-layout__panel a-toolbar header-style slim\">\n                <div>Research activity</div>\n                <div>\n                  <small>Show only</small>\n                  ");
+  hashContexts = {'prompt': depth0,'content': depth0,'valueBinding': depth0};
+  hashTypes = {'prompt': "STRING",'content': "ID",'valueBinding': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.Select", {hash:{
+    'prompt': ("Select activity type"),
+    'content': ("activityTypes"),
+    'valueBinding': ("selectedResearchActivityType")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n              </div>\n\n              <div class=\"a-layout__wrapper a-layout__panel--full\">\n  \n                <div class=\"a-layout--vertical\">\n\n                  <div class=\"a-layout__panel--full is-scrollable bb\">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "selectedResearchActivities", {hash:{},inverse:self.program(14, program14, data),fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                  </div>\n\n                  <div class=\"a-layout__panel is-fixed regular\">\n                    ");
+  hashContexts = {'contentBinding': depth0,'onSubmit': depth0,'tagOptions': depth0,'selectedTagBinding': depth0};
+  hashTypes = {'contentBinding': "STRING",'onSubmit': "STRING",'tagOptions': "ID",'selectedTagBinding': "STRING"};
+  options = {hash:{
+    'contentBinding': ("researchActivityContent"),
+    'onSubmit': ("postResearchActivity"),
+    'tagOptions': ("activityTypes"),
+    'selectedTagBinding': ("selectedResearchTag")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['activity-form'] || (depth0 && depth0['activity-form'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "activity-form", options))));
+  data.buffer.push("\n                  </div>\n\n                </div>\n\n              </div>\n\n            </div>\n          </div>\n        ");
+  return buffer;
+  }
+function program11(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                      <div class=\"a-activity__feed mb--big\">\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "activity", "in", "selectedResearchActivities", {hash:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                      </div>\n                    ");
+  return buffer;
+  }
+function program12(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                          <div class=\"a-activity__divider\">\n                            <div class=\"a-activity__divider__time\">\n                              ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fromNow || (depth0 && depth0.fromNow)),stack1 ? stack1.call(depth0, "activity.createdAt", options) : helperMissing.call(depth0, "fromNow", "activity.createdAt", options))));
+  data.buffer.push("\n                            </div>\n                          </div>\n\n                          <div class=\"a-activity__wrapper\">\n                            <div class=\"a-activity\">\n                              <div class=\"full-width\">\n                                <div class=\"a-bar--space-between regular--stretched\">\n                                  <div class=\"a-activity__caption a-bar\">\n                                    <span ");
+  hashContexts = {'class': depth0,'title': depth0};
+  hashTypes = {'class': "STRING",'title': "STRING"};
+  options = {hash:{
+    'class': (":a-icon :entypo activity.entypoIcon :mr--slim"),
+    'title': ("activity.firstTag")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                                    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "activity.user.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" commented\n                                  </div>\n\n                                  <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "deleteActivity", "research", "activity", {hash:{},contexts:[depth0,depth0,depth0],types:["ID","STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button--naked\">\n                                    <div class=\"a-button__icon entypo circled-cross a-icon\"></div>\n                                  </div>\n                                </div>\n\n                                <div class=\"a-activity__body regular--stretched\">\n                                  ");
+  hashContexts = {'unescaped': depth0};
+  hashTypes = {'unescaped': "STRING"};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "activity.content", {hash:{
+    'unescaped': ("true")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                                </div>\n                              </div>\n                            </div>\n                          </div>\n                        ");
+  return buffer;
+  }
+
+function program14(depth0,data) {
+  
+  
+  data.buffer.push("\n                      <p class=\"text-center\">No activity.</p>\n                    ");
+  }
+
+  data.buffer.push("<div class=\"a-layout__panel--double a-layout__wrapper\">\n  <div class=\"a-layout--vertical\">\n    <div class=\"a-layout__panel--full bb\">\n      <div class=\"variant-page-wrapper\">\n        <div class=\"a-toolbar header-style slim b\">\n          <div class=\"a-button\">\n            <div class=\"a-button__icon entypo pencil a-icon\"></div>\n            Edit case\n          </div>\n\n          <div class=\"a-button\">\n            <div class=\"a-button__icon entypo add-user a-icon\"></div>\n            <div>Add sample</div>\n          </div>\n\n          <div class=\"a-button\">\n            <div class=\"a-button__icon entypo archive a-icon\"></div>\n            <div>Archive case</div>\n          </div>\n        </div>\n\n        <div class=\"a-card a-bar--space-between mb--big\">\n          <div class=\"a-bar__item br--listed center__wrapper regular\">\n            <span class=\"a-icon entypo users mr--slim\"></span>\n            Case ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "familyId", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n          </div>\n\n          <div class=\"a-bar__item br--listed center__wrapper regular\">\n            <span class=\"a-icon entypo clock mr--slim\"></span>\n            Last updated ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fromNow || (depth0 && depth0.fromNow)),stack1 ? stack1.call(depth0, "updateDate", options) : helperMissing.call(depth0, "fromNow", "updateDate", options))));
+  data.buffer.push("\n          </div>\n\n          <div class=\"a-bar__item br--listed center__wrapper regular\">\n            <span class=\"a-icon entypo numbered-list mr--slim\"></span>\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0,depth0],types:["STRING","ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "variants", "instituteId", "model.id", "model.firstDatabase", options) : helperMissing.call(depth0, "link-to", "variants", "instituteId", "model.id", "model.firstDatabase", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n          </div>\n        </div>\n\n        <div class=\"a-list--horizontal a-well regular mb--big\">\n          ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "sample", "in", "samples", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n        </div>\n      </div>\n    </div>\n\n    <div class=\"a-layout__panel--full a-layout__wrapper\">\n      <div class=\"a-layout\">\n        <div class=\"a-layout__panel--full a-layout__wrapper br--listed\">\n          <div class=\"a-layout--vertical\">\n            <div class=\"a-layout__panel a-toolbar header-style slim\">\n              <div>Clinical activity</div>\n              <div>\n                <small>Show only</small>\n                ");
+  hashContexts = {'prompt': depth0,'content': depth0,'valueBinding': depth0};
+  hashTypes = {'prompt': "STRING",'content': "ID",'valueBinding': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.Select", {hash:{
+    'prompt': ("Select activity type"),
+    'content': ("activityTypes"),
+    'valueBinding': ("selectedClinicalActivityType")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n            </div>\n\n            <div class=\"a-layout__wrapper a-layout__panel--full\">\n  \n              <div class=\"a-layout--vertical\">\n\n                <div class=\"a-layout__panel--full is-scrollable bb\">\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "selectedClinicalActivities", {hash:{},inverse:self.program(8, program8, data),fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                </div>\n\n                <div class=\"a-layout__panel is-fixed regular\">\n                  ");
+  hashContexts = {'contentBinding': depth0,'onSubmit': depth0,'tagOptions': depth0,'selectedTagBinding': depth0};
+  hashTypes = {'contentBinding': "STRING",'onSubmit': "STRING",'tagOptions': "ID",'selectedTagBinding': "STRING"};
+  options = {hash:{
+    'contentBinding': ("clinicalActivityContent"),
+    'onSubmit': ("postClinicalActivity"),
+    'tagOptions': ("activityTypes"),
+    'selectedTagBinding': ("selectedClinicalTag")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['activity-form'] || (depth0 && depth0['activity-form'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "activity-form", options))));
+  data.buffer.push("\n                </div>\n\n              </div>\n\n            </div>\n\n          </div>\n        </div>\n        \n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isResearch", {hash:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n      </div>\n    </div>\n  </div>\n</div>\n");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/index", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['index'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n    ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-card is-clickable loose mr--listed")
+  },inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "institute", "institute", options) : helperMissing.call(depth0, "link-to", "institute", "institute", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n  ");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n      <div class=\"mb\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "institute", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n      <div class=\"a-progress\">\n        <div class=\"a-progress__bar\" style=\"width: 0%\">0%</div>\n      </div>\n    ");
+  return buffer;
+  }
+
+  data.buffer.push("<main class=\"a-layout__panel--full center__wrapper\">\n  ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "institute", "in", "model.institutes", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n</main>\n");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/institute", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['institute'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n        <div class=\"mb\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "id", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n      ");
+  return buffer;
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n      <div class=\"a-progress mb\">\n        <div class=\"a-progress__bar\" style=\"width: 0%\">0%</div>\n      </div>\n\n      <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "createFamily", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button regular\">\n        <div class=\"a-button__icon entypo plus a-icon\"></div>\n        <div class=\"a-button__body\">Open new case</div>\n      </div>\n      ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"a-layout__wrapper a-layout__panel--full\">\n\n  <div class=\"a-layout\">\n\n    <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': ("familyIsLoaded:a-layout__panel--minimal:a-layout__panel--full :loose :br--listed")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n      ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "institute", "id", options) : helperMissing.call(depth0, "link-to", "institute", "id", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n      ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "familyIsLoaded", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n    </div>\n\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.outlet || (depth0 && depth0.outlet)),stack1 ? stack1.call(depth0, "second-panel", options) : helperMissing.call(depth0, "outlet", "second-panel", options))));
+  data.buffer.push("\n\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n\n  </div>\n\n</div>\n");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/issue", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['issue'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  
+  data.buffer.push("\n    <div class=\"center__wrapper\">\n      <img src=\"/static/img/loader.gif\">\n    </div>\n  ");
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', stack1, hashContexts, hashTypes, options;
+  data.buffer.push("\n    <h2>\n      <a ");
+  hashContexts = {'href': depth0};
+  hashTypes = {'href': "STRING"};
+  options = {hash:{
+    'href': ("url")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "title", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</a>\n      <small>");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fromNow || (depth0 && depth0.fromNow)),stack1 ? stack1.call(depth0, "createdAt", options) : helperMissing.call(depth0, "fromNow", "createdAt", options))));
+  data.buffer.push("</small>\n    </h2>\n    ");
+  hashContexts = {'unescaped': depth0};
+  hashTypes = {'unescaped': "STRING"};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "html", {hash:{
+    'unescaped': ("true")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n  ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"issue-box\">\n  ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "model.isLoading", {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n</div>");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/issues", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['issues'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  
+  data.buffer.push("\n            <div class=\"a-button__body\">Submit new issue</div>\n          ");
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n            ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-list__item regular")
+  },inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "issue", "issue.id", options) : helperMissing.call(depth0, "link-to", "issue", "issue.id", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n          ");
+  return buffer;
+  }
+function program4(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n              ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "issue.title", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n              <small>");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fromNow || (depth0 && depth0.fromNow)),stack1 ? stack1.call(depth0, "issue.createdAt", options) : helperMissing.call(depth0, "fromNow", "issue.createdAt", options))));
+  data.buffer.push("</small>\n            ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"a-layout__panel--full a-layout__panel__wrapper\">\n  <div class=\"a-layout\">\n    <div class=\"a-layout__panel--full a-layout__wrapper br--listed\">\n      \n      <div class=\"a-layout--vertical\">\n        <div class=\"a-layout__panel slim header-style bb\">\n          ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-button")
+  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "issues.new", options) : helperMissing.call(depth0, "link-to", "issues.new", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n        </div>\n\n        <div class=\"a-layout__panel--full a-list\">\n          ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "issue", "in", "model", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n        </div>\n      </div>\n    </div>\n    \n    <div class=\"a-layout__panel--double is-scrollable\">\n      ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n    </div>\n  </div>\n</div>\n");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/issues/new", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['issues/new'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  
+  data.buffer.push("\n      <button type=\"submit\" class=\"a-button\">\n        <div class=\"a-button__icon a-icon\">&#59140;</div>\n        <div class=\"a-button__body\">Are you sure?</div>\n      </button>\n    ");
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n      <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleProperty", "isConfirmingSubmit", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button\">\n        <div class=\"a-button__icon a-icon\">&#128319;</div>\n        <div class=\"a-button__body\">Send</div>\n      </button>\n    ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"issue-box center__wrapper\">\n  <form ");
+  hashContexts = {'on': depth0};
+  hashTypes = {'on': "STRING"};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "saveIssue", {hash:{
+    'on': ("submit")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n    <h2>Submit new issue</h2>\n    ");
+  hashContexts = {'valueBinding': depth0,'placeholder': depth0,'classNames': depth0,'required': depth0};
+  hashTypes = {'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING",'required': "STRING"};
+  options = {hash:{
+    'valueBinding': ("model.title"),
+    'placeholder': ("Title"),
+    'classNames': ("a-form__input mb"),
+    'required': ("")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n    ");
+  hashContexts = {'valueBinding': depth0,'placeholder': depth0,'classNames': depth0};
+  hashTypes = {'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING"};
+  options = {hash:{
+    'valueBinding': ("model.body"),
+    'placeholder': ("Describe your problem/request"),
+    'classNames': ("a-textarea mb")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
+  data.buffer.push("\n\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isConfirmingSubmit", {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n  </form>\n</div>");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/settings", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['settings'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n        <div class=\"a-list__item a-bar--space-between bb loose\">\n\n          <div>Case ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "family.id", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n\n          <div>");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fromNow || (depth0 && depth0.fromNow)),stack1 ? stack1.call(depth0, "family.value", options) : helperMissing.call(depth0, "fromNow", "family.value", options))));
+  data.buffer.push("</div>\n\n          <div class=\"a-button\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "resetItem", "family", "family.id", {hash:{},contexts:[depth0,depth0,depth0],types:["STRING","STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n            Unarchive\n          </div>\n\n        </div>\n      ");
+  return buffer;
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n        <div class=\"a-list__item a-bar--space-between bb loose\">\n\n          <div>Variant ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "variant.value", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n\n          <div class=\"a-button\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "resetItem", "variant", "variant.id", {hash:{},contexts:[depth0,depth0,depth0],types:["STRING","STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n            Unarchive\n          </div>\n\n        </div>\n      ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"a-layout__panel--full a-layout__wrapper\">\n  <div class=\"a-layout\">\n\n    <div class=\"a-layout__panel--full a-list br\">\n\n      <div class=\"a-list__item header-style bb slim text-center\">\n        Archived families\n      </div>\n\n      ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "family", "in", "hiddenFamiles", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n      <div class=\"a-list__item a-bar--center loose\">\n        <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "resetHidden", "family", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button\">\n          <div class=\"a-button__body\">Unarchive all families</div>\n        </div>\n      </div>\n\n      <div class=\"a-list__item text-center bb slim\">\n        <small>You might have to reload the browser for the unarchived items to return.</small>\n      </div>\n\n    </div>\n\n    <div class=\"a-layout__panel--full a-list br\">\n\n      <div class=\"a-list__item header-style bb slim text-center\">\n        Archived variants\n      </div>\n\n      ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "variant", "in", "hiddenVariants", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n      <div class=\"a-list__item a-bar--center loose\">\n        <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "resetHidden", "variant", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button\">\n          <div class=\"a-button__body\">Unarchive all variants</div>\n        </div>\n      </div>\n\n      <div class=\"a-list__item text-center bb slim\">\n        <small>You might have to reload the browser for the unarchived items to return.</small>\n      </div>\n\n    </div>\n\n  </div>\n</div>");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/variant", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['variant'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  
+  data.buffer.push("\n            <div>Variants</div>\n          ");
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n          <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "unHideInList", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button\">\n            <div class=\"a-button__icon a-icon entypo archive\"></div>\n            <div class=\"a-button__body\">Unarchive</div>\n          </div>\n        ");
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n          <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "hideInList", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button\">\n            <div class=\"a-button__icon a-icon entypo archive\"></div>\n            <div class=\"a-button__body\">Archive</div>\n          </div>\n        ");
+  return buffer;
+  }
+
+function program7(depth0,data) {
+  
+  
+  data.buffer.push("\n          <div class=\"a-button__icon a-icon entypo cart\"></div>\n          <div class=\"a-button__body\">Sanger</div>\n        ");
+  }
+
+function program9(depth0,data) {
+  
+  
+  data.buffer.push("\n              Hide\n            ");
+  }
+
+function program11(depth0,data) {
+  
+  
+  data.buffer.push("\n              Show\n            ");
+  }
+
+function program13(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("-");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "stopBp", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  return buffer;
+  }
+
+function program15(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n          ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.capitalize || (depth0 && depth0.capitalize)),stack1 ? stack1.call(depth0, "functionalAnnotation", options) : helperMissing.call(depth0, "capitalize", "functionalAnnotation", options))));
+  data.buffer.push("\n        ");
+  return buffer;
+  }
+
+function program17(depth0,data) {
+  
+  
+  data.buffer.push("\n          No functional annotation\n        ");
+  }
+
+function program19(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n              <strong class=\"big-font\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "hgncSymbol", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</strong> <small>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "hgncSynonymsString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</small>\n            ");
+  return buffer;
+  }
+
+function program21(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n              ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.capitalize || (depth0 && depth0.capitalize)),stack1 ? stack1.call(depth0, "hgncApprovedName", options) : helperMissing.call(depth0, "capitalize", "hgncApprovedName", options))));
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+
+function program23(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n          <div class=\"a-list__item--header center__wrapper slim\">\n            <span class=\"entypo users\"></span>\n            Other familes\n          </div>\n          <div class=\"max-height-135 is-scrollable\">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "family", "in", "otherFamilies", {hash:{},inverse:self.noop,fn:self.program(24, program24, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n          </div>\n        ");
+  return buffer;
+  }
+function program24(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n              <div class=\"a-list__item slim\">\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},inverse:self.noop,fn:self.program(25, program25, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "variant", "family.pk", options) : helperMissing.call(depth0, "link-to", "variant", "family.pk", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n              </div>\n            ");
+  return buffer;
+  }
+function program25(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push(" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "family.id", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  return buffer;
+  }
+
+function program27(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n          <div class=\"a-list__item slim\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "item", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n        ");
+  return buffer;
+  }
+
+function program29(depth0,data) {
+  
+  
+  data.buffer.push("\n          <div class=\"a-list__item slim\">No predicted protein changes.</div>\n        ");
+  }
+
+function program31(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n          <div class=\"a-list__item--header text-center slim\">Disease group:</div>\n          <div class=\"a-list__item slim\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "diseaseGroup", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n        ");
+  return buffer;
+  }
+
+function program33(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n          <div class=\"a-list__item--header text-center logo--omim slim\">OMIM</div>\n          <div class=\"max-height-135 is-scrollable\">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "syndrome", "in", "omim.SYNDROMS", {hash:{},inverse:self.noop,fn:self.program(34, program34, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n          </div>\n        ");
+  return buffer;
+  }
+function program34(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n              <div class=\"a-list__item slim\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "syndrome", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n            ");
+  return buffer;
+  }
+
+function program36(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n          <div class=\"a-list__item--header text-center slim\">HGMD</div>\n          ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "link", "in", "hgmdVariantPmidLinks", {hash:{},inverse:self.noop,fn:self.program(37, program37, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n        ");
+  return buffer;
+  }
+function program37(depth0,data) {
+  
+  var buffer = '', stack1, hashContexts, hashTypes, options;
+  data.buffer.push("\n            <a ");
+  hashContexts = {'href': depth0};
+  hashTypes = {'href': "ID"};
+  options = {hash:{
+    'href': ("link.link")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" class=\"a-list__item is-clickable slim\" target=\"_blank\">\n              ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "link.id", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n            </a>\n          ");
+  return buffer;
+  }
+
+function program39(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n        <div class=\"a-bar__item mr--listed\">\n          <div class=\"a-card a-list\">\n            <div class=\"a-list__item--header text-center slim\">\n              ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "prediction.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n            </div>\n\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "property", "in", "prediction.values", {hash:{},inverse:self.program(43, program43, data),fn:self.program(40, program40, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n          </div>\n        </div>\n      ");
+  return buffer;
+  }
+function program40(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n              ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "property.value", {hash:{},inverse:self.noop,fn:self.program(41, program41, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+function program41(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                <div class=\"a-list__item a-bar--space-between\">\n                  <div class=\"slim mr dotdotdot\">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "property.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                  </div>\n                  <div class=\"slim\">");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fallback || (depth0 && depth0.fallback)),stack1 ? stack1.call(depth0, "property.value", options) : helperMissing.call(depth0, "fallback", "property.value", options))));
+  data.buffer.push("</div>\n                </div>\n              ");
+  return buffer;
+  }
+
+function program43(depth0,data) {
+  
+  
+  data.buffer.push("\n              <div class=\"a-list__item slim\">\n                <span class=\"mr\">No predictions.</span>\n              </div>\n            ");
+  }
+
+function program45(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n              <tr class=\"a-table__row\">\n                <td class=\"a-table__cell\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "gtcall.idn", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                <td class=\"a-table__cell\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "gtcall.gt", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                <td class=\"a-table__cell\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "gtcall.ad", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                <td class=\"a-table__cell\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "gtcall.pl", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                <td class=\"a-table__cell\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "gtcall.gq", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n              </tr>\n            ");
+  return buffer;
+  }
+
+function program47(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n          <div class=\"a-list__item slim\">\n            <div class=\"dotdotdot big-font\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "model", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n          </div>\n        ");
+  return buffer;
+  }
+
+function program49(depth0,data) {
+  
+  
+  data.buffer.push("\n          <div class=\"a-list__item slim\">No models.</div>\n        ");
+  }
+
+function program51(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n          <div class=\"a-list__item slim\">\n            <div class=\"dotdotdot\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "model", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n          </div>\n        ");
+  return buffer;
+  }
+
+function program53(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n      <table class=\"a-table small mb--big\">\n        <thead class=\"a-table__head\">\n          <tr class=\"a-table__row\">\n            <th class=\"a-table__cell--header\">Combined score</th>\n            <th class=\"a-table__cell--header\">Rank score</th>\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "gtcall", "in", "compounds.content.0.gtcalls", {hash:{},inverse:self.noop,fn:self.program(54, program54, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n            <th class=\"a-table__cell--header\">Inheritance models</th>\n            <th class=\"a-table__cell--header\">Gene annotations</th>\n            <th class=\"a-table__cell--header\">Functional annotation</th>\n          </tr>\n        </thead>\n\n        <tbody class=\"a-table__body\">\n          ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "compound", "in", "compounds", {hash:{},inverse:self.noop,fn:self.program(56, program56, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n        </tbody>\n      </table>\n    ");
+  return buffer;
+  }
+function program54(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n              <th class=\"a-table__cell--header\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "gtcall.sampleId", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</th>\n            ");
+  return buffer;
+  }
+
+function program56(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n            <tr class=\"a-table__row\">\n              <td class=\"a-table__cell text-center\">\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "compound.combinedScore", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n              </td>\n              <td class=\"text-center\">\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},inverse:self.noop,fn:self.program(57, program57, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "variant", "compound.variant", options) : helperMissing.call(depth0, "link-to", "variant", "compound.variant", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n              </td>\n              ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "gtcall", "in", "compound.gtcalls", {hash:{},inverse:self.noop,fn:self.program(59, program59, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n              <td class=\"a-table__cell\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "compound.geneModel", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n              <td class=\"a-table__cell\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "compound.geneAnnotation", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n              <td class=\"a-table__cell\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "compound.functionalAnnotation", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n            </tr>\n          ");
+  return buffer;
+  }
+function program57(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "compound.rankScore", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                ");
+  return buffer;
+  }
+
+function program59(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                <td class=\"a-table__cell text-center\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "gtcall.genotype", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n              ");
+  return buffer;
+  }
+
+function program61(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n  ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("mb")
+  },inverse:self.noop,fn:self.program(62, program62, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-modal-title'] || (depth0 && depth0['ic-modal-title'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-modal-title", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n  \n  <div class=\"email__wrapper mb\">\n    ");
+  hashContexts = {'unescaped': depth0};
+  hashTypes = {'unescaped': "STRING"};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "sangerEmailBody", {hash:{
+    'unescaped': ("true")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n  </div>\n\n  <div class=\"center__wrapper\">\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "saving", {hash:{},inverse:self.program(66, program66, data),fn:self.program(64, program64, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n  </div>\n");
+  return buffer;
+  }
+function program62(depth0,data) {
+  
+  
+  data.buffer.push("Order Sanger sequencing");
+  }
+
+function program64(depth0,data) {
+  
+  
+  data.buffer.push("\n      sending ...\n    ");
+  }
+
+function program66(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n      <div class=\"a-button__group\">\n        ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-button")
+  },inverse:self.noop,fn:self.program(67, program67, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-modal-trigger'] || (depth0 && depth0['ic-modal-trigger'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-modal-trigger", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n        <button type=\"submit\" class=\"a-button\">\n          <div class=\"a-button__icon a-icon entypo paper-plane\"></div>\n          <div class=\"a-button__body\">Send</div>\n        </button>\n      </div>\n    ");
+  return buffer;
+  }
+function program67(depth0,data) {
+  
+  
+  data.buffer.push("\n          <div class=\"a-button__icon a-icon entypo circled-cross\"></div>\n          <div class=\"a-button__body\">Cancel</div>\n        ");
+  }
+
+function program69(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n  <div class=\"a-layout__panel--full a-layout__wrapper\">\n    <div class=\"a-layout--vertical\">\n\n      <div class=\"a-layout__panel is-fixed slim header-style text-center bb\">\n        Variant Activity\n      </div>\n\n      <div class=\"a-layout__panel--full is-scrollable small loose bb\">\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "activities", {hash:{},inverse:self.noop,fn:self.program(70, program70, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n        ");
+  hashContexts = {'content': depth0,'onSubmit': depth0};
+  hashTypes = {'content': "ID",'onSubmit': "STRING"};
+  options = {hash:{
+    'content': ("activityContent"),
+    'onSubmit': ("postActivity")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['activity-form'] || (depth0 && depth0['activity-form'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "activity-form", options))));
+  data.buffer.push("\n      </div>\n\n      <div class=\"a-layout__panel is-fixed slim header-style text-center bb\">\n         ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "logActivityType", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" Activity\n      </div>\n\n      <div class=\"a-layout__panel--full is-scrollable small loose\">\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "logActivities", {hash:{},inverse:self.noop,fn:self.program(73, program73, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n        ");
+  hashContexts = {'content': depth0,'onSubmit': depth0};
+  hashTypes = {'content': "ID",'onSubmit': "STRING"};
+  options = {hash:{
+    'content': ("logActivityContent"),
+    'onSubmit': ("postLogActivity")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['activity-form'] || (depth0 && depth0['activity-form'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "activity-form", options))));
+  data.buffer.push("\n      </div>      \n\n    </div>\n  </div>\n");
+  return buffer;
+  }
+function program70(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n          <div class=\"a-activity__feed mb--big\">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "activity", "in", "activities", {hash:{},inverse:self.noop,fn:self.program(71, program71, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n          </div>\n        ");
+  return buffer;
+  }
+function program71(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n\n              <div class=\"a-activity__divider\">\n                <div class=\"a-activity__divider__time\">\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fromNow || (depth0 && depth0.fromNow)),stack1 ? stack1.call(depth0, "activity.createdAt", options) : helperMissing.call(depth0, "fromNow", "activity.createdAt", options))));
+  data.buffer.push("\n                </div>\n              </div>\n\n              <div class=\"a-activity__wrapper\">\n                <div class=\"a-activity\">\n                  <div class=\"full-width\">\n                    <div class=\"a-bar--space-between regular--stretched\">\n                      <div class=\"a-activity__caption\">\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "activity.user.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" commented\n                      </div>\n\n                      <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "deleteActivity", "activity", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button--naked\">\n                        <div class=\"a-button__icon entypo circled-cross a-icon\"></div>\n                      </div>\n                    </div>\n\n                    <div class=\"a-activity__body regular\">\n                      ");
+  hashContexts = {'unescaped': depth0};
+  hashTypes = {'unescaped': "STRING"};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "activity.content", {hash:{
+    'unescaped': ("true")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                    </div>\n                  </div>\n                </div>\n              </div>\n\n            ");
+  return buffer;
+  }
+
+function program73(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n\n          <div class=\"a-activity__feed mb--big\">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "activity", "in", "logActivities", {hash:{},inverse:self.noop,fn:self.program(74, program74, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n          </div>\n\n        ");
+  return buffer;
+  }
+function program74(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n\n              <div class=\"a-activity__divider\">\n                <div class=\"a-activity__divider__time\">\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fromNow || (depth0 && depth0.fromNow)),stack1 ? stack1.call(depth0, "activity.createdAt", options) : helperMissing.call(depth0, "fromNow", "activity.createdAt", options))));
+  data.buffer.push("\n                </div>\n              </div>\n\n              <div class=\"a-activity__wrapper\">\n                <div class=\"a-activity\">\n                  <div class=\"full-width\">\n                    <div class=\"a-bar--space-between regular--stretched\">\n                      <div class=\"a-activity__caption\">\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "activity.user.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" commented\n                      </div>\n                    </div>\n\n                    <div class=\"a-activity__body regular\">\n                      ");
+  hashContexts = {'unescaped': depth0};
+  hashTypes = {'unescaped': "STRING"};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "activity.content", {hash:{
+    'unescaped': ("true")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                    </div>\n                  </div>\n                </div>\n              </div>\n\n            ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"variant-page a-layout__panel--double is-scrollable br--listed\">\n  <div class=\"variant-page-wrapper\">\n    <div class=\"a-toolbar header-style slim b\">\n      <div class=\"a-toolbar__group a-button__group\">\n        <div class=\"a-button\">\n          <div class=\"a-button__icon a-icon entypo chevron-left\"></div>\n          ");
+  hashContexts = {'title': depth0};
+  hashTypes = {'title': "STRING"};
+  options = {hash:{
+    'title': ("Back to all variants")
+  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0,depth0],types:["STRING","ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "variants", "instituteId", "familyId", "databaseId", options) : helperMissing.call(depth0, "link-to", "variants", "instituteId", "familyId", "databaseId", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n        </div>\n\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isHidden", {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n      </div>\n\n      <div class=\"center__wrapper big-font\" title=\"rank score\">\n        <span class=\"a-icon entypo network mr--slim\"></span>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "rankScore", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n\n        (Family ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "familyId", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(")\n      </div>\n\n      <div class=\"a-toolbar__group a-button__group\">\n        ");
+  hashContexts = {'controls': depth0,'tagName': depth0,'classNames': depth0};
+  hashTypes = {'controls': "STRING",'tagName': "STRING",'classNames': "STRING"};
+  options = {hash:{
+    'controls': ("order-sanger-form"),
+    'tagName': ("div"),
+    'classNames': ("a-button")
+  },inverse:self.noop,fn:self.program(7, program7, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-modal-trigger'] || (depth0 && depth0['ic-modal-trigger'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-modal-trigger", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n        <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleProperty", "isShowingActivity", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button\" title=\"Toggle activity panel\">\n          <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":a-button__icon :a-icon :entypo :chat hasActivity:is-notifying")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></div>\n          <div class=\"a-button__body\">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isShowingActivity", {hash:{},inverse:self.program(11, program11, data),fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            Activity\n          </div>\n        </div>\n      </div>\n    </div>\n\n    <div class=\"a-card a-bar--space-between mb--big\">\n      <div class=\"a-bar__item br center__wrapper regular\" title=\"chromosome + position\">\n        <span class=\"a-icon entypo location mr--slim\"></span>\n        <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': ("isMultiBase:small")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n          Chr");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "chromosome", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("-");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "startBp", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isMultiBase", {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n        </span>\n      </div>\n\n      <div class=\"a-bar__item br center__wrapper regular\" title=\"change\">\n        <span class=\"a-icon entypo shuffle mr--slim\"></span>\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "refNt", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" &rarr; ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "altNt", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n      </div>\n\n      <div class=\"a-bar__item br center__wrapper regular\" title=\"annotations\">\n        <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":a-icon :entypo isProbablyBenign:circled-info:warning :mr--slim")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.capitalize || (depth0 && depth0.capitalize)),stack1 ? stack1.call(depth0, "geneAnnotation", options) : helperMissing.call(depth0, "capitalize", "geneAnnotation", options))));
+  data.buffer.push("\n      </div>\n\n      <div class=\"a-bar__item center__wrapper regular\" title=\"annotations\">\n        <span class=\"a-icon entypo tools mr--slim\"></span>\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "functionalAnnotation", {hash:{},inverse:self.program(17, program17, data),fn:self.program(15, program15, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n      </div>\n    </div>\n\n    <div class=\"a-bar flex-start small mb--big\">\n      <div class=\"a-bar__item a-card a-list br mr\">\n        <div class=\"a-list__item--header text-center slim\">General</div>\n        <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleProperty", "isShowingFullGeneName", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-list__item a-bar--space-between slim dotdotdot is-clickable\">\n          <div>\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "isShowingFullGeneName", {hash:{},inverse:self.program(21, program21, data),fn:self.program(19, program19, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n          </div>\n\n          <div class=\"a-icon--small entypo cycle\"></div>\n        </div>\n\n        <div class=\"a-list__item slim\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "ensemblGeneIdString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isFoundInOtherFamilies", {hash:{},inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n      </div>\n\n      <div class=\"a-bar__item a-card a-list br mr\">\n        <div class=\"a-list__item--header text-center slim\">Predicted protein changes</div>\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "item", "in", "variantFunctions", {hash:{},inverse:self.program(29, program29, data),fn:self.program(27, program27, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n      </div>\n\n      <div class=\"a-bar__item a-card a-list\">\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "diseaseGroup", {hash:{},inverse:self.noop,fn:self.program(31, program31, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "omim", {hash:{},inverse:self.noop,fn:self.program(33, program33, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "hgmdAccession", {hash:{},inverse:self.noop,fn:self.program(36, program36, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("      \n      </div>\n    </div>\n\n    <div class=\"a-bar--space-between flex-start small mb--big\">\n      ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "prediction", "in", "predictions", {hash:{},inverse:self.noop,fn:self.program(39, program39, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n    </div>\n\n    <div class=\"a-bar flex-start small mb--big\">\n      <div class=\"a-bar__item--double mr\">\n        <table class=\"a-table\">\n          <thead class=\"a-table__head\">\n            <tr class=\"a-table__row\">\n              <th class=\"a-table__cell--header\">Sample</th>\n              <th class=\"a-table__cell--header\">GT</th>\n              <th class=\"a-table__cell--header\">AD</th>\n              <th class=\"a-table__cell--header\">PL</th>\n              <th class=\"a-table__cell--header\">GQ</th>\n            </tr>\n          </thead>\n          <tbody class=\"a-table__body\">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "gtcall", "in", "gtcallsBySampleId", {hash:{},inverse:self.noop,fn:self.program(45, program45, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n          </tbody>\n        </table>\n      </div>\n    \n      <div class=\"a-bar__item a-card a-list mr\">\n        <div class=\"a-list__item--header text-center slim dotdotdot\">\n          <strong>Disease gene models</strong>\n        </div>\n\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "model", "in", "diseaseGeneModels", {hash:{},inverse:self.program(49, program49, data),fn:self.program(47, program47, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n      </div>\n\n      <div class=\"a-bar__item a-card a-list\">\n        <div class=\"a-list__item--header text-center slim\">\n          Inheritance models\n        </div>\n\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "model", "in", "geneModels", {hash:{},inverse:self.program(49, program49, data),fn:self.program(51, program51, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n      </div>\n    </div>\n\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "hasCompounds", {hash:{},inverse:self.noop,fn:self.program(53, program53, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n  \n    \n    <div class=\"a-bar--space-between external-links\">\n      <a ");
+  hashContexts = {'href': depth0};
+  hashTypes = {'href': "STRING"};
+  options = {hash:{
+    'href': ("ensemblLink")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" class=\"a-button\" target=\"_blank\">\n        <div class=\"a-button__body\">Ensembl</div>\n      </a>\n\n      <a ");
+  hashContexts = {'href': depth0};
+  hashTypes = {'href': "STRING"};
+  options = {hash:{
+    'href': ("hpaLink")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" class=\"a-button\" target=\"_blank\">\n        <div class=\"a-button__icon a-icon entypo map\"></div>\n        <div class=\"a-button__body\">HPA</div>\n      </a>\n\n      <a ");
+  hashContexts = {'href': depth0};
+  hashTypes = {'href': "STRING"};
+  options = {hash:{
+    'href': ("stringLink")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" class=\"a-button\" target=\"_blank\">\n        <div class=\"a-button__body\">STRING</div>\n      </a>\n\n      <a ");
+  hashContexts = {'href': depth0};
+  hashTypes = {'href': "STRING"};
+  options = {hash:{
+    'href': ("ucscLink")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" class=\"a-button\" target=\"_blank\">\n        <div class=\"a-button__body\">UCSC</div>\n      </a>\n\n      <a ");
+  hashContexts = {'href': depth0};
+  hashTypes = {'href': "STRING"};
+  options = {hash:{
+    'href': ("entrezLink")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" class=\"a-button\" target=\"_blank\">\n        <div class=\"a-button__body\">Entrez</div>\n      </a>\n\n      <a ");
+  hashContexts = {'href': depth0};
+  hashTypes = {'href': "STRING"};
+  options = {hash:{
+    'href': ("idsLink")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" class=\"a-button\" target=\"_blank\">\n        <div class=\"a-button__body\">IDs</div>\n      </a>\n\n      <a ");
+  hashContexts = {'href': depth0};
+  hashTypes = {'href': "STRING"};
+  options = {hash:{
+    'href': ("igvLink")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" class=\"a-button\" target=\"_blank\">\n        <div class=\"a-button__icon a-icon entypo open-book\"></div>\n        <div class=\"a-button__body\">IGV</div>\n      </a>\n    </div>\n\n  </div>\n</div>\n\n");
+  hashContexts = {'id': depth0,'on-submit': depth0,'awaiting-return-value': depth0};
+  hashTypes = {'id': "STRING",'on-submit': "STRING",'awaiting-return-value': "ID"};
+  options = {hash:{
+    'id': ("order-sanger-form"),
+    'on-submit': ("submitSangerForm"),
+    'awaiting-return-value': ("saving")
+  },inverse:self.noop,fn:self.program(61, program61, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['ic-modal-form'] || (depth0 && depth0['ic-modal-form'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "ic-modal-form", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isShowingActivity", {hash:{},inverse:self.noop,fn:self.program(69, program69, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n");
+  return buffer;
+  
+});
+});
+
+;require.register("templates/variants", function(exports, require, module) {
+module.exports = Ember.TEMPLATES['variants'] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, self=this, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n              <div class=\"dotdotdot slim a-bar__item--half br--listed\">1000 Genomes</div>\n              <div class=\"dotdotdot slim a-bar__item--half br--listed\">PolyPhen</div>\n              <div class=\"dotdotdot slim a-bar__item br--listed\">Gene annotation</div>\n              <div class=\"dotdotdot slim a-bar__item br--listed\">Func. annotation</div>\n              ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "researchMode", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n              <div class=\"dotdotdot slim a-bar__item--double br--listed\">Inheritance models</div>\n              <div class=\"dotdotdot slim a-bar__item--half br--listed\">HGMD</div>\n              <div class=\"dotdotdot slim a-bar__item--half br--listed\">Archive</div>\n            ");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  
+  data.buffer.push("\n                <div class=\"dotdotdot slim a-bar__item--double br--listed\">Disease group</div>\n                <div class=\"dotdotdot slim a-bar__item--half br--listed\">Disease gene model</div>\n              ");
+  }
+
+function program4(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "variant.isHidden", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n          ");
+  return buffer;
+  }
+function program5(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n            <div class=\"a-list__item a-bar--space-between variant-list-item\">\n              \n              ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("dotdotdot slim a-bar__item--half a-bar--space-around rank-score-column br")
+  },inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "variant", "variant", options) : helperMissing.call(depth0, "link-to", "variant", "variant", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n              \n              \n              <div class=\"dotdotdot slim a-bar__item--half br--listed\">\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "variant.hgncSymbol", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n              </div>\n              \n              ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "variantIsLoaded", {hash:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            </div>\n            ");
+  return buffer;
+  }
+function program6(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                <div>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "variant.rankScore", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "variant.hasCompounds", {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n              ");
+  return buffer;
+  }
+function program7(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                  <div class=\"a-notify\">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "variant.individualRankScore", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                  </div>\n                ");
+  return buffer;
+  }
+
+function program9(depth0,data) {
+  
+  var buffer = '';
+  data.buffer.push("\n                  \n                  <div class=\"a-notify--fake\"></div>\n                ");
+  return buffer;
+  }
+
+function program11(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n                \n                <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":slim :a-bar__item--half variant.isFoundInOtherFamilies:a-bar--space-between variant.thousandG::undef :br--listed")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "variant.isFoundInOtherFamilies", {hash:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n                  <div class=\"text-right\">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fallback || (depth0 && depth0.fallback)),stack1 ? stack1.call(depth0, "variant.thousandG", options) : helperMissing.call(depth0, "fallback", "variant.thousandG", options))));
+  data.buffer.push("\n                  </div>\n\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "variant.frequencies", {hash:{},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                </div>\n\n                \n                <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":slim :a-bar__item--half variant.polyphenDivHuman::undef :br--listed")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                  <div class=\"text-right\">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fallback || (depth0 && depth0.fallback)),stack1 ? stack1.call(depth0, "variant.polyphenDivHuman", options) : helperMissing.call(depth0, "fallback", "variant.polyphenDivHuman", options))));
+  data.buffer.push("\n                  </div>\n\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "variant.severities", {hash:{},inverse:self.noop,fn:self.program(18, program18, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                </div>\n\n                \n                <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":dotdotdot :slim :a-bar__item variant.geneAnnotation::undef :br--listed")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fallback || (depth0 && depth0.fallback)),stack1 ? stack1.call(depth0, "variant.geneAnnotation", options) : helperMissing.call(depth0, "fallback", "variant.geneAnnotation", options))));
+  data.buffer.push("\n                </div>\n\n                \n                <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":dotdotdot :slim :a-bar__item variant.functionalAnnotation::undef :br--listed")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fallback || (depth0 && depth0.fallback)),stack1 ? stack1.call(depth0, "variant.functionalAnnotation", options) : helperMissing.call(depth0, "fallback", "variant.functionalAnnotation", options))));
+  data.buffer.push("\n                </div>\n\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "researchMode", {hash:{},inverse:self.noop,fn:self.program(21, program21, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n                \n                <div class=\"a-bar__item--double slim--squashed a-bar br--listed\">\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "model", "in", "variant.geneModels", {hash:{},inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "variant.hasCompounds", {hash:{},inverse:self.noop,fn:self.program(25, program25, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                </div>\n\n                \n                <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":dotdotdot :slim :a-bar__item--half variant.hgmdVariantType::undef :br--listed")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fallback || (depth0 && depth0.fallback)),stack1 ? stack1.call(depth0, "variant.hgmdVariantType", options) : helperMissing.call(depth0, "fallback", "variant.hgmdVariantType", options))));
+  data.buffer.push("\n                </div>        \n\n                \n                <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "hideVariant", "variant", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-bar__item--half a-bar--center slim--squashed br--listed is-clickable\">\n                  <div class=\"a-icon entypo archive\"></div>\n                </div>\n              ");
+  return buffer;
+  }
+function program12(depth0,data) {
+  
+  var buffer = '', stack1, hashContexts, hashTypes, options;
+  data.buffer.push("\n                    <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":a-notify--bubble variant.hbvdbHuman")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                      &nbsp;\n                    </div>\n                  ");
+  return buffer;
+  }
+
+function program14(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n                    ");
+  hashContexts = {'triggerdBy': depth0,'direction': depth0,'classNames': depth0};
+  hashTypes = {'triggerdBy': "STRING",'direction': "STRING",'classNames': "STRING"};
+  options = {hash:{
+    'triggerdBy': ("hover"),
+    'direction': ("right"),
+    'classNames': ("slim")
+  },inverse:self.noop,fn:self.program(15, program15, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['a-popover'] || (depth0 && depth0['a-popover'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "a-popover", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                  ");
+  return buffer;
+  }
+function program15(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                      <div class=\"always-visible-text\">\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "property", "in", "variant.frequencies", {hash:{},inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                      </div>\n                    ");
+  return buffer;
+  }
+function program16(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                          <div class=\"a-bar--space-between\">\n                            <div class=\"dotdotdot slim\">\n                              <strong>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "property.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</strong>\n                            </div>\n                            <div class=\"slim text-right\">\n                              ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fallback || (depth0 && depth0.fallback)),stack1 ? stack1.call(depth0, "property.value", options) : helperMissing.call(depth0, "fallback", "property.value", options))));
+  data.buffer.push("\n                            </div>\n                          </div>\n                        ");
+  return buffer;
+  }
+
+function program18(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n                    ");
+  hashContexts = {'triggerdBy': depth0,'direction': depth0,'classNames': depth0};
+  hashTypes = {'triggerdBy': "STRING",'direction': "STRING",'classNames': "STRING"};
+  options = {hash:{
+    'triggerdBy': ("hover"),
+    'direction': ("right"),
+    'classNames': ("slim")
+  },inverse:self.noop,fn:self.program(19, program19, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['a-popover'] || (depth0 && depth0['a-popover'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "a-popover", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                  ");
+  return buffer;
+  }
+function program19(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                      <div class=\"always-visible-text\">\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "property", "in", "variant.severities", {hash:{},inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                      </div>\n                    ");
+  return buffer;
+  }
+
+function program21(depth0,data) {
+  
+  var buffer = '', stack1, hashContexts, hashTypes, options;
+  data.buffer.push("\n                  \n                  <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":dotdotdot :slim :a-bar__item--double :br--listed variant.diseaseGroup::undef")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.fallback || (depth0 && depth0.fallback)),stack1 ? stack1.call(depth0, "variant.diseaseGroup", options) : helperMissing.call(depth0, "fallback", "variant.diseaseGroup", options))));
+  data.buffer.push("\n                  </div>\n\n                  \n                  <div class=\"dotdotdot slim a-bar__item--half br--listed\">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "variant.diseaseGeneModel", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                  </div>\n                ");
+  return buffer;
+  }
+
+function program23(depth0,data) {
+  
+  var buffer = '', stack1, hashContexts, hashTypes, options;
+  data.buffer.push("\n                    <div ");
+  hashContexts = {'title': depth0};
+  hashTypes = {'title': "STRING"};
+  options = {hash:{
+    'title': ("model")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" class=\"dotdotdot br--listed slim\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "model", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n                  ");
+  return buffer;
+  }
+
+function program25(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n                    ");
+  hashContexts = {'triggerdBy': depth0,'direction': depth0,'classNames': depth0};
+  hashTypes = {'triggerdBy': "STRING",'direction': "STRING",'classNames': "STRING"};
+  options = {hash:{
+    'triggerdBy': ("hover"),
+    'direction': ("left"),
+    'classNames': ("slim")
+  },inverse:self.noop,fn:self.program(26, program26, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['a-popover'] || (depth0 && depth0['a-popover'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "a-popover", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                  ");
+  return buffer;
+  }
+function program26(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n                      <table class=\"a-table\">\n                        <thead class=\"a-table__head\">\n                          <tr class=\"a-table__row\">\n                            <th class=\"a-table__cell--header\">\n                              Combined score\n                            </th>\n                            <th class=\"a-table__cell--header\">Rank score</th>\n                            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "sample", "in", "variant.compounds.content.0.samples", {hash:{},inverse:self.noop,fn:self.program(27, program27, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                            <th class=\"a-table__cell--header\">\n                              Inheritance models\n                            </th>\n                            <th class=\"a-table__cell--header\">\n                              Gene annotations\n                            </th>\n                            <th class=\"a-table__cell--header\">\n                              Functional annotation\n                            </th>\n                          </tr>\n                        </thead>\n\n                        <tbody class=\"a-table__body\">\n                          <tr class=\"a-table__row is-highlighted\">\n                            <td class=\"a-table__cell dotdotdot\">\n                              ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "variant.gtData.combinedScore", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                            </td>\n\n                            <td class=\"a-table__cell dotdotdot\">\n                              ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},inverse:self.noop,fn:self.program(29, program29, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "variant", "variant.gtData.variant", options) : helperMissing.call(depth0, "link-to", "variant", "variant.gtData.variant", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                            </td>\n                            \n                            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "gtcall", "in", "variant.gtData.gtcalls", {hash:{},inverse:self.noop,fn:self.program(31, program31, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n                            <td class=\"a-table__cell dotdotdot\">\n                              ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "variant.gtData.geneModel", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                            </td>\n\n                            <td class=\"a-table__cell dotdotdot\">\n                              ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "variant.gtData.geneAnnotation", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                            </td>\n\n                            <td class=\"a-table__cell dotdotdot\">\n                              ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "variant.gtData.functionalAnnotation", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                            </td>\n                          </tr>\n\n                          ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "compound", "in", "variant.compounds", {hash:{},inverse:self.noop,fn:self.program(33, program33, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                        </tbody>\n                      </table>\n                    ");
+  return buffer;
+  }
+function program27(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                              <th class=\"a-table__cell--header dotdotdot\">\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "sample", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                              </th>\n                            ");
+  return buffer;
+  }
+
+function program29(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "variant.gtData.rankScore", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                              ");
+  return buffer;
+  }
+
+function program31(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                              <td class=\"a-table__cell dotdotdot text-center\">\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "gtcall", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                              </td>\n                            ");
+  return buffer;
+  }
+
+function program33(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n                            <tr class=\"a-table__row\">\n                              <td class=\"a-table__cell dotdotdot\">\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "compound.combinedScore", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                              </td>\n\n                              <td class=\"a-table__cell dotdotdot\">\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},inverse:self.noop,fn:self.program(34, program34, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "variant", "compound.variant", options) : helperMissing.call(depth0, "link-to", "variant", "compound.variant", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                              </td>\n\n                              ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "gtcall", "in", "compound.gtcalls", {hash:{},inverse:self.noop,fn:self.program(36, program36, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n                              <td class=\"a-table__cell dotdotdot\">\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "compound.geneModel", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                              </td>\n\n                              <td class=\"a-table__cell dotdotdot\">\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "compound.geneAnnotation", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                              </td>\n\n                              <td class=\"a-table__cell dotdotdot\">\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "compound.functionalAnnotation", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                              </td>                              \n                            </tr>\n                          ");
+  return buffer;
+  }
+function program34(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                                  ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "compound.rankScore", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                                ");
+  return buffer;
+  }
+
+function program36(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                                <td class=\"a-table__cell dotdotdot text-center\">\n                                  ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "gtcall.genotype", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                                </td>\n                              ");
+  return buffer;
+  }
+
+function program38(depth0,data) {
+  
+  
+  data.buffer.push("\n            <h2 class=\"text-center\">Loading...</h2>\n          ");
+  }
+
+function program40(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n          \n          <div class=\"a-layout__footer a-toolbar slim bt\">\n            <div class=\"a-button__group\">\n              ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-button")
+  },inverse:self.noop,fn:self.program(41, program41, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "institute", "instituteId", options) : helperMissing.call(depth0, "link-to", "institute", "instituteId", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n              ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-button")
+  },inverse:self.noop,fn:self.program(43, program43, data),contexts:[depth0,depth0,depth0],types:["STRING","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "family", "instituteId", "familyId", options) : helperMissing.call(depth0, "link-to", "family", "instituteId", "familyId", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            </div>\n\n            <div class=\"center__wrapper\">Database: ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "database", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n\n            <div class=\"a-button__group\">\n              <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "doFilter", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button\">\n                <div class=\"a-button__icon a-icon entypo ccw\"></div>\n                <div class=\"a-button__body\">Update variants</div>\n              </div>\n\n              <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "toggleProperty", "isShowingFilters", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button\">\n                <div class=\"a-button__icon a-icon entypo hair-cross\"></div>\n                <div class=\"a-button__body\">\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "isShowingFilters", {hash:{},inverse:self.program(47, program47, data),fn:self.program(45, program45, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                  filters\n                </div>\n              </div>\n            </div>\n          </div>\n        ");
+  return buffer;
+  }
+function program41(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                <div class=\"a-button__body\">\n                  Institue: ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "instituteId", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                </div>\n              ");
+  return buffer;
+  }
+
+function program43(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                <div class=\"a-button__body\">Case: ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "familyId", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n              ");
+  return buffer;
+  }
+
+function program45(depth0,data) {
+  
+  
+  data.buffer.push(" Show ");
+  }
+
+function program47(depth0,data) {
+  
+  
+  data.buffer.push(" Hide ");
+  }
+
+function program49(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n      \n      ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "isShowingFilters", {hash:{},inverse:self.noop,fn:self.program(50, program50, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n    ");
+  return buffer;
+  }
+function program50(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n        <div class=\"filter-panel a-layout__panel--quarter a-list br--listed\">\n          <div class=\"a-bar--space-between slim bb\">\n            <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "doFilterClinically", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button\">\n              <div class=\"a-button__icon a-icon entypo lifebuoy\"></div>\n              <div class=\"a-button__body\">Clinical filter</div>\n            </div>\n\n            <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "doClearFilters", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button\">\n              <div class=\"a-button__icon a-icon entypo circled-cross\"></div>\n              <div class=\"a-button__body\">Clear</div>\n            </div>\n          </div>\n          <form ");
+  hashContexts = {'on': depth0};
+  hashTypes = {'on': "STRING"};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "submitdiv", {hash:{
+    'on': ("submit")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n            <div class=\"a-list__item--header slim text-center\">\n              Frequency cutoffs\n            </div>\n\n            <div class=\"a-list__item a-choice__wrapper regular\">\n              <div class=\"a-choice\">\n                ");
+  hashContexts = {'name': depth0,'selectionBinding': depth0,'value': depth0};
+  hashTypes = {'name': "STRING",'selectionBinding': "STRING",'value': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.RadioButton", {hash:{
+    'name': ("relation"),
+    'selectionBinding': ("relation"),
+    'value': ("LESSER")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                <div class=\"a-choice__label\">Less than</div>\n              </div>\n\n              <div class=\"a-choice\">\n                ");
+  hashContexts = {'name': depth0,'selectionBinding': depth0,'value': depth0};
+  hashTypes = {'name': "STRING",'selectionBinding': "STRING",'value': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "Ember.RadioButton", {hash:{
+    'name': ("relation"),
+    'selectionBinding': ("relation"),
+    'value': ("GREATER")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                <div class=\"a-choice__label\">Greater than</div>\n              </div>\n            </div>\n\n            <div class=\"regular\">\n              ");
+  hashContexts = {'id': depth0,'type': depth0,'step': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0,'required': depth0};
+  hashTypes = {'id': "STRING",'type': "STRING",'step': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING",'required': "STRING"};
+  options = {hash:{
+    'id': ("hbvdb"),
+    'type': ("number"),
+    'step': ("0.01"),
+    'valueBinding': ("hbvdb"),
+    'placeholder': ("HBVdb"),
+    'classNames': ("a-form__input"),
+    'required': ("")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n            </div>\n\n            <div class=\"regular\">\n              ");
+  hashContexts = {'id': depth0,'type': depth0,'step': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0,'required': depth0};
+  hashTypes = {'id': "STRING",'type': "STRING",'step': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING",'required': "STRING"};
+  options = {hash:{
+    'id': ("genomes"),
+    'type': ("number"),
+    'step': ("0.01"),
+    'valueBinding': ("thousand_g"),
+    'placeholder': ("1000 Genomes"),
+    'classNames': ("a-form__input"),
+    'required': ("")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n            </div>\n\n            <div class=\"regular\">\n              ");
+  hashContexts = {'id': depth0,'type': depth0,'step': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0,'required': depth0};
+  hashTypes = {'id': "STRING",'type': "STRING",'step': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING",'required': "STRING"};
+  options = {hash:{
+    'id': ("dbSNP129"),
+    'type': ("number"),
+    'step': ("0.01"),
+    'valueBinding': ("dbsnp129"),
+    'placeholder': ("dbSNP 129"),
+    'classNames': ("a-form__input"),
+    'required': ("")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n            </div>\n\n            <div class=\"regular\">\n              ");
+  hashContexts = {'id': depth0,'type': depth0,'step': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0,'required': depth0};
+  hashTypes = {'id': "STRING",'type': "STRING",'step': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING",'required': "STRING"};
+  options = {hash:{
+    'id': ("dbSNP132"),
+    'type': ("number"),
+    'step': ("0.01"),
+    'valueBinding': ("dbsnp132"),
+    'placeholder': ("dbSNP 132"),
+    'classNames': ("a-form__input"),
+    'required': ("")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n            </div>\n\n            <div class=\"regular\">\n              ");
+  hashContexts = {'id': depth0,'type': depth0,'step': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0,'required': depth0};
+  hashTypes = {'id': "STRING",'type': "STRING",'step': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING",'required': "STRING"};
+  options = {hash:{
+    'id': ("esp6500"),
+    'type': ("number"),
+    'step': ("0.01"),
+    'valueBinding': ("esp6500"),
+    'placeholder': ("esp6500"),
+    'classNames': ("a-form__input"),
+    'required': ("")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n            </div>\n\n            <div class=\"a-list__item--header bt slim text-center\">\n              Database and gene search\n            </div>\n\n            <div class=\"a-list__item a-bar--space-between\">\n              ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "db", "in", "filter.clinical_db_gene_annotation", {hash:{},inverse:self.noop,fn:self.program(51, program51, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            </div>\n\n            <div class=\"regular\">\n              ");
+  hashContexts = {'id': depth0,'type': depth0,'valueBinding': depth0,'placeholder': depth0,'classNames': depth0,'required': depth0};
+  hashTypes = {'id': "STRING",'type': "STRING",'valueBinding': "STRING",'placeholder': "STRING",'classNames': "STRING",'required': "STRING"};
+  options = {hash:{
+    'id': ("gene-name"),
+    'type': ("text"),
+    'valueBinding': ("gene_name"),
+    'placeholder': ("HGNC gene symbol"),
+    'classNames': ("a-form__input"),
+    'required': ("")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n            </div>\n\n            <div class=\"regular\">\n              ");
+  hashContexts = {'id': depth0,'type': depth0,'valueBinding': depth0,'classNames': depth0,'placeholder': depth0,'required': depth0};
+  hashTypes = {'id': "STRING",'type': "STRING",'valueBinding': "STRING",'classNames': "STRING",'placeholder': "STRING",'required': "STRING"};
+  options = {hash:{
+    'id': ("offset"),
+    'type': ("number"),
+    'valueBinding': ("offset"),
+    'classNames': ("a-form__input"),
+    'placeholder': ("Skip first..."),
+    'required': ("")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n            </div>\n\n            \n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "group", "in", "filterGroups", {hash:{},inverse:self.noop,fn:self.program(54, program54, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n          </form>\n        </div>\n      ");
+  return buffer;
+  }
+function program51(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n                ");
+  hashContexts = {'classNames': depth0};
+  hashTypes = {'classNames': "STRING"};
+  options = {hash:{
+    'classNames': ("a-bar__item regular br--listed")
+  },inverse:self.noop,fn:self.program(52, program52, data),contexts:[depth0,depth0,depth0,depth0],types:["STRING","ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "variants", "instituteId", "familyId", "db", options) : helperMissing.call(depth0, "link-to", "variants", "instituteId", "familyId", "db", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n              ");
+  return buffer;
+  }
+function program52(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                  ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "db", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                ");
+  return buffer;
+  }
+
+function program54(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n              <div class=\"a-list__item--header bt slim text-center\">\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "group.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n              </div>\n\n              ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "filter", "in", "group.filters", {hash:{},inverse:self.noop,fn:self.program(55, program55, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+function program55(depth0,data) {
+  
+  var buffer = '', stack1, hashContexts, hashTypes, options;
+  data.buffer.push("\n                <div class=\"regular\">\n                  <div class=\"a-checkbox__wrapper\">\n                    <div class=\"a-checkbox__box\">\n                      ");
+  hashContexts = {'type': depth0,'checkedBinding': depth0,'classNames': depth0};
+  hashTypes = {'type': "STRING",'checkedBinding': "STRING",'classNames': "STRING"};
+  options = {hash:{
+    'type': ("checkbox"),
+    'checkedBinding': ("filter.property"),
+    'classNames': ("toggle-slider__input")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n                    </div>\n                    <div class=\"a-checkbox__caption dotdotdot\">\n                      ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "filter.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                    </div>\n                  </div>\n                </div>\n              ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"a-layout__wrapper a-layout__panel--full\">\n\n  <div class=\"a-layout\">\n    <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":a-layout__wrapper variantIsLoaded:a-layout__panel--quarter:a-layout__panel--full :a-floater__wrapper :br--listed")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n      <div class=\"a-layout--vertical\">\n\n        \n        <div class=\"variants-header a-list__item--header bb\">\n\n          <div class=\"a-bar--space-between\">\n            <div class=\"dotdotdot slim a-bar__item--half br--listed\">Rank score</div>\n            <div class=\"dotdotdot slim a-bar__item--half br--listed\">Gene</div>\n\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "variantIsLoaded", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n          </div>\n        </div>\n\n        <div class=\"a-layout__panel--full is-scrollable variants-main\">\n          ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.each.call(depth0, "variant", "in", "controller", {hash:{},inverse:self.program(38, program38, data),fn:self.program(4, program4, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n          <div class=\"a-list__item slim\">\n            <div ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "loadMore", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"a-button center__wrapper\">\n              <div class=\"a-button__icon a-icon entypo infinity\"></div>\n              <div class=\"a-button__body big-font\">Load more...</div>\n            </div>\n          </div>\n        </div>\n        \n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "variantIsLoaded", {hash:{},inverse:self.noop,fn:self.program(40, program40, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n      </div>\n\n    </div>\n\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "variantIsLoaded", {hash:{},inverse:self.noop,fn:self.program(49, program49, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n  </div>\n\n</div>\n");
+  return buffer;
+  
+});
+});
+
+;require.register("views/application", function(exports, require, module) {
+module.exports = App.ApplicationView = Ember.View.extend({
+  classNames: ['wrapper']
+});
+});
+
+;require.register("views/radio-button", function(exports, require, module) {
+module.exports = Ember.RadioButton = Ember.View.extend({
+  tagName: 'input',
+  type: 'radio',
+  attributeBindings: ['name', 'type', 'value', 'checked:checked:'],
+  click: function() {
+    return this.set('selection', this.$().val());
+  },
+  checked: (function() {
+    return this.get('value') === this.get('selection');
+  }).property()
+});
+});
+
+;require.register("config/environments/development", function(exports, require, module) {
+window.TAPAS_ENV = {
+  name: 'development'
+};
+});
+
+;
+//# sourceMappingURL=app.js.map

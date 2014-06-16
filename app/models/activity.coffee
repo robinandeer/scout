@@ -10,6 +10,7 @@ App.Activity = Ember.Model.extend
 
   ecosystem: Em.attr()
   userId: Em.attr()
+  user: Em.belongsTo 'App.User', {key: 'user_id'}
 
   createdAt: Em.attr(MomentDate)
   updatedAt: Em.attr(MomentDate)
@@ -25,18 +26,32 @@ App.Activity = Ember.Model.extend
 
   entypoIcon: (->
     tag = @get 'firstTag'
-    if tag is 'finding'
-      return 'search'
-    else if tag is 'action'
+    if tag is 'action'
       return 'new'
     else if tag is 'conclusion'
       return 'check'
+    else  # 'finding' by default
+      return 'search'
   ).property 'firstTag'
+
+
+ActivityAdapter = NewRESTAdapter.extend
+  find: (record, id) ->
+    url = @buildURL record.constructor, id
+
+    return @ajax(url).then (data) =>
+      @didFind record, id, data
+      return record
+
+  didFind: (record, id, data) ->
+    Ember.run record, record.load, id, data.activities
+    Ember.run App.User, App.User.load, data.user
+
 
 App.Activity.camelizeKeys = yes
 App.Activity.primaryKey = '_id'
 App.Activity.collectionKey = 'activities'
 App.Activity.url = '/api/v1/activities'
-App.Activity.adapter = NewRESTAdapter.create()
+App.Activity.adapter = ActivityAdapter.create()
 
 module.exports = App.Activity

@@ -20,13 +20,16 @@ module.exports = App.FamilyController = Ember.ObjectController.extend
         tags: [@get('selectedClinicalTag')]
 
       activity.save().then((newObject) =>
-        @get('clinicalActivities').pushObject(newObject)
+        @get('clinicalActivities').insertAt(0, newObject)
       )
 
     deleteActivity: (category, activity) ->
-      # Delete the record from the server
-      @get("#{category}Activities").removeObject(activity)
-      activity.deleteRecord()
+      if @isOwner activity.get('userId')
+        # Delete the record from the server
+        @get("#{category}Activities").removeObject(activity)
+        activity.deleteRecord()
+      else
+        alert("You can't delete #{activity.get('user.givenName')}'s comment.")
 
     postResearchActivity: ->
       activity = App.Activity.create
@@ -41,8 +44,12 @@ module.exports = App.FamilyController = Ember.ObjectController.extend
         tags: [@get('selectedResearchTag')]
 
       activity.save().then((newObject) =>
-        @get('researchActivities').pushObject(newObject)
+        @get('researchActivities').insertAt(0, newObject)
       )
+
+  isOwner: (commentUserId) ->
+    # Matches a given user id against user currently logged in
+    return commentUserId is @get('user._id')
 
   activityTypes: ['finding', 'action', 'conclusion']
   selectedClinicalActivityType: undefined

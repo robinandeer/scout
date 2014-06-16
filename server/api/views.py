@@ -81,7 +81,15 @@ def activities(document_id=None):
 
   elif request.method == 'GET':
     if document_id is None:
-      return jsonify_mongo(activities=list(mongo.db.activity.find(query_args)))
+      activities = list(mongo.db.activity.find(
+        query_args).sort('created_at', -1))
+      users = mongo.db.user.find({'_id':
+        {'$in': [activity['user_id'] for activity in activities]}})
+
+      return jsonify_mongo(activities=activities, users=list(users))
+    else:
+      user = mongo.db.user.find_one({'_id': document['user_id']})
+      document['user'] = user
 
   elif request.method == 'PUT':
     # Update a specific document

@@ -28,7 +28,7 @@
         </div>
 
         <div class="a-layout__panel--full is-scrollable variants-main">
-          {{#each variant in model}}
+          {{#each variant in controller}}
             {{#unless variant.isHidden}}
             <div class="a-list__item a-bar--space-between variant-list-item">
               {{!-- COLUMN --}}
@@ -240,6 +240,9 @@
               {{/unless}}
             </div>
             {{/unless}}
+
+          {{else}}
+            <h2 class="text-center">Loading...</h2>
           {{/each}}
 
           <div class="a-list__item slim">

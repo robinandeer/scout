@@ -89,18 +89,17 @@
                           <div class="a-activity">
                             <div class="full-width">
                               <div class="a-bar--space-between regular--stretched">
-                                <div class="a-activity__caption">
-                                  {{{activity.caption}}}
+                                <div class="a-activity__caption a-bar">
+                                  <span {{bind-attr class=":a-icon :entypo activity.entypoIcon :mr--slim" title="activity.firstTag"}}></span>
+                                  {{activity.user.name}} commented
                                 </div>
-
-                                <div {{bind-attr class=":a-icon :entypo activity.entypoIcon" title="activity.firstTag"}}></div>
 
                                 <div {{action deleteActivity "clinical" activity}} class="a-button--naked">
                                   <div class="a-button__icon entypo circled-cross a-icon"></div>
                                 </div>
                               </div>
 
-                              <div class="a-activity__body regular">
+                              <div class="a-activity__body regular--stretched">
                                 {{{activity.content}}}
                               </div>
                             </div>
@@ -108,6 +107,8 @@
                         </div>
                       {{/each}}
                     </div>
+                  {{else}}
+                    <p class="text-center">No activity.</p>
                   {{/if}}
                 </div>
 
@@ -157,18 +158,17 @@
                             <div class="a-activity">
                               <div class="full-width">
                                 <div class="a-bar--space-between regular--stretched">
-                                  <div class="a-activity__caption">
-                                    {{{activity.caption}}}
+                                  <div class="a-activity__caption a-bar">
+                                    <span {{bind-attr class=":a-icon :entypo activity.entypoIcon :mr--slim" title="activity.firstTag"}}></span>
+                                    {{activity.user.name}} commented
                                   </div>
-
-                                  <div {{bind-attr class=":a-icon :entypo activity.entypoIcon" title="activity.firstTag"}}></div>
 
                                   <div {{action deleteActivity "research" activity}} class="a-button--naked">
                                     <div class="a-button__icon entypo circled-cross a-icon"></div>
                                   </div>
                                 </div>
 
-                                <div class="a-activity__body regular">
+                                <div class="a-activity__body regular--stretched">
                                   {{{activity.content}}}
                                 </div>
                               </div>
@@ -176,6 +176,8 @@
                           </div>
                         {{/each}}
                       </div>
+                    {{else}}
+                      <p class="text-center">No activity.</p>
                     {{/if}}
                   </div>
 
