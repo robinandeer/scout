@@ -3,9 +3,13 @@
   <div class="a-layout--vertical">
 
     <div class="header-style slim bb text-center">Open cases</div>
-    
+
+    <div class="loose bb">
+      {{input type='text' value=searchText classNames="a-form__input" placeholder="Filter cases" required=""}}
+    </div>
+
     <div class="a-layout__panel--full is-scrollable loose">
-      {{#each family in controller}}
+      {{#each family in filteredModel}}
         
         {{#unless family.isHidden}}
 
@@ -45,7 +49,7 @@
         {{/unless}}
 
       {{else}}
-        <h2 class="text-center">Loading...</h2>
+        <h2 class="text-center">No cases...</h2>
       {{/each}}
     </div>
 

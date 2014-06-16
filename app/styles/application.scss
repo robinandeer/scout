@@ -282,6 +282,12 @@ ic-menu-list {
   @extend .small-font;
 }
 
+.variant-list-item {
+  &:hover {
+    background-color: rgba(#000, .04);
+  }
+}
+
 .variants-header {
   @extend .small-font;
   box-shadow: 0 0 2px -1px #333;
@@ -294,9 +300,7 @@ ic-menu-list {
 .rank-score-column {
   &.active,
   &.active + div {
-    background: #2b84d3;
-    color: #fff;
-    border-right-color: rgba(#000, .2);
+    background-color: rgba(#2cc65e, .1);
   }
 }
 
@@ -305,6 +309,10 @@ ic-menu-list {
   &.undef {
     background-color: rgba(#000, .02);
     color: rgba(#000, 0);
+  }
+
+  &.active {
+    background-color: rgba(#2cc65e, .1);
   }
 }
 
