@@ -64,7 +64,7 @@ def logout():
   session.pop('google_token', None)
   flash('Logged out', 'success')
 
-  return redirect(request.referrer or url_for('frontend.index'))
+  return redirect(url_for('frontend.index'))
 
 
 @frontend.route('/authorized')
