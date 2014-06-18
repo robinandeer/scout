@@ -25,7 +25,7 @@
       <div class="center__wrapper big-font" title="rank score">
         <span class="a-icon icon-network mr--slim"></span>{{rankScore}}
 
-        (Family {{familyId}})
+        (Case {{familyId}})
       </div>
 
       <div class="a-toolbar__group a-button__group">
@@ -202,11 +202,11 @@
         </div>
 
         {{#each model in diseaseGeneModels}}
-          <div class="a-list__item slim">
+          <div class="a-list__item slim bb">
             <div class="dotdotdot big-font">{{model}}</div>
           </div>
         {{else}}
-          <div class="a-list__item slim">No models.</div>
+          <div class="a-list__item slim bb">No models.</div>
         {{/each}}
 
         {{#if reducedPenetrance}}

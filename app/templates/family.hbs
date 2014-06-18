@@ -29,7 +29,7 @@
         </div>
 
         <div class="a-list--horizontal a-well regular mb--big">
-          {{#each sample in samples}}
+          {{#each sample in altSamples}}
             <div class="a-list__item mr--listed">
               <div class="a-card a-list">
                 <div class="a-list__item--header slim">{{sample.idn}}</div>
@@ -38,7 +38,8 @@
                   Phenotype: {{sample.phenotype}}
                 </div>
                 <div class="a-list__item small slim">
-                  Inheritance models: {{sample.inheritance_model}}
+                  Inheritance models:<br>
+                  {{sample.inheritanceModelString}}
                 </div>
               </div>
             </div>
