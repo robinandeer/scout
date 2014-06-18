@@ -39,6 +39,7 @@
 
 .a-bar__item {
   @include flex-basis(100%);
+  @include align-self(stretch);
 }
 
 .a-bar__item--double {

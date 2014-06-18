@@ -2,23 +2,6 @@
   <div class="a-layout--vertical">
     <div class="a-layout__panel--full bb">
       <div class="variant-page-wrapper">
-        <div class="a-toolbar header-style slim b">
-          <div class="a-button">
-            <div class="a-button__icon icon-pencil a-icon"></div>
-            Edit case
-          </div>
-
-          <div class="a-button">
-            <div class="a-button__icon icon-add-user a-icon"></div>
-            <div>Add sample</div>
-          </div>
-
-          <div class="a-button">
-            <div class="a-button__icon icon-archive a-icon"></div>
-            <div>Archive case</div>
-          </div>
-        </div>
-
         <div class="a-card a-bar--space-between mb--big">
           <div class="a-bar__item br--listed center__wrapper regular">
             <span class="a-icon icon-users mr--slim"></span>
@@ -27,11 +10,18 @@
 
           <div class="a-bar__item br--listed center__wrapper regular">
             <span class="a-icon icon-clock mr--slim"></span>
-            Last updated {{fromNow updateDate}}
+            Updated {{fromNow updateDate}}
           </div>
 
           <div class="a-bar__item br--listed center__wrapper regular">
-            <span class="a-icon icon-numbered-list mr--slim"></span>
+            <div class="a-button">
+              <div class="a-button__icon icon-archive a-icon"></div>
+              <div>Archive case</div>
+            </div>
+          </div>
+
+          <div class="a-bar__item br--listed center__wrapper regular">
+            <span class="a-icon icon-list mr--slim"></span>
             {{#link-to "variants" instituteId model.id model.firstDatabase}}
               Go to variants
             {{/link-to}}

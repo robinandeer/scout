@@ -89,6 +89,10 @@ $activity-line-margin-left: 25px;
 	}
 }
 
+.a-activity__body {
+	overflow-x: auto;
+}
+
 .a-activity__divider__time {
 	font-size: 80%;
 	color: #979dac;
