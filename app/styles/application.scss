@@ -1,6 +1,5 @@
 @import '../../node_modules/node-bourbon/assets/stylesheets/bourbon';
 @import 'utils/flex-box';
-@import 'entypo';
 
 // RESET
 a {
@@ -9,6 +8,16 @@ a {
 
 // VARIABLES
 $border-color: #d8dae3;
+
+// ENTYPO
+[class^="icon-"], [class*=" icon-"] {
+  text-align: inherit;
+  width: auto;
+  color: #525f6b;
+  font-size: 1em;
+  font-weight: normal;
+  line-height: 0;
+}
 
 // +--------------------------------------------------------------------
 // |  WebKit font-smoothing - controvertial option, use responsibly!
@@ -313,6 +322,13 @@ ic-menu-list {
 
   &.active {
     background-color: rgba(#2cc65e, .1);
+  }
+}
+
+// Reset prev. rule for list of cases
+.a-card {
+  .active {
+    background: inherit;
   }
 }
 

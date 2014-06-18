@@ -1,10 +1,9 @@
 .a-icon {
 	// Pixel perfect icons should be crisp over smudgy
 	@include font-smoothing(antialiased);
-	font-family: Entypo;
 
 	// Guessing this is a good fit for icons/menu items
-	font-size: 35px;
+	font-size: 1.4em;
 
 	// Great for use with "align-items(center)" to avoid messing with layout
 	line-height: 0;

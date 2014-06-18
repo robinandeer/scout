@@ -3,7 +3,7 @@
     <div class="a-toolbar header-style slim b">
       <div class="a-toolbar__group a-button__group">
         <div class="a-button">
-          <div class="a-button__icon a-icon entypo chevron-left"></div>
+          <div class="a-button__icon a-icon icon-left-open-big"></div>
           {{#link-to "variants" instituteId familyId databaseId title="Back to all variants"}}
             <div>Variants</div>
           {{/link-to}}
@@ -11,31 +11,31 @@
 
         {{#if isHidden}}
           <div {{action "unHideInList"}} class="a-button">
-            <div class="a-button__icon a-icon entypo archive"></div>
+            <div class="a-button__icon a-icon icon-archive"></div>
             <div class="a-button__body">Unarchive</div>
           </div>
         {{else}}
           <div {{action "hideInList"}} class="a-button">
-            <div class="a-button__icon a-icon entypo archive"></div>
+            <div class="a-button__icon a-icon icon-archive"></div>
             <div class="a-button__body">Archive</div>
           </div>
         {{/if}}
       </div>
 
       <div class="center__wrapper big-font" title="rank score">
-        <span class="a-icon entypo network mr--slim"></span>{{rankScore}}
+        <span class="a-icon icon-network mr--slim"></span>{{rankScore}}
 
         (Family {{familyId}})
       </div>
 
       <div class="a-toolbar__group a-button__group">
         {{#ic-modal-trigger controls="order-sanger-form" tagName="div" classNames="a-button"}}
-          <div class="a-button__icon a-icon entypo cart"></div>
+          <div class="a-button__icon a-icon icon-basket"></div>
           <div class="a-button__body">Sanger</div>
         {{/ic-modal-trigger}}
 
         <div {{action "toggleProperty" "isShowingActivity"}} class="a-button" title="Toggle activity panel">
-          <div {{bind-attr class=":a-button__icon :a-icon :entypo :chat hasActivity:is-notifying"}}></div>
+          <div {{bind-attr class=":a-button__icon :a-icon :icon-chat hasActivity:is-notifying"}}></div>
           <div class="a-button__body">
             {{#if isShowingActivity}}
               Hide
@@ -50,24 +50,24 @@
 
     <div class="a-card a-bar--space-between mb--big">
       <div class="a-bar__item br center__wrapper regular" title="chromosome + position">
-        <span class="a-icon entypo location mr--slim"></span>
+        <span class="a-icon icon-location mr--slim"></span>
         <span {{bind-attr class="isMultiBase:small"}}>
           Chr{{chromosome}}-{{startBp}}{{#if isMultiBase}}-{{stopBp}}{{/if}}
         </span>
       </div>
 
       <div class="a-bar__item br center__wrapper regular" title="change">
-        <span class="a-icon entypo shuffle mr--slim"></span>
+        <span class="a-icon icon-shuffle mr--slim"></span>
         {{refNt}} &rarr; {{altNt}}
       </div>
 
       <div class="a-bar__item br center__wrapper regular" title="annotations">
-        <span {{bind-attr class=":a-icon :entypo isProbablyBenign:circled-info:warning :mr--slim"}}></span>
+        <span {{bind-attr class=":a-icon isProbablyBenign:icon-info-circled:icon-attention :mr--slim"}}></span>
         {{capitalize geneAnnotation}}
       </div>
 
       <div class="a-bar__item center__wrapper regular" title="annotations">
-        <span class="a-icon entypo tools mr--slim"></span>
+        <span class="a-icon icon-tools mr--slim"></span>
         {{#if functionalAnnotation}}
           {{capitalize functionalAnnotation}}
         {{else}}
@@ -88,14 +88,14 @@
             {{/unless}}
           </div>
 
-          <div class="a-icon--small entypo cycle"></div>
+          <div class="a-icon--small icon-arrows-ccw"></div>
         </div>
 
         <div class="a-list__item slim">{{ensemblGeneIdString}}</div>
 
         {{#if isFoundInOtherFamilies}}
           <div class="a-list__item--header center__wrapper slim">
-            <span class="entypo users"></span>
+            <span class="icon-users"></span>
             Other familes
           </div>
           <div class="max-height-135 is-scrollable">
@@ -208,6 +208,12 @@
         {{else}}
           <div class="a-list__item slim">No models.</div>
         {{/each}}
+
+        {{#if reducedPenetrance}}
+          <div class="a-list__item slim">
+            <strong>Reduced penetrance</strong>
+          </div>
+        {{/if}}
       </div>
 
       <div class="a-bar__item a-card a-list">
@@ -241,6 +247,36 @@
         </thead>
 
         <tbody class="a-table__body">
+          <tr class="a-table__row is-highlighted">
+            <td class="a-table__cell text-center dotdotdot">
+              {{gtData.combinedScore}}
+            </td>
+
+            <td class="a-table__cell text-center dotdotdot">
+              {{#link-to "variant" gtData.variant}}
+                {{gtData.rankScore}}
+              {{/link-to}}
+            </td>
+
+            {{#each gtcall in gtcallsBySampleId}}
+              <td class="a-table__cell text-center dotdotdot">
+                {{gtcall.gt}}
+              </td>
+            {{/each}}
+
+            <td class="a-table__cell dotdotdot">
+              {{gtData.geneModel}}
+            </td>
+
+            <td class="a-table__cell dotdotdot">
+              {{gtData.geneAnnotation}}
+            </td>
+
+            <td class="a-table__cell dotdotdot">
+              {{gtData.functionalAnnotation}}
+            </td>
+          </tr>
+
           {{#each compound in compounds}}
             <tr class="a-table__row">
               <td class="a-table__cell text-center">
@@ -270,7 +306,7 @@
       </a>
 
       <a {{bind-attr href="hpaLink"}} class="a-button" target="_blank">
-        <div class="a-button__icon a-icon entypo map"></div>
+        <div class="a-button__icon a-icon icon-map"></div>
         <div class="a-button__body">HPA</div>
       </a>
 
@@ -291,7 +327,7 @@
       </a>
 
       <a {{bind-attr href="igvLink"}} class="a-button" target="_blank">
-        <div class="a-button__icon a-icon entypo open-book"></div>
+        <div class="a-button__icon a-icon icon-book-open"></div>
         <div class="a-button__body">IGV</div>
       </a>
     </div>
@@ -312,11 +348,11 @@
     {{else}}
       <div class="a-button__group">
         {{#ic-modal-trigger classNames="a-button"}}
-          <div class="a-button__icon a-icon entypo circled-cross"></div>
+          <div class="a-button__icon a-icon icon-cancel-circled"></div>
           <div class="a-button__body">Cancel</div>
         {{/ic-modal-trigger}}
         <button type="submit" class="a-button">
-          <div class="a-button__icon a-icon entypo paper-plane"></div>
+          <div class="a-button__icon a-icon icon-paper-plane"></div>
           <div class="a-button__body">Send</div>
         </button>
       </div>
@@ -352,7 +388,7 @@
                       </div>
 
                       <div {{action "deleteActivity" activity}} class="a-button--naked">
-                        <div class="a-button__icon entypo circled-cross a-icon"></div>
+                        <div class="a-button__icon icon-cancel-circled a-icon"></div>
                       </div>
                     </div>
 

@@ -143,9 +143,9 @@
                               Combined score
                             </th>
                             <th class="a-table__cell--header">Rank score</th>
-                            {{#each sample in variant.compounds.content.0.samples}}
+                            {{#each gtcall in variant.compounds.content.0.gtcalls}}
                               <th class="a-table__cell--header dotdotdot">
-                                {{sample}}
+                                {{gtcall.sampleId}}
                               </th>
                             {{/each}}
                             <th class="a-table__cell--header">
@@ -235,7 +235,7 @@
 
                 {{!-- COLUMN --}}
                 <div {{action "hideVariant" variant}} class="a-bar__item--half a-bar--center slim--squashed br--listed is-clickable">
-                  <div class="a-icon entypo archive"></div>
+                  <div class="a-icon icon-archive"></div>
                 </div>
               {{/unless}}
             </div>
@@ -247,7 +247,7 @@
 
           <div class="a-list__item slim">
             <div {{action "loadMore"}} class="a-button center__wrapper">
-              <div class="a-button__icon a-icon entypo infinity"></div>
+              <div class="a-button__icon a-icon icon-infinity"></div>
               <div class="a-button__body big-font">Load more...</div>
             </div>
           </div>
@@ -272,12 +272,12 @@
 
             <div class="a-button__group">
               <div {{action "doFilter"}} class="a-button">
-                <div class="a-button__icon a-icon entypo ccw"></div>
+                <div class="a-button__icon a-icon icon-ccw"></div>
                 <div class="a-button__body">Update variants</div>
               </div>
 
               <div {{action "toggleProperty" "isShowingFilters"}} class="a-button">
-                <div class="a-button__icon a-icon entypo hair-cross"></div>
+                <div class="a-button__icon a-icon icon-target"></div>
                 <div class="a-button__body">
                   {{#unless isShowingFilters}} Show {{else}} Hide {{/unless}}
                   filters
@@ -296,12 +296,12 @@
         <div class="filter-panel a-layout__panel--quarter a-list br--listed">
           <div class="a-bar--space-between slim bb">
             <div {{action "doFilterClinically"}} class="a-button">
-              <div class="a-button__icon a-icon entypo lifebuoy"></div>
+              <div class="a-button__icon a-icon icon-lifebuoy"></div>
               <div class="a-button__body">Clinical filter</div>
             </div>
 
             <div {{action "doClearFilters"}} class="a-button">
-              <div class="a-button__icon a-icon entypo circled-cross"></div>
+              <div class="a-button__icon a-icon icon-cancel-circled"></div>
               <div class="a-button__body">Clear</div>
             </div>
           </div>
