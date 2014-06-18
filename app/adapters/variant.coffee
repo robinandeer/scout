@@ -9,7 +9,7 @@ module.exports = App.VariantAdapter = Ember.Adapter.extend
         # If boolean query parameter
         if value is yes
           queryString += "#{key}&"
-        else if value isnt 'undefined'
+        else if value not in ['undefined', 'false']
           queryString += "#{key}=#{value}&"
 
     # Return the query string after removing trailing '&'
