@@ -45,11 +45,11 @@ App.Variant = Ember.Model.extend
   # Severity predictions
   siftWholeExome: Em.attr()
   polyphenDivHuman: Em.attr()
-  gerpWholeExome: Em.attr()
+  polyphenVarHuman: Em.attr()
   mutationTaster: Em.attr()
   severities: (->
     severities = []
-    properties = ['siftWholeExome', 'polyphenDivHuman', 'gerpWholeExome',
+    properties = ['siftWholeExome', 'polyphenDivHuman', 'polyphenVarHuman',
                   'mutationTaster']
     for property in properties
       if @get property
@@ -59,7 +59,7 @@ App.Variant = Ember.Model.extend
           value: @get property
 
     return severities
-  ).property('siftWholeExome', 'polyphenDivHuman', 'gerpWholeExome',
+  ).property('siftWholeExome', 'polyphenDivHuman', 'polyphenVarHuman',
              'mutationTaster')
   scaledCscoreThousandG: Em.attr()
   unscaledCscoreThousandG: Em.attr()
@@ -121,13 +121,13 @@ App.Variant = Ember.Model.extend
     return parseInt((@get('phastConstElements') or '').split(';')[0].replace(/Score=/, ''))
   ).property 'phastConstElements'
   gerpElement: Em.attr()
-  polyphenVarHuman: Em.attr()
+  gerpWholeExome: Em.attr()
 
   conservations: (->
     conservations = []
     for property in ['phylopWholeExome', 'lrtWholeExome',
                      'phastConstElementsScore', 'gerpElement',
-                     'polyphenVarHuman']
+                     'gerpWholeExome']
       if @get property
         conservations.push
           id: property
@@ -136,7 +136,7 @@ App.Variant = Ember.Model.extend
 
     return conservations
   ).property 'phylopWholeExome', 'lrtWholeExome', 'phastConstElementsScore',
-             'gerpElement', 'polyphenVarHuman'
+             'gerpElement', 'gerpWholeExome'
 
   # Disease gene annotations
   hgmd: Em.attr(ReplaceNull)
@@ -179,6 +179,8 @@ App.Variant = Ember.Model.extend
   diseaseGeneModels: (->
     return (@get('diseaseGeneModel') or '').split(',')
   ).property 'diseaseGeneModel'
+
+  reducedPenetrance: Em.attr()
 
   otherFamilies: (->
     if @get 'isFoundInOtherFamilies'

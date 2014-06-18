@@ -1,7 +1,7 @@
 <div class="issue-box">
-  {{#if model.isLoading}}
+  {{#unless model.isLoaded}}
     <div class="center__wrapper">
-      <img src="/static/img/loader.gif">
+      <p>Loading issues...</p>
     </div>
   {{else}}
     <h2>
@@ -9,5 +9,5 @@
       <small>{{fromNow createdAt}}</small>
     </h2>
     {{{html}}}
-  {{/if}}
+  {{/unless}}
 </div>

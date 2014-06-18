@@ -4,12 +4,15 @@
 
     <div class="header-style slim bb text-center">Open cases</div>
 
-    <div class="loose bb">
-      {{input type='text' value=searchText classNames="a-form__input" placeholder="Filter cases" required=""}}
-    </div>
+    <form {{action "goToFamily" on="submit"}} class="a-bar loose bb">
+      {{input type="text" value=searchText classNames="a-form__input mr" placeholder="Go to family" required=""}}
+      <button type="submit" class="a-button stretch-self">
+        <div class="a-button__body big-font">Go</div>
+      </button>
+    </form>
 
     <div class="a-layout__panel--full is-scrollable loose">
-      {{#each family in filteredModel}}
+      {{#each family in controller}}
         
         {{#unless family.isHidden}}
 

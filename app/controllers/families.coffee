@@ -5,23 +5,17 @@ module.exports = App.FamiliesController = Ember.ArrayController.extend
   sortAscending: no
 
   instituteIdBinding: 'controllers.institute.id'
+  searchText: undefined
 
   actions:
     hideFamily: (family) ->
       # Add variant to the list of hidden elements (localStorage)
       family.get('model').hide()
 
+    goToFamily: ->
+      familyId = @get('searchText')
+      @transitionToRoute 'family', App.Family.find(familyId)
+
   model: (->
     return App.Family.find({institute: @get('instituteId')})
   ).property 'instituteId'
-
-  searchText: undefined
-  filteredModel: (->
-    model = @get('model')
-    searchText = @get('searchText')
-    if searchText
-      return model.filter (item, index, self) ->
-        return item.get('id').toString().startsWith(searchText)
-    else
-      return model
-  ).property 'model.@each.id', 'searchText'
