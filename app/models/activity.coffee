@@ -27,11 +27,11 @@ App.Activity = Ember.Model.extend
   entypoIcon: (->
     tag = @get 'firstTag'
     if tag is 'action'
-      return 'new'
+      return 'icon-alert'
     else if tag is 'conclusion'
-      return 'check'
+      return 'icon-check'
     else  # 'finding' by default
-      return 'search'
+      return 'icon-search'
   ).property 'firstTag'
 
 
