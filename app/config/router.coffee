@@ -8,3 +8,4 @@ module.exports = App.Router.map ->
     @resource 'family', { path: '/:family_id' }
   @resource 'variants', { path: '/variants/:institute_id/:family_id/:database_id' }, ->
     @resource 'variant', { path: '/:variant_id' }
+  @resource 'new'
