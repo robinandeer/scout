@@ -80,9 +80,9 @@
       <div class="a-bar__item a-card a-list br mr">
         <div class="a-list__item--header text-center slim">General</div>
         <div {{action "toggleProperty" "isShowingFullGeneName"}} class="a-list__item a-bar--space-between slim dotdotdot is-clickable">
-          <div>
+          <div class="big-font">
             {{#unless isShowingFullGeneName}}
-              <strong class="big-font">{{hgncSymbol}}</strong> <small>{{hgncSynonymsString}}</small>
+              <strong>{{hgncSymbol}}</strong> <small>{{hgncSynonymsString}}</small>
             {{else}}
               {{capitalize hgncApprovedName}}
             {{/unless}}

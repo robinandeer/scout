@@ -11,7 +11,7 @@
 
         <div class="a-layout__panel--full a-list">
           {{#each issue in model}}
-            {{#link-to "issue" issue.id classNames="a-list__item regular"}}
+            {{#link-to "issue" issue.id classNames="a-list__item regular bb"}}
               {{issue.title}}
               <small>{{fromNow issue.createdAt}}</small>
             {{/link-to}}

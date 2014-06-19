@@ -37,10 +37,12 @@
                 <div class="a-list__item small slim">
                   Phenotype: {{sample.phenotype}}
                 </div>
-                <div class="a-list__item small slim">
-                  Inheritance models:<br>
-                  {{sample.inheritanceModelString}}
-                </div>
+                {{#if sample.inheritanceModelString}}
+                  <div class="a-list__item small slim">
+                    Inheritance models:<br>
+                    {{sample.inheritanceModelString}}
+                  </div>
+                {{/if}}
               </div>
             </div>
           {{/each}}

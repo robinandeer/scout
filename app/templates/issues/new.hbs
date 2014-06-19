@@ -11,12 +11,12 @@
 
     {{#if isConfirmingSubmit}}
       <button type="submit" class="a-button">
-        <div class="a-button__icon a-icon">&#59140;</div>
+        <div class="a-button__icon icon-check"></div>
         <div class="a-button__body">Are you sure?</div>
       </button>
     {{else}}
       <button {{action "toggleProperty" "isConfirmingSubmit"}} class="a-button">
-        <div class="a-button__icon a-icon">&#128319;</div>
+        <div class="a-button__icon icon-paper-plane"></div>
         <div class="a-button__body">Send</div>
       </button>
     {{/if}}
