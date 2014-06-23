@@ -7,6 +7,7 @@ from .utils import make_dir, INSTANCE_FOLDER_PATH
 class BaseConfig(object):
 
   PROJECT = 'server'
+  NAME = PROJECT
 
   # Get app root path, also can use flask.root_path.
   # ../../config.py
@@ -25,6 +26,8 @@ class BaseConfig(object):
 
 
 class DefaultConfig(BaseConfig):
+
+  NAME = 'scout'
 
   DEBUG = True
 
@@ -50,4 +53,3 @@ class DefaultConfig(BaseConfig):
 class TestConfig(BaseConfig):
 
   TESTING = True
-

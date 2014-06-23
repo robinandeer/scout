@@ -5,7 +5,7 @@
 from datetime import timedelta
 import os
 
-from flask import Flask, render_template, session, current_app
+from flask import Flask, render_template, session
 from flask_sslify import SSLify
 
 from .api import api
@@ -50,7 +50,8 @@ def configure_app(app, config=None):
   app.config.from_object(DefaultConfig)
 
   # http://flask.pocoo.org/docs/config/#instance-folders
-  app.config.from_pyfile((config or 'scout.cfg'), silent=True)
+  config_file = (config or ('%s.cfg' % app.config['NAME']))
+  app.config.from_pyfile(config_file, silent=True)
 
   # Set the timeout for our session to 30 days.
   # The session will be lost after 30 days with no interaction form
@@ -126,13 +127,14 @@ def configure_logging(app):
     return
 
   import logging
-  from logging.handlers import RotatingFileHandler, SMTPHandler
+  from logging.handlers import RotatingFileHandler
+  from .handlers import TlsSMTPHandler
 
   # Set info level on logger which might be overwritten by handlers
   # Suppress DEBUG messages
   app.logger.setLevel(logging.INFO)
 
-  log_name = '%s.log' % (app.config.get('PROJECT'))
+  log_name = '%s.log' % app.config['NAME']
   info_log = os.path.join(app.config['LOG_FOLDER'], log_name)
   info_log_handler = RotatingFileHandler(
     info_log, maxBytes=100000, backupCount=10)
@@ -148,11 +150,11 @@ def configure_logging(app):
   werkzeug_log.setLevel(logging.INFO)
   werkzeug_log.addHandler(info_log_handler)
 
-  mail_handler = SMTPHandler(
-    app.config['MAIL_SERVER'],
+  mail_handler = TlsSMTPHandler(
+    (app.config['MAIL_SERVER'], app.config['MAIL_PORT']),
     app.config['MAIL_USERNAME'],
     app.config['ADMINS'],
-    'O_ops... %s failed!' % app.config['PROJECT'],
+    'O_ops... %s failed!' % app.config['NAME'],
     (app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'])
   )
   mail_handler.setLevel(logging.ERROR)
@@ -174,5 +176,4 @@ def configure_error_handlers(app):
 
   @app.errorhandler(500)
   def server_error_page(error):
-    current_app.logger.exception(error)
     return render_template('errors/server_error.html'), 500
