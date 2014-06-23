@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from flask import abort, Blueprint, flash, redirect, request, session, \
-  url_for, current_app
-from flask.ext.login import confirm_login, current_user, login_required, \
-  login_user, logout_user
+from flask import (abort, Blueprint, flash, redirect, request, session,
+  url_for, current_app)
+from flask.ext.login import (confirm_login, current_user, login_required,
+  login_user, logout_user)
 import requests
 
 from ..decorators import templated

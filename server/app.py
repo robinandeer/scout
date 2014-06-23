@@ -132,7 +132,8 @@ def configure_logging(app):
   # Suppress DEBUG messages
   app.logger.setLevel(logging.INFO)
 
-  info_log = os.path.join(app.config['LOG_FOLDER'], 'info.log')
+  log_name = '%s.log' % (app.config.get('PROJECT'))
+  info_log = os.path.join(app.config['LOG_FOLDER'], log_name)
   info_log_handler = RotatingFileHandler(
     info_log, maxBytes=100000, backupCount=10)
   info_log_handler.setLevel(logging.INFO)
@@ -141,6 +142,11 @@ def configure_logging(app):
     '[in %(pathname)s:%(lineno)d]')
   )
   app.logger.addHandler(info_log_handler)
+
+  # Also write default Weekzeug log (INFO) to the main log-file
+  werkzeug_log = logging.getLogger('werkzeug')
+  werkzeug_log.setLevel(logging.INFO)
+  werkzeug_log.addHandler(info_log_handler)
 
   mail_handler = SMTPHandler(
     app.config['MAIL_SERVER'],
