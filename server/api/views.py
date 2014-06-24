@@ -169,7 +169,7 @@ def issues(issue_id=None):
     body = """{body}
 
 submitted by **{author}**.
-    """.format(body=request.json['body'].encode('utf-8'),
+    """.format(body=request.json.get('body', '').encode('utf-8'),
                author=current_user.get('name').encode('utf-8'))
 
     # Create the new isssue
