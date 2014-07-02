@@ -13,7 +13,7 @@
       <p>Please upgrade to <a class="green" href="https://www.google.com/intl/en/chrome/browser/">Chrome</a>, <a class="green" href="http://www.mozilla.org/en-US/firefox/new/#">Firefox</a>, or <a class="green" href="http://support.apple.com/downloads/#safari">Safari</a>.</p>
 
       <div class="logo chrome">
-        <img src="{{ url_for('static' filename='img/chrome.png') }}">
+        <img src="{{ url_for('static', filename='img/chrome.png') }}">
       </div>
     </div>
   </div>
@@ -21,7 +21,11 @@
 {% endblock %}
 
 {% block js_btm %}
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
   <script>
-    $('.warning-browser').html(navigator.sayswho);
+    $(function(){
+      $('.warning-browser').html(navigator.sayswho);
+    });
   </script>
 {% endblock %}
