@@ -33,6 +33,11 @@ body,
   -ms-justify-content: center;
   -o-justify-content: center;
   justify-content: center;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  -o-flex-direction: column;
+  flex-direction: column;
   -webkit-flex: 1;
   -moz-flex: 1;
   -ms-flex: 1;
@@ -75,4 +80,8 @@ body,
 
 .link:active {
   background: #c92e27;
+}
+
+.flashes {
+  font-size: 1.5em;
 }

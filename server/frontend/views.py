@@ -3,6 +3,7 @@ from flask import (abort, Blueprint, flash, redirect, request, session,
   url_for, current_app)
 from flask.ext.login import (confirm_login, current_user, login_required,
   login_user, logout_user)
+from flask_oauthlib.client import OAuthException
 import requests
 
 from ..decorators import templated
@@ -79,6 +80,11 @@ def authorized(oauth_response):
 
     return abort(403)
 
+  elif isinstance(oauth_response, OAuthException):
+    current_app.logger.warning(oauth_response.message)
+    flash('%s - try again!' % oauth_response.message)
+    return redirect(url_for('frontend.index'))
+
   # Add token to session, do it before validation to be able to fetch
   # additional data (like email) on the authenticated user
   session['google_token'] = (oauth_response['access_token'], '')
@@ -94,7 +100,7 @@ def authorized(oauth_response):
   validation = requests.get(url).json()
 
   if 'Error' in validation:
-    flash(validation.get('Error'))
+    flash('Access denied: %s' % validation.get('Error'))
     return abort(403)
 
   # Check if user is already in the database

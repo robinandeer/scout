@@ -13,6 +13,16 @@
       <a class="link" href="{{ url_for('frontend.login') }}">
         Connect with Google
       </a>
+
+      {% with messages = get_flashed_messages() %}
+        <ul class="flashes">
+          {% if messages %}
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          {% endif %}
+        </ul>
+      {% endwith %}
     </div>
 
     <div class="footer">

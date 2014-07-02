@@ -5,12 +5,23 @@
 {% block body %}
   <h1>Forbidden Page <span>:(</span></h1>
   <p>You shall NOT pass!</p>
+
   <p>It looks like this was the result of either:</p>
-  <ul>
-    <li>no permission</li>
-  </ul>
+  {% with messages = get_flashed_messages() %}
+    <ul class="flashes">
+      <li>No permission</li>
+
+      {% if messages %}
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      {% endif %}
+    </ul>
+  {% endwith %}
+
   <script>
       var GOOG_FIXURL_LANG = (navigator.language || '').slice(0,2),GOOG_FIXURL_SITE = location.host;
   </script>
+
   <script src="http://linkhelp.clients.google.com/tbproxy/lh/wm/fixurl.js"></script>
 {% endblock %}
