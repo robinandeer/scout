@@ -26,6 +26,8 @@ module.exports = App.VariantsRoute = Ember.Route.extend
       database: params.database_id
       database_id: null
 
+    variantsController.set 'latestQueryParams', queryParams
+
     App.Variant.find
       family_id: params.family_id
       queryParams: queryParams
