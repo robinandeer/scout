@@ -158,7 +158,7 @@ App.Variant = Ember.Model.extend
   # Inheritance models
   geneModel: Em.attr(ReplaceNull)
   hasCompounds: (->
-    return (@get('geneModel') or '').indexOf('compound') != -1
+    return (@get('geneModel') or '').indexOf('AR_comp') != -1
   ).property 'geneModel'
   geneModels: (->
     modelString = @get('geneModel')
