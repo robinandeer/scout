@@ -28,6 +28,9 @@
         </div>
 
         <div class="a-layout__panel--full is-scrollable variants-main">
+          {{#if model.isLoading}}
+            <h2 class="text-center">Loading...</h2>
+          {{/if}}
           {{#each variant in controller}}
             {{#unless variant.isHidden}}
             <div class="a-list__item a-bar--space-between variant-list-item">
@@ -45,12 +48,12 @@
                   <div class="a-notify--fake"></div>
                 {{/if}}
               {{/link-to}}
-              
+
               {{!-- COLUMN --}}
               <div class="dotdotdot slim a-bar__item--half br--listed">
                 {{variant.hgncSymbol}}
               </div>
-              
+
               {{#unless variantIsLoaded}}
                 {{!-- COLUMN --}}
                 <div {{bind-attr class=":slim :a-bar__item--half variant.isFoundInOtherFamilies:a-bar--space-between variant.thousandG::undef :br--listed"}}>
@@ -171,7 +174,7 @@
                                 {{variant.gtData.rankScore}}
                               {{/link-to}}
                             </td>
-                            
+
                             {{#each gtcall in variant.gtData.gtcalls}}
                               <td class="a-table__cell dotdotdot text-center">
                                 {{gtcall}}
@@ -219,7 +222,7 @@
 
                               <td class="a-table__cell dotdotdot">
                                 {{compound.functionalAnnotation}}
-                              </td>                              
+                              </td>
                             </tr>
                           {{/each}}
                         </tbody>
@@ -231,7 +234,7 @@
                 {{!-- COLUMN --}}
                 <div {{bind-attr class=":dotdotdot :slim :a-bar__item--half variant.hgmdVariantType::undef :br--listed"}}>
                   {{fallback variant.hgmdVariantType}}
-                </div>        
+                </div>
 
                 {{!-- COLUMN --}}
                 <div {{action "hideVariant" variant}} class="a-bar__item--half a-bar--center slim--squashed br--listed is-clickable">
@@ -242,17 +245,22 @@
             {{/unless}}
 
           {{else}}
-            <h2 class="text-center">Loading...</h2>
+            {{#if model.isLoaded}}
+              <h2 class="text-center">No matching variants found.</h2>
+              <p class="text-center">
+                Try changing or deselecting some filters.
+              </p>
+            {{/if}}
           {{/each}}
 
           <div class="a-list__item slim">
             <div {{action "loadMore"}} class="a-button center__wrapper">
               <div class="a-button__icon a-icon icon-infinity"></div>
-              <div class="a-button__body big-font">Load more...</div>
+              <div class="a-button__body big-font">Load more</div>
             </div>
           </div>
         </div>
-        
+
         {{#unless variantIsLoaded}}
           {{! "Floating" footer }}
           <div class="a-layout__footer a-toolbar slim bt">
