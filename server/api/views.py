@@ -18,7 +18,6 @@ api = Blueprint('api', __name__, url_prefix='/api/v1')
 
 
 @api.route('/remote/static/<path:path>', methods=['GET'])
-@login_required
 def remote_static(path):
   """Route incoming API calls to the Tornado backend and sends JSON response"""
   # Check if GET 206
