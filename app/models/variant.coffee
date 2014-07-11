@@ -224,10 +224,6 @@ App.Variant = Ember.Model.extend
   ).property 'gtcalls.length', 'rankScore', 'geneModel', 'geneAnnotation',
              'functionalAnnotation'
 
-  compounds: (->
-    return App.Compound.find { variant_id: @get('id') }
-  ).property 'id'
-
   # Misc.
   locationReliability: Em.attr()
   functionalAnnotation: Em.attr(ReplaceNull)

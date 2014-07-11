@@ -109,6 +109,12 @@ module.exports = App.VariantController = Ember.ObjectController.extend
     return gtcalls
   ).property 'gtcalls.@each.idn', 'gtcalls.@each.gt'
 
+  compounds: (->
+    return App.Compound.find
+      variant_id: @get('id')
+      institute: @get('instituteId')
+  ).property 'id', 'instituteId'
+
   sangerEmailBody: (->
     functions = ("<li>#{func}</li>" for func in @get('variantFunctions'))
     gtcalls = ("<li>#{gtcall}</li>" for gtcall in @get('gtString'))

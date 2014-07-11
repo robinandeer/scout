@@ -96,10 +96,6 @@ module.exports = App.VariantsController = Ember.ArrayController.extend
 
       moreVariants.addObserver 'isLoaded', @, @loadMoreVariants
 
-    hideVariant: (variant) ->
-      # Add variant to the list of hidden elements (localStorage)
-      variant.hide()
-
   loadMoreVariants: (moreVariants) ->
     model = @get('model').pushObjects moreVariants.content
     @incrementProperty 'loadedVariants', 100

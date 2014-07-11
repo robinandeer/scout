@@ -1,0 +1,208 @@
+
+{{!-- COLUMN --}}
+{{#link-to "variant" variant
+           classNames="dotdotdot slim a-bar__item--half a-bar--space-around rank-score-column br"}}
+  <div>{{model.rankScore}}</div>
+
+  {{#if model.hasCompounds}}
+    <div class="a-notify">
+      {{model.individualRankScore}}
+    </div>
+  {{else}}
+    {{!-- Just fill-out --}}
+    <div class="a-notify--fake"></div>
+  {{/if}}
+{{/link-to}}
+
+{{!-- COLUMN --}}
+<div class="dotdotdot slim a-bar__item--half br--listed">
+  {{model.hgncSymbol}}
+</div>
+
+{{#unless variantIsLoaded}}
+  {{!-- COLUMN --}}
+  <div {{bind-attr class=":slim :a-bar__item--half model.isFoundInOtherFamilies:a-bar--space-between model.thousandG::undef :br--listed"}}>
+    {{#if model.isFoundInOtherFamilies}}
+      <div {{bind-attr class=":a-notify--bubble model.hbvdbHuman"}}>
+        &nbsp;
+      </div>
+    {{/if}}
+
+    <div class="text-right">
+      {{fallback model.thousandG}}
+    </div>
+
+    {{#if model.frequencies}}
+      {{#a-popover triggerdBy="hover" direction="right" classNames="slim"}}
+        <div class="always-visible-text">
+          {{#each property in model.frequencies}}
+            <div class="a-bar--space-between">
+              <div class="dotdotdot slim">
+                <strong>{{property.name}}</strong>
+              </div>
+              <div class="slim text-right">
+                {{fallback property.value}}
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      {{/a-popover}}
+    {{/if}}
+  </div>
+
+  {{!-- COLUMN --}}
+  <div {{bind-attr class=":slim :a-bar__item--half model.polyphenDivHuman::undef :br--listed"}}>
+    <div class="text-right">
+      {{fallback model.polyphenDivHuman}}
+    </div>
+
+    {{#if model.severities}}
+      {{#a-popover triggerdBy="hover" direction="right" classNames="slim"}}
+        <div class="always-visible-text">
+          {{#each property in model.severities}}
+            <div class="a-bar--space-between">
+              <div class="dotdotdot slim">
+                <strong>{{property.name}}</strong>
+              </div>
+              <div class="slim text-right">
+                {{fallback property.value}}
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      {{/a-popover}}
+    {{/if}}
+  </div>
+
+  {{!-- COLUMN --}}
+  <div {{bind-attr class=":dotdotdot :slim :a-bar__item model.geneAnnotation::undef :br--listed"}}>
+    {{fallback model.geneAnnotation}}
+  </div>
+
+  {{!-- COLUMN --}}
+  <div {{bind-attr class=":dotdotdot :slim :a-bar__item model.functionalAnnotation::undef :br--listed"}}>
+    {{fallback model.functionalAnnotation}}
+  </div>
+
+  {{#unless researchMode}}
+    {{!-- COLUMN --}}
+    <div {{bind-attr class=":dotdotdot :slim :a-bar__item--double :br--listed model.diseaseGroup::undef"}}>
+      {{fallback model.diseaseGroup}}
+    </div>
+
+    {{!-- COLUMN --}}
+    <div class="dotdotdot slim a-bar__item--half br--listed">
+      {{model.diseaseGeneModel}}
+    </div>
+  {{/unless}}
+
+  {{!-- COLUMN --}}
+  <div class="a-bar__item--double slim--squashed a-bar br--listed">
+    {{#each model in model.geneModels}}
+      <div {{bind-attr title="model"}} class="dotdotdot br--listed slim">{{model}}</div>
+    {{/each}}
+
+    {{#if model.hasCompounds}}
+      {{#a-popover triggerdBy="hover" direction="left" classNames="slim"}}
+        <table class="a-table">
+          <thead class="a-table__head">
+            <tr class="a-table__row">
+              <th class="a-table__cell--header">
+                Combined score
+              </th>
+              <th class="a-table__cell--header">Rank score</th>
+              {{#each gtcall in compounds.content.0.gtcalls}}
+                <th class="a-table__cell--header dotdotdot">
+                  {{gtcall.sampleId}}
+                </th>
+              {{/each}}
+              <th class="a-table__cell--header">
+                Inheritance models
+              </th>
+              <th class="a-table__cell--header">
+                Gene annotations
+              </th>
+              <th class="a-table__cell--header">
+                Functional annotation
+              </th>
+            </tr>
+          </thead>
+
+          <tbody class="a-table__body">
+            <tr class="a-table__row is-highlighted">
+              <td class="a-table__cell dotdotdot">
+                {{model.gtData.combinedScore}}
+              </td>
+
+              <td class="a-table__cell dotdotdot">
+                {{#link-to "variant" model.gtData.variant}}
+                  {{model.gtData.rankScore}}
+                {{/link-to}}
+              </td>
+
+              {{#each gtcall in model.gtData.gtcalls}}
+                <td class="a-table__cell dotdotdot text-center">
+                  {{gtcall}}
+                </td>
+              {{/each}}
+
+              <td class="a-table__cell dotdotdot">
+                {{model.gtData.geneModel}}
+              </td>
+
+              <td class="a-table__cell dotdotdot">
+                {{model.gtData.geneAnnotation}}
+              </td>
+
+              <td class="a-table__cell dotdotdot">
+                {{model.gtData.functionalAnnotation}}
+              </td>
+            </tr>
+
+            {{#each compound in compounds}}
+              <tr class="a-table__row">
+                <td class="a-table__cell dotdotdot">
+                  {{compound.combinedScore}}
+                </td>
+
+                <td class="a-table__cell dotdotdot">
+                  {{#link-to "variant" compound.variant}}
+                    {{compound.rankScore}}
+                  {{/link-to}}
+                </td>
+
+                {{#each gtcall in compound.gtcalls}}
+                  <td class="a-table__cell dotdotdot text-center">
+                    {{gtcall.genotype}}
+                  </td>
+                {{/each}}
+
+                <td class="a-table__cell dotdotdot">
+                  {{compound.geneModel}}
+                </td>
+
+                <td class="a-table__cell dotdotdot">
+                  {{compound.geneAnnotation}}
+                </td>
+
+                <td class="a-table__cell dotdotdot">
+                  {{compound.functionalAnnotation}}
+                </td>
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
+      {{/a-popover}}
+    {{/if}}
+  </div>
+
+  {{!-- COLUMN --}}
+  <div {{bind-attr class=":dotdotdot :slim :a-bar__item--half model.hgmdVariantType::undef :br--listed"}}>
+    {{fallback model.hgmdVariantType}}
+  </div>
+
+  {{!-- COLUMN --}}
+  <div {{action "hide"}} class="a-bar__item--half a-bar--center slim--squashed br--listed is-clickable">
+    <div class="a-icon icon-archive"></div>
+  </div>
+{{/unless}}
