@@ -1,4 +1,6 @@
 module.exports = App.ListVariantComponent = Ember.Component.extend
+  minify: no
+
   actions:
     hide: ->
       # Add variant to the list of hidden elements (localStorage)

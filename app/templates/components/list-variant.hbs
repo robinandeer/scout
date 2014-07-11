@@ -1,6 +1,5 @@
-
 {{!-- COLUMN --}}
-{{#link-to "variant" variant
+{{#link-to "variant" model
            classNames="dotdotdot slim a-bar__item--half a-bar--space-around rank-score-column br"}}
   <div>{{model.rankScore}}</div>
 
@@ -19,7 +18,7 @@
   {{model.hgncSymbol}}
 </div>
 
-{{#unless variantIsLoaded}}
+{{#unless minify}}
   {{!-- COLUMN --}}
   <div {{bind-attr class=":slim :a-bar__item--half model.isFoundInOtherFamilies:a-bar--space-between model.thousandG::undef :br--listed"}}>
     {{#if model.isFoundInOtherFamilies}}

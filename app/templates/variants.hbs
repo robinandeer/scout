@@ -33,7 +33,7 @@
           {{/if}}
           {{#each variant in controller}}
             {{#unless variant.isHidden}}
-              {{list-variant model=variant instituteId=instituteId classNames="a-list__item a-bar--space-between variant-list-item"}}
+              {{list-variant model=variant instituteId=instituteId minify=variantIsLoaded classNames="a-list__item a-bar--space-between variant-list-item"}}
             {{/unless}}
 
           {{else}}
