@@ -42,6 +42,7 @@ module.exports = App.VariantController = Ember.ObjectController.extend
         userId: @get 'user._id'
         caption: "#{@get('user.firstName')} commented on family #{@get('familyId')}"
         content: @get('logActivityContent')
+        category: @get('logActivityType').toLowerCase()
 
       activity.save().then((newObject) =>
         @get('logActivities').pushObject(newObject)
@@ -57,8 +58,7 @@ module.exports = App.VariantController = Ember.ObjectController.extend
         message: @get('sangerEmailBody')
         hgnc_symbol: @get('hgncSymbol')
 
-      event.returnValue = $.post('/api/v1/sanger', payload)
-      .then( (data) =>
+      event.returnValue = $.post('/api/v1/sanger', payload).then( (data) =>
 
         caption = "#{@get('user.firstName')} ordered Sanger for #{@get('hgncSymbol')} <a class='activity-caption-link' href='/#{window.location.hash}'>#{@get('uniqueId')}</a>"
 
