@@ -218,7 +218,7 @@ module.exports = App.VariantController = Ember.ObjectController.extend
   ).property 'omim.OMIM_ID'
 
   igvLink: (->
-    return "#{location.origin}/api/v1/variants/#{@get('id')}/igv.xml?host=#{location.origin}"
+    return "#{location.origin}/api/v1/variants/#{@get('id')}/igv.xml?origin=#{location.origin}"
   ).property 'id'
 
   hgmdLink: (->
