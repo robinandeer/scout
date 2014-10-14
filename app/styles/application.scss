@@ -306,6 +306,10 @@ ic-menu-list {
   @extend .small-font;
 }
 
+.gene-list-database-filter {
+  min-width: 80px;
+}
+
 .rank-score-column {
   &.active,
   &.active + div {
